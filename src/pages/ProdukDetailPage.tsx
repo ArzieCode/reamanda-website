@@ -108,7 +108,7 @@ export default function ProdukDetailPage() {
 
   return (
     <>
-      <div className="max-w-screen-xl mx-auto px-6 pb-20">
+      <div className="max-w-screen-xl mx-auto px-5 sm:px-8 lg:px-12 pb-28 md:pb-36 pt-4">
         {/* Breadcrumb */}
         <div className="flex gap-2 py-4 border-b mb-10" style={{ borderColor: 'var(--line)' }}>
           <Link to="/busana" className="nav-label hover:opacity-60 transition-opacity" style={{ fontSize: '10px', color: 'var(--muted)', letterSpacing: '0.14em' }}>BUSANA</Link>
@@ -139,7 +139,7 @@ export default function ProdukDetailPage() {
 
           {/* Product info */}
           <div className="flex flex-col">
-            <p className="nav-label mb-2" style={{ fontSize: '10px', color: 'var(--caramel)', letterSpacing: '0.18em' }}>
+            <p className="nav-label mb-2" style={{ fontSize: '10px', color: 'var(--caramel-deep)', letterSpacing: '0.18em' }}>
               {product.collection.toUpperCase()}
             </p>
             <h1
@@ -269,7 +269,7 @@ export default function ProdukDetailPage() {
             <p className="nav-label text-center mb-10" style={{ fontSize: '10px', color: 'var(--muted)', letterSpacing: '0.2em' }}>
               PRODUK LAINNYA
             </p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
               {related.map((p) => <ProductCard key={p.id} product={p} />)}
             </div>
           </div>

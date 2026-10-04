@@ -37,7 +37,7 @@
 
   /* Visible focus states for accessibility */
   :focus-visible {
-    outline: 1px solid var(--caramel);
+    outline: 2px solid var(--caramel);
     outline-offset: 2px;
   }
 

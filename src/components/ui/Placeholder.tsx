@@ -10,6 +10,8 @@ interface PlaceholderProps {
   ratio?: string;
   label?: string;
   className?: string;
+  style?: React.CSSProperties;
+  dark?: boolean;
 }
 
 const ratioMap: Record<string, string> = {
@@ -20,17 +22,18 @@ const ratioMap: Record<string, string> = {
   '2/3': 'aspect-[2/3]',
 };
 
-export default function Placeholder({ ratio = '3/4', label, className = '' }: PlaceholderProps) {
+export default function Placeholder({ ratio = '3/4', label, className = '', style, dark = false }: PlaceholderProps) {
   const aspectClass = ratioMap[ratio] ?? 'aspect-[3/4]';
   return (
     <div
-      className={`${aspectClass} w-full bg-surface flex items-center justify-center overflow-hidden ${className}`}
+      className={`${aspectClass} w-full ${dark ? 'bg-surface-hero' : 'bg-surface'} flex items-center justify-center overflow-hidden ${className}`}
+      style={style}
       aria-label={label ?? 'Gambar'}
       role="img"
     >
       {label && (
         <span
-          className="nav-label text-muted select-none"
+          className={`nav-label select-none ${dark ? 'text-white/60' : 'text-muted'}`}
           style={{ fontSize: '10px', letterSpacing: '0.14em' }}
         >
           {label.toUpperCase()}

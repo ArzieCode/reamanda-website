@@ -1,12 +1,12 @@
 // ============================================================
-// Announcement Bar — rotating 3 messages, charcoal bg
+// Announcement Bar — rotating 3 messages, charcoal bg, single line truncated on mobile
 // ============================================================
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 const messages = [
   'GRATIS ONGKIR UNTUK PEMBELIAN DI ATAS RP 500.000 • KODE: RIAFIRST',
   'KOLEKSI LUMINARA 2024 — KINI TERSEDIA DI SEMUA KATEGORI',
-  'PROGRAM LOYALTY RIAMIRANDA — KUMPULKAN POIN SETIAP PEMBELIAN',
+  'PROGRAM LOYALITAS RIAMIRANDA — KUMPULKAN POIN SETIAP PEMBELIAN',
 ];
 
 export default function AnnouncementBar() {
@@ -21,12 +21,12 @@ export default function AnnouncementBar() {
 
   return (
     <div
-      className="w-full flex items-center justify-center"
+      className="w-full flex items-center justify-center px-4"
       style={{ height: 40, backgroundColor: 'var(--charcoal)' }}
     >
       <p
         key={index}
-        className="nav-label text-white text-center px-4 transition-opacity duration-500"
+        className="nav-label text-white text-center truncate max-w-full transition-opacity duration-500"
         style={{ fontSize: '10px', letterSpacing: '0.16em' }}
       >
         {messages[index]}

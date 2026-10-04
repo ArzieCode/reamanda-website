@@ -139,19 +139,24 @@ export default function KateringPage() {
 
   return (
     <>
-      {/* Hero */}
-      <section className="relative w-full -mt-[136px]" style={{ minHeight: 480 }}>
-        <Placeholder ratio="16/9" label="Katering RiaMiranda" className="w-full" style={{ minHeight: 480 }} />
+      {/* Hero with flat charcoal overlay (0.45) and dark placeholder */}
+      <section
+        className="relative w-full overflow-hidden flex items-center justify-center"
+        style={{ minHeight: 'clamp(520px, 80svh, 860px)' }}
+      >
+        <div className="absolute inset-0 w-full h-full">
+          <Placeholder ratio="16/9" dark={true} label="Katering RiaMiranda" className="w-full h-full object-cover" />
+        </div>
         <div
           className="absolute inset-0 flex flex-col items-center justify-center text-center px-6"
-          style={{ backgroundColor: 'rgba(152,114,69,0.35)' }}
+          style={{ backgroundColor: 'rgba(79, 77, 74, 0.45)' }}
         >
-          <p className="nav-label text-white mb-4" style={{ fontSize: '10px', letterSpacing: '0.2em' }}>
+          <p className="nav-label text-white mb-4 select-none" style={{ fontSize: '11px', letterSpacing: '0.2em' }}>
             KATERING RIAMIRANDA
           </p>
           <h1
-            className="font-cormorant font-light text-white mb-8 max-w-2xl leading-snug"
-            style={{ fontSize: 'clamp(1.8rem, 4vw, 3.2rem)', letterSpacing: '0.04em' }}
+            className="font-cormorant font-light text-white mb-8 max-w-3xl leading-snug"
+            style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', letterSpacing: '0.04em' }}
           >
             Cita Rasa Terbaik untuk Setiap Momen Istimewa
           </h1>
@@ -159,8 +164,8 @@ export default function KateringPage() {
             href={`https://wa.me/${WHATSAPP_NUMBER}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="nav-label px-8 py-4 text-white transition-opacity duration-400 hover:opacity-80"
-            style={{ fontSize: '10px', letterSpacing: '0.18em', backgroundColor: 'var(--caramel)' }}
+            className="nav-label px-8 min-h-[44px] inline-flex items-center justify-center text-white transition-opacity duration-400 hover:opacity-85 focus-visible:outline-none"
+            style={{ fontSize: '14px', fontWeight: 500, letterSpacing: '0.12em', backgroundColor: 'var(--caramel)' }}
           >
             KONSULTASI VIA WHATSAPP
           </a>
@@ -168,10 +173,10 @@ export default function KateringPage() {
       </section>
 
       {/* Intro */}
-      <section className="max-w-screen-lg mx-auto px-6 py-20 text-center">
+      <section className="max-w-screen-lg mx-auto px-5 sm:px-8 py-16 md:py-24 text-center">
         <p
-          className="font-light leading-relaxed"
-          style={{ color: 'var(--ink)', fontFamily: 'Jost', fontSize: '16px', lineHeight: 2, maxWidth: 640, margin: '0 auto' }}
+          className="font-light leading-relaxed max-w-2xl mx-auto"
+          style={{ color: 'var(--ink)', fontFamily: 'Jost', fontSize: '16px', lineHeight: 2 }}
         >
           RiaMiranda Katering hadir untuk merayakan momen penting Anda bersama orang-orang tercinta.
           Dengan resep autentik dan bahan-bahan segar pilihan, kami menghadirkan cita rasa rumahan yang hangat dalam skala profesional.
@@ -181,7 +186,7 @@ export default function KateringPage() {
 
       {/* Paket Unggulan */}
       <section className="border-t" style={{ borderColor: 'var(--line)' }}>
-        <div className="max-w-screen-xl mx-auto px-6 py-20">
+        <div className="max-w-screen-xl mx-auto px-5 sm:px-8 lg:px-12 py-16 md:py-24">
           <p className="nav-label text-center mb-16" style={{ fontSize: '10px', color: 'var(--muted)', letterSpacing: '0.2em' }}>
             PAKET UNGGULAN
           </p>
@@ -189,24 +194,24 @@ export default function KateringPage() {
             {packages.map((pkg, i) => (
               <div
                 key={pkg.name}
-                className={`grid grid-cols-1 md:grid-cols-2 border-b ${i % 2 === 0 ? '' : ''}`}
+                className="grid grid-cols-1 md:grid-cols-2 border-b"
                 style={{ borderColor: 'var(--line)' }}
               >
                 <div
-                  className={`py-12 px-10 flex flex-col justify-center border-r ${i % 2 !== 0 ? 'md:order-2' : ''}`}
+                  className={`py-12 px-6 sm:px-10 flex flex-col justify-center border-b md:border-b-0 md:border-r ${i % 2 !== 0 ? 'md:order-2' : ''}`}
                   style={{ borderColor: 'var(--line)' }}
                 >
-                  <p className="nav-label mb-4" style={{ fontSize: '10px', color: 'var(--caramel)', letterSpacing: '0.2em' }}>
+                  <p className="nav-label mb-4" style={{ fontSize: '10px', color: 'var(--caramel-deep)', letterSpacing: '0.2em' }}>
                     PAKET {String(i + 1).padStart(2, '0')}
                   </p>
-                  <h3 className="font-cormorant font-light mb-3" style={{ fontSize: 'clamp(1.4rem, 2.5vw, 2.2rem)', color: 'var(--charcoal)' }}>
+                  <h3 className="font-cormorant font-light mb-3" style={{ fontSize: 'clamp(1.5rem, 2.5vw, 2.2rem)', color: 'var(--charcoal)' }}>
                     {pkg.name}
                   </h3>
                   <p className="font-light mb-6 leading-relaxed" style={{ color: 'var(--muted)', fontFamily: 'Jost', fontSize: '14px', lineHeight: 1.8 }}>
                     {pkg.description}
                   </p>
                   <div className="mb-6">
-                    <span className="font-light" style={{ color: 'var(--caramel)', fontFamily: 'Jost', fontSize: '20px' }}>
+                    <span className="font-light" style={{ color: 'var(--caramel-deep)', fontFamily: 'Jost', fontSize: '20px' }}>
                       mulai dari {formatRupiah(pkg.price)}
                     </span>
                     <span className="font-light" style={{ color: 'var(--muted)', fontFamily: 'Jost', fontSize: '13px' }}>
@@ -217,14 +222,14 @@ export default function KateringPage() {
                     Min. {pkg.minOrder} {pkg.minUnit}
                   </p>
                 </div>
-                <div className={`py-12 px-10 flex flex-col justify-center ${i % 2 !== 0 ? 'md:order-1' : ''}`} style={{ backgroundColor: 'var(--surface)' }}>
+                <div className={`py-12 px-6 sm:px-10 flex flex-col justify-center ${i % 2 !== 0 ? 'md:order-1' : ''}`} style={{ backgroundColor: 'var(--surface)' }}>
                   <p className="nav-label mb-5" style={{ fontSize: '10px', color: 'var(--charcoal)', letterSpacing: '0.16em' }}>
                     SUDAH TERMASUK
                   </p>
                   <ul className="space-y-3">
                     {pkg.inclusions.map((item) => (
                       <li key={item} className="flex items-start gap-3">
-                        <span style={{ color: 'var(--caramel)', marginTop: 2, flexShrink: 0 }}>—</span>
+                        <span style={{ color: 'var(--caramel-deep)', marginTop: 2, flexShrink: 0 }}>—</span>
                         <span className="font-light" style={{ color: 'var(--ink)', fontFamily: 'Jost', fontSize: '14px' }}>
                           {item}
                         </span>
@@ -239,7 +244,7 @@ export default function KateringPage() {
       </section>
 
       {/* Menu Gallery — masonry-style */}
-      <section className="max-w-screen-xl mx-auto px-6 pb-20">
+      <section className="max-w-screen-xl mx-auto px-5 sm:px-8 lg:px-12 py-16 md:py-24">
         <p className="nav-label text-center mb-10" style={{ fontSize: '10px', color: 'var(--muted)', letterSpacing: '0.2em' }}>
           GALERI HIDANGAN
         </p>
@@ -257,14 +262,14 @@ export default function KateringPage() {
 
       {/* Cara Pemesanan */}
       <section className="border-t border-b" style={{ borderColor: 'var(--line)' }}>
-        <div className="max-w-screen-xl mx-auto px-6 py-20">
+        <div className="max-w-screen-xl mx-auto px-5 sm:px-8 lg:px-12 py-16 md:py-24">
           <p className="nav-label text-center mb-14" style={{ fontSize: '10px', color: 'var(--muted)', letterSpacing: '0.2em' }}>
             CARA PEMESANAN
           </p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-0 divide-x" style={{ '--tw-divide-opacity': 1 } as React.CSSProperties}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-0 lg:divide-x" style={{ '--tw-divide-opacity': 1 } as React.CSSProperties}>
             {steps.map((step) => (
-              <div key={step.num} className="px-8 py-4 text-center" style={{ borderColor: 'var(--line)' }}>
-                <p className="font-cormorant font-light mb-4" style={{ fontSize: '3rem', color: 'var(--caramel)' }}>
+              <div key={step.num} className="px-4 lg:px-8 py-4 text-center" style={{ borderColor: 'var(--line)' }}>
+                <p className="font-cormorant font-light mb-4" style={{ fontSize: '3rem', color: 'var(--caramel-deep)' }}>
                   {step.num}
                 </p>
                 <p className="nav-label mb-3" style={{ fontSize: '11px', color: 'var(--charcoal)', letterSpacing: '0.14em' }}>
@@ -280,7 +285,7 @@ export default function KateringPage() {
       </section>
 
       {/* Acara yang Dilayani */}
-      <section className="max-w-screen-lg mx-auto px-6 py-20">
+      <section className="max-w-screen-lg mx-auto px-5 sm:px-8 py-16 md:py-24">
         <p className="nav-label text-center mb-12" style={{ fontSize: '10px', color: 'var(--muted)', letterSpacing: '0.2em' }}>
           ACARA YANG KAMI LAYANI
         </p>
@@ -301,7 +306,7 @@ export default function KateringPage() {
 
       {/* Testimoni */}
       <section style={{ backgroundColor: 'var(--surface)' }}>
-        <div className="max-w-screen-xl mx-auto px-6 py-20">
+        <div className="max-w-screen-xl mx-auto px-5 sm:px-8 lg:px-12 py-16 md:py-24">
           <p className="nav-label text-center mb-12" style={{ fontSize: '10px', color: 'var(--muted)', letterSpacing: '0.2em' }}>
             KATA PELANGGAN KAMI
           </p>
@@ -332,7 +337,7 @@ export default function KateringPage() {
       </section>
 
       {/* FAQ */}
-      <section className="max-w-screen-lg mx-auto px-6 py-20">
+      <section className="max-w-screen-lg mx-auto px-5 sm:px-8 py-16 md:py-24">
         <p className="nav-label text-center mb-12" style={{ fontSize: '10px', color: 'var(--muted)', letterSpacing: '0.2em' }}>
           PERTANYAAN UMUM
         </p>
@@ -343,10 +348,10 @@ export default function KateringPage() {
         </div>
       </section>
 
-      {/* Inquiry Form */}
+      {/* Inquiry Form with safe area padding so floating elements never cover */}
       <section className="border-t" style={{ borderColor: 'var(--line)', backgroundColor: 'var(--surface)' }}>
-        <div className="max-w-screen-md mx-auto px-6 py-20">
-          <p className="nav-label text-center mb-4" style={{ fontSize: '10px', color: 'var(--caramel)', letterSpacing: '0.2em' }}>
+        <div className="max-w-screen-md mx-auto px-5 sm:px-8 pt-16 md:pt-24 pb-28 md:pb-36">
+          <p className="nav-label text-center mb-4" style={{ fontSize: '10px', color: 'var(--caramel-deep)', letterSpacing: '0.2em' }}>
             FORMULIR KONSULTASI
           </p>
           <h2 className="font-cormorant font-light text-center mb-12" style={{ fontSize: 'clamp(1.6rem, 3vw, 2.5rem)', color: 'var(--charcoal)' }}>
@@ -355,7 +360,7 @@ export default function KateringPage() {
 
           {submitted ? (
             <div className="text-center py-12">
-              <p className="font-cormorant font-light text-2xl mb-4" style={{ color: 'var(--caramel)' }}>
+              <p className="font-cormorant font-light text-2xl mb-4" style={{ color: 'var(--caramel-deep)' }}>
                 Terima kasih!
               </p>
               <p className="font-light" style={{ color: 'var(--ink)', fontFamily: 'Jost', fontSize: '15px' }}>
@@ -374,7 +379,7 @@ export default function KateringPage() {
                   value={form.nama}
                   onChange={handleChange}
                   placeholder="Masukkan nama lengkap Anda"
-                  className="input-underline"
+                  className="input-underline min-h-[44px]"
                   required
                 />
               </div>
@@ -388,7 +393,7 @@ export default function KateringPage() {
                   name="tanggalAcara"
                   value={form.tanggalAcara}
                   onChange={handleChange}
-                  className="input-underline"
+                  className="input-underline min-h-[44px]"
                   required
                 />
               </div>
@@ -404,7 +409,7 @@ export default function KateringPage() {
                   onChange={handleChange}
                   placeholder="Estimasi jumlah porsi"
                   min={1}
-                  className="input-underline"
+                  className="input-underline min-h-[44px]"
                   required
                 />
               </div>
@@ -432,8 +437,8 @@ export default function KateringPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="nav-label w-full py-4 text-white transition-opacity duration-400 hover:opacity-80 disabled:opacity-50"
-                style={{ fontSize: '11px', letterSpacing: '0.18em', backgroundColor: 'var(--caramel)' }}
+                className="nav-label w-full min-h-[44px] py-4 text-white transition-opacity duration-400 hover:opacity-85 disabled:opacity-50 focus-visible:outline-none"
+                style={{ fontSize: '14px', fontWeight: 500, letterSpacing: '0.14em', backgroundColor: 'var(--caramel)' }}
               >
                 {submitting ? 'MENGIRIM...' : 'KIRIM PESAN'}
               </button>

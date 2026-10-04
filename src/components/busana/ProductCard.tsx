@@ -66,7 +66,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                   backgroundColor: 'var(--charcoal)',
                 }}
               >
-                NEW ARRIVAL
+                TERBARU
               </span>
             )}
             {product.isSale && (

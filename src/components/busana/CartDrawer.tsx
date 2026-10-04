@@ -23,20 +23,15 @@ export default function CartDrawer() {
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 z-50 transition-opacity duration-400"
-        style={{ backgroundColor: 'rgba(77,73,70,0.4)' }}
+        className="fixed inset-0 z-[60] transition-opacity duration-400"
+        style={{ backgroundColor: 'rgba(77,73,70,0.45)' }}
         onClick={close}
         aria-hidden
       />
 
       {/* Drawer */}
       <div
-        className="fixed right-0 top-0 bottom-0 z-50 flex flex-col"
-        style={{
-          width: 'min(100vw, 420px)',
-          backgroundColor: 'var(--bg)',
-          borderLeft: '1px solid var(--line)',
-        }}
+        className="fixed right-0 top-0 bottom-0 z-[60] flex flex-col w-full sm:w-[420px] max-w-full bg-bg border-l border-line"
         role="dialog"
         aria-label="Keranjang Belanja"
       >
@@ -161,7 +156,7 @@ export default function CartDrawer() {
                     <div>
                       <p
                         className="nav-label mb-1"
-                        style={{ fontSize: '11px', color: 'var(--caramel)', letterSpacing: '0.12em' }}
+                        style={{ fontSize: '11px', color: 'var(--caramel-deep)', letterSpacing: '0.12em' }}
                       >
                         {v.code}
                       </p>
@@ -174,12 +169,12 @@ export default function CartDrawer() {
                     </div>
                     <button
                       onClick={() => handleApply(v.code)}
-                      className="nav-label ml-3 flex-shrink-0 px-3 py-1 border transition-all duration-400"
+                      className="nav-label ml-3 flex-shrink-0 px-3 py-1.5 min-h-[36px] border transition-all duration-400"
                       style={{
-                        fontSize: '9px',
+                        fontSize: '10px',
                         letterSpacing: '0.14em',
-                        borderColor: appliedVoucher === v.code ? 'var(--caramel)' : 'var(--line)',
-                        color: appliedVoucher === v.code ? 'var(--caramel)' : 'var(--muted)',
+                        borderColor: appliedVoucher === v.code ? 'var(--caramel-deep)' : 'var(--line)',
+                        color: appliedVoucher === v.code ? 'var(--caramel-deep)' : 'var(--muted)',
                       }}
                     >
                       {appliedVoucher === v.code ? 'DIPAKAI' : 'PAKAI'}

@@ -63,24 +63,24 @@ export default function HomePage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative w-full" style={{ height: 'calc(100vh - 136px)', minHeight: 480 }}>
-        <div className="w-full h-full" style={{ backgroundColor: 'var(--surface)' }}>
-          <Placeholder ratio="16/9" label="RiaMiranda — Hero" className="w-full h-full" />
+      <section className="relative w-full overflow-hidden flex items-center justify-center" style={{ minHeight: 'clamp(520px, 80svh, 860px)' }}>
+        <div className="absolute inset-0 w-full h-full">
+          <Placeholder ratio="16/9" dark={true} label="RiaMiranda — Beranda" className="w-full h-full object-cover" />
         </div>
         <div
           className="absolute inset-0 flex flex-col items-center justify-center text-center px-6"
-          style={{ backgroundColor: 'rgba(77,73,70,0.22)' }}
+          style={{ backgroundColor: 'rgba(79, 77, 74, 0.45)' }}
         >
           <h1
-            className="font-cormorant font-light text-white max-w-2xl leading-snug mb-8"
+            className="font-cormorant font-light text-white max-w-3xl leading-snug mb-8"
             style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', letterSpacing: '0.04em' }}
           >
             Elegan, Tulus, dan Abadi
           </h1>
           <Link
             to="/busana"
-            className="nav-label text-white border-b pb-0.5 transition-opacity duration-400 hover:opacity-70"
-            style={{ fontSize: '11px', letterSpacing: '0.2em', borderColor: 'rgba(255,255,255,0.6)' }}
+            className="nav-label text-white border-b pb-1 min-h-[44px] inline-flex items-center transition-opacity duration-400 hover:opacity-75"
+            style={{ fontSize: '11px', letterSpacing: '0.2em', borderColor: 'rgba(255,255,255,0.8)' }}
           >
             KENALI KAMI
           </Link>
@@ -88,7 +88,7 @@ export default function HomePage() {
       </section>
 
       {/* Tentang RiaMiranda */}
-      <section className="max-w-screen-xl mx-auto px-6 py-24">
+      <section className="max-w-screen-xl mx-auto px-5 sm:px-8 lg:px-12 py-16 md:py-24">
         <div ref={aboutRef} className="fade-in grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20 items-start">
           {/* Portrait image, offset left */}
           <div className="md:translate-y-8">
@@ -99,7 +99,7 @@ export default function HomePage() {
           <div className="md:pt-12">
             <p
               className="nav-label mb-5"
-              style={{ fontSize: '10px', color: 'var(--caramel)', letterSpacing: '0.2em' }}
+              style={{ fontSize: '10px', color: 'var(--caramel-deep)', letterSpacing: '0.2em' }}
             >
               TENTANG RIAMIRANDA
             </p>
@@ -153,10 +153,10 @@ export default function HomePage() {
 
       {/* Nilai Kami */}
       <section
-        className="border-t border-b py-16"
+        className="border-t border-b py-16 md:py-24"
         style={{ borderColor: 'var(--line)' }}
       >
-        <div className="max-w-screen-xl mx-auto px-6">
+        <div className="max-w-screen-xl mx-auto px-5 sm:px-8 lg:px-12">
           <div ref={valuesRef} className="fade-in grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x" style={{ '--tw-divide-opacity': 1 } as React.CSSProperties}>
             {[
               {
@@ -171,15 +171,15 @@ export default function HomePage() {
                 label: 'KEPERCAYAAN',
                 text: 'Lebih dari satu dekade menemani perjalanan gaya wanita muslimah Indonesia.',
               },
-            ].map((v, i) => (
+            ].map((v) => (
               <div
                 key={v.label}
-                className="px-8 py-8"
+                className="px-6 md:px-8 py-8"
                 style={{ borderColor: 'var(--line)' }}
               >
                 <p
                   className="nav-label mb-4"
-                  style={{ fontSize: '10px', color: 'var(--caramel)', letterSpacing: '0.2em' }}
+                  style={{ fontSize: '10px', color: 'var(--caramel-deep)', letterSpacing: '0.2em' }}
                 >
                   {v.label}
                 </p>
@@ -193,7 +193,7 @@ export default function HomePage() {
       </section>
 
       {/* Lini Bisnis */}
-      <section className="max-w-screen-xl mx-auto px-6 py-24">
+      <section className="max-w-screen-xl mx-auto px-5 sm:px-8 lg:px-12 pt-16 md:pt-24 pb-28 md:pb-36">
         <div ref={bizRef} className="fade-in">
           <p
             className="nav-label text-center mb-16"
@@ -218,7 +218,7 @@ export default function HomePage() {
                 <div className={`${biz.imageLeft ? '' : 'md:col-start-1 md:row-start-1'} flex flex-col justify-center px-4`}>
                   <p
                     className="nav-label mb-4"
-                    style={{ fontSize: '10px', letterSpacing: '0.2em', color: biz.accent }}
+                    style={{ fontSize: '10px', letterSpacing: '0.2em', color: biz.accent === 'var(--caramel)' ? 'var(--caramel-deep)' : biz.accent }}
                   >
                     {biz.label}
                   </p>
@@ -236,10 +236,10 @@ export default function HomePage() {
                   </p>
                   <Link
                     to={biz.path}
-                    className="nav-label inline-flex items-center gap-2 border-b pb-0.5 w-fit transition-opacity duration-400 hover:opacity-60"
-                    style={{ fontSize: '11px', letterSpacing: '0.16em', color: biz.accent, borderColor: biz.accent }}
+                    className="nav-label inline-flex items-center gap-2 border-b pb-1 min-h-[44px] w-fit transition-opacity duration-400 hover:opacity-60"
+                    style={{ fontSize: '11px', letterSpacing: '0.16em', color: biz.accent === 'var(--caramel)' ? 'var(--caramel-deep)' : biz.accent, borderColor: biz.accent === 'var(--caramel)' ? 'var(--caramel-deep)' : biz.accent }}
                   >
-                    LIHAT →
+                    JELAJAHI →
                   </Link>
                 </div>
               </div>

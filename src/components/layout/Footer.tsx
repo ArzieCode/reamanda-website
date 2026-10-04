@@ -57,10 +57,10 @@ export default function Footer() {
 
   return (
     <footer
-      className="border-t mt-24"
+      className="border-t mt-16 md:mt-24"
       style={{ borderColor: 'var(--line)', backgroundColor: 'var(--bg)' }}
     >
-      <div className="max-w-screen-xl mx-auto px-6 py-16">
+      <div className="max-w-screen-xl mx-auto px-5 sm:px-8 lg:px-12 pt-16 md:pt-24 pb-28 md:pb-36">
         {/* Top row: wordmark + newsletter */}
         <div className="flex flex-col md:flex-row justify-between gap-12 mb-16">
           <div>
@@ -80,10 +80,10 @@ export default function Footer() {
               className="nav-label mb-4"
               style={{ fontSize: '10px', color: 'var(--charcoal)', letterSpacing: '0.16em' }}
             >
-              LANGGANAN NEWSLETTER
+              LANGGANAN BULETIN
             </p>
             {subscribed ? (
-              <p className="text-sm font-light" style={{ color: 'var(--caramel)' }}>
+              <p className="text-sm font-light" style={{ color: 'var(--caramel-deep)' }}>
                 Terima kasih! Anda telah berlangganan.
               </p>
             ) : (
@@ -93,14 +93,14 @@ export default function Footer() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Alamat email Anda"
-                  className="flex-1 bg-transparent border-none outline-none text-sm font-light py-2"
+                  className="flex-1 bg-transparent border-none outline-none text-sm font-light py-2 min-h-[44px]"
                   style={{ color: 'var(--ink)', fontFamily: 'Jost, sans-serif', fontSize: '13px' }}
                   required
                 />
                 <button
                   type="submit"
-                  className="nav-label px-0 pb-2 transition-opacity duration-400 hover:opacity-60"
-                  style={{ fontSize: '10px', color: 'var(--caramel)', letterSpacing: '0.16em' }}
+                  className="nav-label px-2 min-h-[44px] transition-opacity duration-400 hover:opacity-60"
+                  style={{ fontSize: '11px', color: 'var(--caramel-deep)', letterSpacing: '0.16em' }}
                 >
                   DAFTAR
                 </button>

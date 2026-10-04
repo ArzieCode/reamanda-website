@@ -2,7 +2,7 @@
 // Properti Detail Page (/properti/:id)
 // Sticky bid panel, countdown, live bid simulation
 // ============================================================
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Placeholder from '../components/ui/Placeholder';
 import { getListing, getBids, placeBid, simulateLiveBid } from '../services/properti';
@@ -125,7 +125,7 @@ export default function PropertiDetailPage() {
 
   return (
     <>
-      <div className="max-w-screen-xl mx-auto px-6 pb-20">
+      <div className="max-w-screen-xl mx-auto px-5 sm:px-8 lg:px-12 pb-28 md:pb-36 pt-4">
         {/* Breadcrumb */}
         <div className="flex gap-2 py-4 border-b mb-8" style={{ borderColor: 'var(--line)' }}>
           <Link to="/properti" className="nav-label hover:opacity-60 transition-opacity" style={{ fontSize: '10px', color: 'var(--muted)', letterSpacing: '0.14em' }}>PROPERTI</Link>
@@ -133,7 +133,7 @@ export default function PropertiDetailPage() {
           <span className="nav-label" style={{ fontSize: '10px', color: 'var(--charcoal)', letterSpacing: '0.14em' }}>{property.name}</span>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-12 items-start">
           {/* Left: gallery + details */}
           <div className="lg:col-span-2">
             <div className="mb-3">
@@ -194,9 +194,9 @@ export default function PropertiDetailPage() {
             </Accordion>
           </div>
 
-          {/* Right: Sticky bid panel */}
-          <div>
-            <div className="sticky top-[136px] border p-6" style={{ borderColor: 'var(--line)' }}>
+          {/* Right: Stacked block on mobile, sticky bid panel on desktop */}
+          <div className="w-full">
+            <div className="static lg:sticky lg:top-[160px] border p-6 bg-bg" style={{ borderColor: 'var(--line)' }}>
               <p className="nav-label mb-6" style={{ fontSize: '10px', color: 'var(--indigo-brand)', letterSpacing: '0.16em' }}>PANEL PENAWARAN</p>
 
               {/* Prices */}
@@ -263,7 +263,7 @@ export default function PropertiDetailPage() {
                         setBidSuccess('');
                       }}
                       placeholder={`min. ${formatRupiah(minRequired)}`}
-                      className="w-full border py-3 px-4 text-sm font-light mb-3 transition-colors duration-400 focus:outline-none"
+                      className="w-full border min-h-[44px] py-3 px-4 text-sm font-light mb-3 transition-colors duration-400 focus-visible:outline-none"
                       style={{
                         borderColor: bidError ? 'var(--occupied)' : 'var(--line)',
                         color: 'var(--ink)',
@@ -282,7 +282,7 @@ export default function PropertiDetailPage() {
                   <button
                     onClick={handleBid}
                     disabled={bidLoading}
-                    className="w-full nav-label py-4 text-white transition-opacity duration-400 hover:opacity-80 disabled:opacity-50"
+                    className="w-full nav-label min-h-[44px] py-4 text-white transition-opacity duration-400 hover:opacity-80 disabled:opacity-50 focus-visible:outline-none"
                     style={{ fontSize: '11px', letterSpacing: '0.18em', backgroundColor: 'var(--indigo-brand)' }}
                   >
                     {bidLoading ? 'MEMPROSES...' : 'AJUKAN PENAWARAN'}

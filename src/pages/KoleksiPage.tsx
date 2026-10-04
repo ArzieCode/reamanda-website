@@ -85,7 +85,7 @@ export default function KoleksiPage() {
         onReset={reset}
       />
 
-      <div className="max-w-screen-xl mx-auto px-6 pb-20">
+      <div className="max-w-screen-xl mx-auto px-5 sm:px-8 lg:px-12 pb-28 md:pb-36 pt-4">
         {/* Breadcrumb */}
         <div className="flex gap-2 py-4 border-b mb-8" style={{ borderColor: 'var(--line)' }}>
           <Link to="/busana" className="nav-label transition-opacity hover:opacity-60" style={{ fontSize: '10px', color: 'var(--muted)', letterSpacing: '0.14em' }}>
@@ -101,30 +101,30 @@ export default function KoleksiPage() {
         <div className="mb-10">
           <h1
             className="font-cormorant font-light mb-3"
-            style={{ fontSize: 'clamp(1.8rem, 3vw, 3rem)', color: 'var(--charcoal)' }}
+            style={{ fontSize: 'clamp(2rem, 4vw, 3.2rem)', color: 'var(--charcoal)' }}
           >
             {collection?.name ?? slug}
           </h1>
           {collection?.description && (
-            <p className="font-light" style={{ color: 'var(--muted)', fontFamily: 'Jost', fontSize: '14px' }}>
+            <p className="font-light max-w-2xl" style={{ color: 'var(--muted)', fontFamily: 'Jost', fontSize: '14px', lineHeight: 1.8 }}>
               {collection.description}
             </p>
           )}
         </div>
 
         {/* Toolbar */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
           <button
             onClick={() => setFilterOpen(true)}
-            className="flex items-center gap-2 nav-label border py-2 px-4 transition-all duration-400 hover:opacity-70"
-            style={{ fontSize: '10px', letterSpacing: '0.14em', borderColor: 'var(--line)', color: 'var(--charcoal)' }}
+            className="flex items-center gap-2 nav-label border min-h-[44px] px-5 transition-all duration-400 hover:opacity-70 focus-visible:outline-none"
+            style={{ fontSize: '11px', letterSpacing: '0.14em', borderColor: 'var(--line)', color: 'var(--charcoal)' }}
           >
             <SlidersHorizontal size={14} strokeWidth={1.25} />
             FILTER
             {(selectedSizes.length + selectedColors.length) > 0 && (
               <span
-                className="ml-1 rounded-full px-1.5 text-white"
-                style={{ fontSize: '8px', backgroundColor: 'var(--caramel)' }}
+                className="ml-1 rounded-full px-2 py-0.5 text-white"
+                style={{ fontSize: '9px', backgroundColor: 'var(--caramel)', fontWeight: 500 }}
               >
                 {selectedSizes.length + selectedColors.length}
               </span>
@@ -132,14 +132,14 @@ export default function KoleksiPage() {
           </button>
 
           <div className="flex items-center gap-3">
-            <p className="text-xs font-light" style={{ color: 'var(--muted)', fontFamily: 'Jost', fontSize: '12px' }}>
+            <p className="text-xs font-light" style={{ color: 'var(--muted)', fontFamily: 'Jost', fontSize: '13px' }}>
               {sorted.length} produk
             </p>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="nav-label border py-1.5 px-3 transition-all duration-400 hover:opacity-70 bg-transparent"
-              style={{ fontSize: '10px', letterSpacing: '0.12em', borderColor: 'var(--line)', color: 'var(--charcoal)' }}
+              className="nav-label border min-h-[44px] px-4 transition-all duration-400 hover:opacity-70 bg-transparent focus-visible:outline-none"
+              style={{ fontSize: '11px', letterSpacing: '0.12em', borderColor: 'var(--line)', color: 'var(--charcoal)' }}
             >
               {sortOptions.map((o) => (
                 <option key={o.value} value={o.value}>{o.label}</option>
@@ -148,10 +148,10 @@ export default function KoleksiPage() {
           </div>
         </div>
 
-        {/* Grid */}
+        {/* Grid: 2 mobile, 3 tablet, 4 desktop */}
         {loading ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {[1, 2, 3, 4, 5, 6].map((i) => <div key={i} className="aspect-[3/4] bg-surface" />)}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => <div key={i} className="aspect-[3/4] bg-surface" />)}
           </div>
         ) : sorted.length === 0 ? (
           <div className="py-24 text-center">
@@ -159,11 +159,11 @@ export default function KoleksiPage() {
               Tidak ada produk
             </p>
             <p className="text-sm font-light" style={{ color: 'var(--muted)', fontFamily: 'Jost' }}>
-              Coba ubah filter Anda
+              Coba sesuaikan pilihan filter Anda
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-10">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             {sorted.map((p) => <ProductCard key={p.id} product={p} />)}
           </div>
         )}

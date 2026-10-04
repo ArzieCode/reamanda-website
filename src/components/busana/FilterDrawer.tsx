@@ -48,18 +48,13 @@ export default function FilterDrawer({
   return (
     <>
       <div
-        className="fixed inset-0 z-40 transition-opacity duration-400"
-        style={{ backgroundColor: 'rgba(77,73,70,0.3)' }}
+        className="fixed inset-0 z-[60] transition-opacity duration-400"
+        style={{ backgroundColor: 'rgba(77,73,70,0.45)' }}
         onClick={onClose}
         aria-hidden
       />
       <aside
-        className="fixed left-0 top-0 bottom-0 z-50 flex flex-col overflow-y-auto"
-        style={{
-          width: 300,
-          backgroundColor: 'var(--bg)',
-          borderRight: '1px solid var(--line)',
-        }}
+        className="fixed left-0 top-0 bottom-0 z-[60] flex flex-col overflow-y-auto w-full sm:w-[360px] md:w-[420px] max-w-full bg-bg border-r border-line"
         aria-label="Filter produk"
       >
         <div className="flex items-center justify-between px-6 py-5 border-b" style={{ borderColor: 'var(--line)' }}>

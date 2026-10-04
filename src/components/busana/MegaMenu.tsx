@@ -17,7 +17,7 @@ const categories = [
 export default function MegaMenu({ onClose }: MegaMenuProps) {
   return (
     <div
-      className="absolute left-1/2 top-full mt-0 w-[640px] border border-t-0 z-50"
+      className="absolute left-1/2 top-full mt-0 w-[640px] border border-t-0 z-40"
       style={{
         transform: 'translateX(-40%)',
         backgroundColor: 'var(--bg)',
@@ -26,10 +26,10 @@ export default function MegaMenu({ onClose }: MegaMenuProps) {
       onMouseLeave={onClose}
     >
       <div className="grid grid-cols-4 gap-0 p-8">
-        {/* New In */}
+        {/* Terbaru */}
         <div className="border-r pr-6" style={{ borderColor: 'var(--line)' }}>
           <p className="nav-label mb-4" style={{ fontSize: '10px', color: 'var(--charcoal)', letterSpacing: '0.16em' }}>
-            NEW IN
+            TERBARU
           </p>
           <ul className="space-y-2">
             <li>

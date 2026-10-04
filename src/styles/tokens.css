@@ -8,6 +8,7 @@
   /* Base surfaces */
   --bg: #ffffff;
   --surface: #f6f4f0;
+  --surface-hero: #746f67;
 
   /* Text */
   --ink: #4d4946;
@@ -19,6 +20,7 @@
 
   /* Brand accents */
   --caramel: #987245;
+  --caramel-deep: #7e5d34;
   --indigo-brand: #162c74;
 
   /* Sale — ONLY for sale tags & one primary promo button */
@@ -28,4 +30,11 @@
   --available: #7c9070;
   --occupied:  #a8645a;
   --deposit:   #c79a4b;
+
+  /* Standardized z-index scale */
+  --z-content: 0;
+  --z-header: 40;
+  --z-floating: 50;
+  --z-drawer: 60;
+  --z-modal: 70;
 }
