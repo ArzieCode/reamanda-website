@@ -1,0 +1,89 @@
+/* ============================================================
+   RIAMIRANDA — Global Base Styles
+   ============================================================ */
+@import './tokens.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    background-color: var(--bg);
+    color: var(--ink);
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    background-color: var(--bg);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    letter-spacing: 0.04em;
+    color: var(--charcoal);
+  }
+
+  /* Thin line icons — set stroke-width on svg */
+  svg {
+    stroke-width: 1.25;
+  }
+
+  /* Visible focus states for accessibility */
+  :focus-visible {
+    outline: 1px solid var(--caramel);
+    outline-offset: 2px;
+  }
+
+  /* Underline-only inputs (used in forms) */
+  .input-underline {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    padding: 0.5rem 0;
+    width: 100%;
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    color: var(--ink);
+    transition: border-color 400ms ease;
+  }
+
+  .input-underline:focus {
+    outline: none;
+    border-bottom-color: var(--caramel);
+  }
+
+  .input-underline::placeholder {
+    color: var(--muted);
+    font-size: 0.875rem;
+  }
+}
+
+@layer utilities {
+  /* Fade-in on scroll utility */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 600ms ease, transform 600ms ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Nav label style */
+  .nav-label {
+    font-family: 'Jost', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+}

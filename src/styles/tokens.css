@@ -1,0 +1,31 @@
+/* ============================================================
+   RIAMIRANDA — Design Token CSS Custom Properties
+   All colour usage in components MUST reference these variables.
+   Never use hardcoded hex values in component files.
+   ============================================================ */
+
+:root {
+  /* Base surfaces */
+  --bg: #ffffff;
+  --surface: #f6f4f0;
+
+  /* Text */
+  --ink: #4d4946;
+  --charcoal: #4f4d4a;
+  --muted: #8b8987;
+
+  /* Borders / dividers */
+  --line: #e6e2dc;
+
+  /* Brand accents */
+  --caramel: #987245;
+  --indigo-brand: #162c74;
+
+  /* Sale — ONLY for sale tags & one primary promo button */
+  --sale: #ea33b7;
+
+  /* Property status colours */
+  --available: #7c9070;
+  --occupied:  #a8645a;
+  --deposit:   #c79a4b;
+}
