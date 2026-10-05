@@ -1,14 +1,19 @@
 // ============================================================
 // Header — fixed height (60px mobile / 72px desktop)
 // Transparent over hero, solid white when scrolled
-// Mobile menu drawer below 1024px, 44px touch targets
-// Wishlist icon for mobile view
+// Full functionality: Currency dropdown, Search overlay trigger,
+// Wishlist drawer trigger + badge, Profile dropdown (Auth), Cart badge
 // ============================================================
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Search, User, ShoppingBag, ChevronDown, Menu, X, Heart } from 'lucide-react';
+import { Search, User as UserIcon, ShoppingBag, ChevronDown, Menu, X, Heart, LogOut, Package, Gavel, Award } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
+import { useAuth } from '../../context/AuthContext';
+import { useCurrency } from '../../context/CurrencyContext';
+import { useWishlist } from '../../context/WishlistContext';
+import { useSearch } from '../../context/SearchContext';
 import MegaMenu from '../busana/MegaMenu';
+import type { CurrencyCode } from '../../types/currency';
 
 const navItems = [
   { label: 'Koleksi', path: '/busana', hasMega: true },
@@ -16,12 +21,24 @@ const navItems = [
   { label: 'Katering', path: '/katering', hasMega: false },
 ];
 
+const CURRENCIES: CurrencyCode[] = ['IDR', 'USD', 'SGD', 'MYR'];
+
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [currencyDropdownOpen, setCurrencyDropdownOpen] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+
   const { totalItems, dispatch } = useCart();
+  const { user, openAuthModal, logout } = useAuth();
+  const { currency, setCurrency } = useCurrency();
+  const { toggleWishlistDrawer, items: wishlistItems } = useWishlist();
+  const { toggleSearch } = useSearch();
   const { pathname } = useLocation();
+
+  const profileRef = useRef<HTMLDivElement>(null);
+  const currencyRef = useRef<HTMLDivElement>(null);
 
   // Determine if we're on a hero page (transparent header)
   const isHeroPage =
@@ -36,12 +53,43 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Reset mobile menu on route change without cascading effect
+  // Close menus & dropdowns on route change
   const [prevPath, setPrevPath] = useState(pathname);
   if (prevPath !== pathname) {
     setPrevPath(pathname);
     setMobileMenuOpen(false);
+    setMegaOpen(false);
+    setCurrencyDropdownOpen(false);
+    setProfileDropdownOpen(false);
   }
+
+  // Handle outside click & Escape key
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+        setProfileDropdownOpen(false);
+      }
+      if (currencyRef.current && !currencyRef.current.contains(e.target as Node)) {
+        setCurrencyDropdownOpen(false);
+      }
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setProfileDropdownOpen(false);
+        setCurrencyDropdownOpen(false);
+        setMegaOpen(false);
+        setMobileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   const isTransparent = isHeroPage && !scrolled;
   const textColor = isTransparent ? 'text-white' : 'text-charcoal';
@@ -52,7 +100,6 @@ export default function Header() {
       <header
         className="w-full transition-colors duration-400"
         style={{
-          height: undefined,
           backgroundColor: isTransparent ? 'transparent' : 'var(--bg)',
           borderBottom: isTransparent ? 'none' : '1px solid var(--line)',
         }}
@@ -106,43 +153,211 @@ export default function Header() {
 
           {/* Right icons: min 44px tap targets */}
           <div className="flex items-center gap-1 sm:gap-2">
-            {/* Currency (desktop only) */}
-            <span
-              className={`nav-label hidden xl:block px-2 transition-colors duration-400 ${textColor}`}
-              style={{ fontSize: '11px', letterSpacing: '0.14em' }}
-            >
-              IDR
-            </span>
+            {/* Currency Selector Dropdown (desktop) */}
+            <div className="relative hidden xl:block" ref={currencyRef}>
+              <button
+                onClick={() => setCurrencyDropdownOpen((prev) => !prev)}
+                className={`nav-label h-11 px-2.5 flex items-center gap-1 transition-colors duration-400 hover:opacity-70 focus-visible:outline-none ${textColor}`}
+                style={{ fontSize: '11px', letterSpacing: '0.14em' }}
+                aria-label={`Pilih Mata Uang (Saat ini: ${currency})`}
+                aria-expanded={currencyDropdownOpen}
+              >
+                <span>{currency}</span>
+                <ChevronDown size={11} strokeWidth={1.25} />
+              </button>
 
-            {/* Search */}
+              {currencyDropdownOpen && (
+                <div
+                  className="absolute right-0 top-full mt-1 w-28 bg-bg border border-line shadow-lg py-1 z-50 animate-in fade-in"
+                  role="menu"
+                >
+                  {CURRENCIES.map((code) => (
+                    <button
+                      key={code}
+                      onClick={() => {
+                        setCurrency(code);
+                        setCurrencyDropdownOpen(false);
+                      }}
+                      className={`w-full text-left px-4 py-2 nav-label transition-colors hover:bg-surface flex items-center justify-between ${
+                        currency === code ? 'text-charcoal font-medium bg-surface' : 'text-muted'
+                      }`}
+                      style={{ fontSize: '11px', letterSpacing: '0.12em' }}
+                      role="menuitem"
+                    >
+                      <span>{code}</span>
+                      {currency === code && <span>•</span>}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Search Button */}
             <button
-              aria-label="Cari produk"
-              className={`w-11 h-11 flex items-center justify-center transition-colors duration-400 hover:opacity-70 ${textColor}`}
+              onClick={() => toggleSearch(true)}
+              aria-label="Buka pencarian produk & layanan"
+              className={`w-11 h-11 flex items-center justify-center transition-colors duration-400 hover:opacity-70 focus-visible:outline-none ${textColor}`}
             >
               <Search size={19} color={iconColor} strokeWidth={1.25} />
             </button>
 
-            {/* Wishlist icon button (prominent on mobile when floating tab is hidden) */}
-            <Link
-              to="/busana"
-              aria-label="Wishlist (Favorit)"
-              className={`w-11 h-11 flex items-center justify-center transition-colors duration-400 hover:opacity-70 ${textColor}`}
+            {/* Wishlist Button with Badge */}
+            <button
+              onClick={() => toggleWishlistDrawer(true)}
+              aria-label={`Buka Wishlist (${wishlistItems.length} produk)`}
+              className={`relative w-11 h-11 flex items-center justify-center transition-colors duration-400 hover:opacity-70 focus-visible:outline-none ${textColor}`}
             >
               <Heart size={19} color={iconColor} strokeWidth={1.25} />
-            </Link>
-
-            {/* User Account */}
-            <button
-              aria-label="Akun saya"
-              className={`hidden sm:flex w-11 h-11 items-center justify-center transition-colors duration-400 hover:opacity-70 ${textColor}`}
-            >
-              <User size={19} color={iconColor} strokeWidth={1.25} />
+              {wishlistItems.length > 0 && (
+                <span
+                  className="absolute top-2 right-2 rounded-full flex items-center justify-center text-white"
+                  style={{
+                    width: 15,
+                    height: 15,
+                    fontSize: 8,
+                    backgroundColor: 'var(--charcoal)',
+                    fontWeight: 500,
+                  }}
+                >
+                  {wishlistItems.length}
+                </span>
+              )}
             </button>
 
-            {/* Shopping Cart */}
+            {/* User Account Button with Dropdown */}
+            <div className="relative" ref={profileRef}>
+              <button
+                onClick={() => setProfileDropdownOpen((prev) => !prev)}
+                aria-label={user ? `Akun saya (${user.name})` : 'Masuk atau daftar akun'}
+                aria-expanded={profileDropdownOpen}
+                className={`w-11 h-11 flex items-center justify-center transition-colors duration-400 hover:opacity-70 focus-visible:outline-none ${textColor}`}
+              >
+                <UserIcon size={19} color={iconColor} strokeWidth={1.25} />
+              </button>
+
+              {profileDropdownOpen && (
+                <div
+                  className="absolute right-0 top-full mt-1 w-64 bg-bg border border-line shadow-xl py-3 z-50 animate-in fade-in"
+                  role="menu"
+                >
+                  {user ? (
+                    <div>
+                      {/* Logged in header */}
+                      <div className="px-4 pb-3 border-b border-line mb-2">
+                        <p className="nav-label text-charcoal truncate" style={{ fontSize: '11px', letterSpacing: '0.12em' }}>
+                          {user.name}
+                        </p>
+                        <p className="text-xs text-muted truncate font-light" style={{ fontFamily: 'Jost, sans-serif' }}>
+                          {user.email}
+                        </p>
+                      </div>
+
+                      {/* Logged in links */}
+                      <div className="space-y-1">
+                        <Link
+                          to="/akun"
+                          onClick={() => setProfileDropdownOpen(false)}
+                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-light text-ink hover:bg-surface transition-colors"
+                          style={{ fontFamily: 'Jost, sans-serif', fontSize: '13px' }}
+                          role="menuitem"
+                        >
+                          <UserIcon size={14} color="var(--charcoal)" />
+                          <span>Profil Saya</span>
+                        </Link>
+                        <Link
+                          to="/akun/pesanan"
+                          onClick={() => setProfileDropdownOpen(false)}
+                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-light text-ink hover:bg-surface transition-colors"
+                          style={{ fontFamily: 'Jost, sans-serif', fontSize: '13px' }}
+                          role="menuitem"
+                        >
+                          <Package size={14} color="var(--charcoal)" />
+                          <span>Riwayat Pesanan</span>
+                        </Link>
+                        <Link
+                          to="/akun/wishlist"
+                          onClick={() => setProfileDropdownOpen(false)}
+                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-light text-ink hover:bg-surface transition-colors"
+                          style={{ fontFamily: 'Jost, sans-serif', fontSize: '13px' }}
+                          role="menuitem"
+                        >
+                          <Heart size={14} color="var(--charcoal)" />
+                          <span>Wishlist Favorit ({wishlistItems.length})</span>
+                        </Link>
+                        <Link
+                          to="/akun/penawaran"
+                          onClick={() => setProfileDropdownOpen(false)}
+                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-light text-ink hover:bg-surface transition-colors"
+                          style={{ fontFamily: 'Jost, sans-serif', fontSize: '13px' }}
+                          role="menuitem"
+                        >
+                          <Gavel size={14} color="var(--charcoal)" />
+                          <span>Penawaran Properti</span>
+                        </Link>
+                        <Link
+                          to="/akun/poin"
+                          onClick={() => setProfileDropdownOpen(false)}
+                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-light text-ink hover:bg-surface transition-colors"
+                          style={{ fontFamily: 'Jost, sans-serif', fontSize: '13px' }}
+                          role="menuitem"
+                        >
+                          <Award size={14} color="var(--caramel-deep)" />
+                          <span>Poin & Hadiah ({user.points ?? 1250})</span>
+                        </Link>
+                      </div>
+
+                      {/* Logout */}
+                      <div className="pt-2 mt-2 border-t border-line">
+                        <button
+                          onClick={() => {
+                            logout();
+                            setProfileDropdownOpen(false);
+                          }}
+                          className="w-full flex items-center gap-2.5 px-4 py-2 text-xs font-light text-occupied hover:bg-surface transition-colors"
+                          style={{ fontFamily: 'Jost, sans-serif', fontSize: '13px' }}
+                          role="menuitem"
+                        >
+                          <LogOut size={14} />
+                          <span>Keluar dari Akun</span>
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    /* Logged out: Masuk and Daftar */
+                    <div className="p-4 space-y-3">
+                      <p className="text-xs font-light text-muted leading-relaxed" style={{ fontFamily: 'Jost, sans-serif' }}>
+                        Masuk untuk menikmati kemudahan pelacakan pesanan, penawaran properti, dan poin penghargaan.
+                      </p>
+                      <button
+                        onClick={() => {
+                          setProfileDropdownOpen(false);
+                          openAuthModal('login');
+                        }}
+                        className="w-full nav-label py-2.5 bg-charcoal text-white hover:opacity-85 transition-opacity text-center block"
+                        style={{ fontSize: '10px', letterSpacing: '0.14em' }}
+                      >
+                        MASUK KE AKUN
+                      </button>
+                      <button
+                        onClick={() => {
+                          setProfileDropdownOpen(false);
+                          openAuthModal('register');
+                        }}
+                        className="w-full nav-label py-2.5 border border-charcoal text-charcoal hover:bg-surface transition-colors text-center block"
+                        style={{ fontSize: '10px', letterSpacing: '0.14em' }}
+                      >
+                        BUAT AKUN BARU
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Shopping Cart Button with Badge */}
             <button
               aria-label={`Keranjang belanja (${totalItems} item)`}
-              className={`relative w-11 h-11 flex items-center justify-center transition-colors duration-400 hover:opacity-70 ${textColor}`}
+              className={`relative w-11 h-11 flex items-center justify-center transition-colors duration-400 hover:opacity-70 focus-visible:outline-none ${textColor}`}
               onClick={() => dispatch({ type: 'TOGGLE_CART', payload: true })}
             >
               <ShoppingBag size={19} color={iconColor} strokeWidth={1.25} />
@@ -192,6 +407,46 @@ export default function Header() {
             </div>
 
             <div className="p-6 space-y-6">
+              {/* Account Quick Status */}
+              <div className="p-4 bg-surface border border-line">
+                {user ? (
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="nav-label text-charcoal" style={{ fontSize: '11px' }}>{user.name}</p>
+                      <p className="text-xs text-muted font-light">{user.email}</p>
+                    </div>
+                    <Link
+                      to="/akun"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="nav-label text-[10px] text-caramel-deep hover:underline"
+                    >
+                      AKUN SAYA →
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        openAuthModal('login');
+                      }}
+                      className="flex-1 nav-label py-2 bg-charcoal text-white text-[10px]"
+                    >
+                      MASUK
+                    </button>
+                    <button
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        openAuthModal('register');
+                      }}
+                      className="flex-1 nav-label py-2 border border-line text-charcoal text-[10px]"
+                    >
+                      DAFTAR
+                    </button>
+                  </div>
+                )}
+              </div>
+
               <div className="border-b border-line pb-6">
                 <p className="nav-label text-muted mb-4" style={{ fontSize: '10px', letterSpacing: '0.18em' }}>
                   LINI PRODUK
@@ -273,10 +528,25 @@ export default function Header() {
               </div>
 
               <div className="pt-2">
-                <div className="flex items-center gap-4 text-xs text-muted font-light">
-                  <span>Mata Uang: IDR</span>
-                  <span>·</span>
-                  <span>Jakarta, est. 2009</span>
+                <div className="flex items-center gap-3 text-xs text-muted font-light mb-4">
+                  <span>Mata Uang:</span>
+                  <div className="flex gap-2">
+                    {CURRENCIES.map((code) => (
+                      <button
+                        key={code}
+                        onClick={() => setCurrency(code)}
+                        className={`nav-label px-2 py-0.5 border ${
+                          currency === code ? 'border-charcoal text-charcoal font-medium bg-surface' : 'border-line text-muted'
+                        }`}
+                        style={{ fontSize: '10px' }}
+                      >
+                        {code}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="text-xs text-muted font-light">
+                  Jakarta, est. 2009
                 </div>
               </div>
             </div>

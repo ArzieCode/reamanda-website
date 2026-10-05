@@ -1,111 +1,57 @@
 // ============================================================
 // Katering Page (/katering)
+// Package cards open detail modal, WhatsApp CTA, Inquiry form with validation, FAQ accordion
 // ============================================================
 import React, { useState } from 'react';
 import Placeholder from '../components/ui/Placeholder';
-import { sendInquiry, WHATSAPP_NUMBER } from '../services/katering';
-import type { InquiryData } from '../types/katering';
-import { Star, ChevronDown } from 'lucide-react';
-import { formatRupiah } from '../utils/format';
-
-const packages = [
-  {
-    name: 'Nasi Box',
-    price: 35000,
-    unit: 'porsi',
-    minOrder: 50,
-    minUnit: 'porsi',
-    inclusions: ['Nasi putih / merah pilihan', 'Lauk utama (ayam/daging)', 'Sayur tumis', 'Buah segar', 'Air mineral'],
-    description: 'Pilihan praktis untuk seminar, rapat, dan acara internal kantor. Dikemas rapi dalam kotak ramah lingkungan.',
-  },
-  {
-    name: 'Prasmanan',
-    price: 85000,
-    unit: 'porsi',
-    minOrder: 100,
-    minUnit: 'porsi',
-    inclusions: ['5 pilihan lauk utama', '2 sajian sayur', 'Dessert tradisional', 'Minuman dingin & panas', 'Dekorasi meja prasmanan'],
-    description: 'Cocok untuk pernikahan, syukuran, dan acara keluarga besar. Disajikan hangat langsung di lokasi Anda.',
-  },
-  {
-    name: 'Tumpeng / Acara Khusus',
-    price: 1500000,
-    unit: 'set',
-    minOrder: 1,
-    minUnit: 'set',
-    inclusions: ['Tumpeng nasi kuning tradisional lengkap', '7 lauk pilihan premium', 'Alas daun pisang segar', 'Dekorasi kembang & hasil bumi', 'Tim pelayanan'],
-    description: 'Untuk momen spesial yang tak terlupakan — ulang tahun, selamatan, wisuda, dan perayaan adat.',
-  },
-];
-
-const menuItems = [
-  { name: 'Nasi Liwet Spesial', ratio: '1/1' as const },
-  { name: 'Rendang Daging Sapi', ratio: '3/4' as const },
-  { name: 'Tumis Kangkung Terasi', ratio: '1/1' as const },
-  { name: 'Es Teh Pandan', ratio: '3/4' as const },
-  { name: 'Tumpeng Mini Nasi Kuning', ratio: '3/4' as const },
-  { name: 'Aneka Satay Combo', ratio: '1/1' as const },
-];
-
-const steps = [
-  { num: '01', title: 'Hubungi Kami', text: 'Via WhatsApp atau formulir di bawah halaman ini.' },
-  { num: '02', title: 'Konsultasi Menu', text: 'Diskusikan kebutuhan, menu, dan detail acara Anda bersama tim kami.' },
-  { num: '03', title: 'Konfirmasi & DP', text: 'Setujui penawaran dan lakukan pembayaran uang muka 50%.' },
-  { num: '04', title: 'Siap Tepat Waktu', text: 'Katering kami hadir di lokasi Anda tepat waktu, siap saji.' },
-];
-
-const events = [
-  'Pengajian & Majelis Taklim',
-  'Pernikahan & Resepsi',
-  'Rapat & Acara Kantor',
-  'Arisan & Gathering',
-  'Ulang Tahun & Syukuran',
-];
-
-const faqs = [
-  { q: 'Berapa minimal pemesanan nasi box?', a: 'Minimal pemesanan nasi box adalah 50 porsi. Untuk jumlah di bawah itu, silakan konsultasikan kebutuhan Anda dengan tim kami.' },
-  { q: 'Apakah tersedia pilihan menu halal?', a: 'Seluruh menu RiaMiranda Katering menggunakan bahan-bahan halal bersertifikat. Kami berkomitmen pada standar kebersihan dan kehalalan tertinggi.' },
-  { q: 'Bagaimana sistem pembayaran?', a: 'Pembayaran dilakukan dalam dua tahap: uang muka (DP) 50% saat konfirmasi pesanan, dan pelunasan H-3 sebelum acara.' },
-  { q: 'Apakah tersedia layanan dekorasi?', a: 'Untuk paket Prasmanan dan Tumpeng, dekorasi dasar sudah termasuk. Dekorasi tambahan dan custom dapat didiskusikan dengan biaya terpisah.' },
-  { q: 'Berapa jauh jangkauan pengiriman?', a: 'Kami melayani area Jabodetabek dan sekitarnya. Untuk lokasi di luar area tersebut, silakan hubungi kami untuk penawaran khusus.' },
-];
+import { packages, faqs, menuItems, type CateringPackage } from '../data/katering';
+import { sendInquiry, type InquiryData, WHATSAPP_NUMBER } from '../services/katering';
+import { useCurrency } from '../context/CurrencyContext';
+import { useToast } from '../context/ToastContext';
+import { ChevronDown, Star, MessageCircle, Utensils, Eye } from 'lucide-react';
+import PackageDetailModal from '../components/modals/PackageDetailModal';
 
 const testimoni = [
   {
-    quote: 'Katering RiaMiranda benar-benar luar biasa. Makanannya enak, penyajiannya rapi, dan timnya sangat profesional. Tamu-tamu kami sampai menanyakan kontak katering setelah acara.',
-    name: 'Hana Putri',
+    quote: 'Pernikahan putri kami berjalan begitu khidmat dan seluruh tamu memuji hidangan prasmanannya. Rasa rendang dan sup kimlonya autentik.',
+    name: 'Ibu Ratna Dewi',
     city: 'Jakarta Selatan',
-    event: 'Pernikahan',
+    event: 'Resepsi Pernikahan (800 porsi)',
   },
   {
-    quote: 'Sudah dua kali kami memesan nasi box untuk acara kantor, dan hasilnya selalu memuaskan. Porsinya pas, menunya bervariasi, dan pengirimannya tepat waktu.',
-    name: 'Bapak Darmawan',
-    city: 'Jakarta Pusat',
-    event: 'Acara Kantor',
+    quote: 'Penyajian tumpeng mini untuk syukuran kantor sangat rapi dan estetik. Kemasannya mewah, tidak mengecewakan.',
+    name: 'Bapak Hendra W.',
+    city: 'Tangerang Selatan',
+    event: 'Syukuran Kantor (120 porsi)',
   },
   {
-    quote: 'Tumpeng untuk ulang tahun ibu saya sangat cantik dan lezat. Dekorasinya indah dan semua lauk terasa autentik. Sangat direkomendasikan!',
-    name: 'Siti Rahayu',
-    city: 'Depok',
-    event: 'Syukuran',
+    quote: 'Pelayanan konsultan katering RiaMiranda sangat teliti dan sigap saat koordinasi di hari H. Terima kasih banyak!',
+    name: 'Sarah & Fikri',
+    city: 'Bandung',
+    event: 'Akad Nikah & Intimate Dinner',
   },
 ];
 
 function FaqItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border-b" style={{ borderColor: 'var(--line)' }}>
+    <div className="border-b border-line">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="w-full flex items-center justify-between py-5 text-left transition-opacity duration-400 hover:opacity-70"
+        className="w-full flex items-center justify-between py-5 text-left transition-opacity duration-400 hover:opacity-75 focus-visible:outline-none"
       >
-        <span className="font-light" style={{ color: 'var(--charcoal)', fontFamily: 'Jost', fontSize: '15px' }}>
+        <span className="font-light text-charcoal text-sm sm:text-base" style={{ fontFamily: 'Jost' }}>
           {q}
         </span>
-        <ChevronDown size={16} strokeWidth={1.25} color="var(--caramel)" style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 300ms ease', flexShrink: 0, marginLeft: 16 }} />
+        <ChevronDown
+          size={16}
+          strokeWidth={1.25}
+          color="var(--caramel-deep)"
+          style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 300ms ease', flexShrink: 0, marginLeft: 16 }}
+        />
       </button>
       {open && (
-        <p className="pb-5 font-light leading-relaxed" style={{ color: 'var(--muted)', fontFamily: 'Jost', fontSize: '14px', lineHeight: 1.85 }}>
+        <p className="pb-5 font-light leading-relaxed text-muted text-xs sm:text-sm" style={{ fontFamily: 'Jost', lineHeight: 1.85 }}>
           {a}
         </p>
       )}
@@ -114,10 +60,16 @@ function FaqItem({ q, a }: { q: string; a: string }) {
 }
 
 export default function KateringPage() {
+  const { format } = useCurrency();
+  const { showToast } = useToast();
+
   const [form, setForm] = useState<InquiryData>({ nama: '', tanggalAcara: '', jumlahPorsi: 0, catatan: '' });
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [formError, setFormError] = useState('');
+
+  // Selected package detail modal state
+  const [selectedPackage, setSelectedPackage] = useState<CateringPackage | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -127,7 +79,7 @@ export default function KateringPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.nama || !form.tanggalAcara || !form.jumlahPorsi) {
-      setFormError('Mohon lengkapi semua kolom yang diperlukan.');
+      setFormError('Mohon lengkapi seluruh kolom wajib yang bertanda bintang (*).');
       return;
     }
     setFormError('');
@@ -135,6 +87,18 @@ export default function KateringPage() {
     await sendInquiry(form);
     setSubmitting(false);
     setSubmitted(true);
+    showToast('Formulir konsultasi Anda berhasil terkirim!', 'success');
+  };
+
+  const handleSelectPackageForInquiry = (pkg: CateringPackage) => {
+    setForm((prev) => ({
+      ...prev,
+      jumlahPorsi: prev.jumlahPorsi || pkg.minOrder,
+      catatan: `Tertarik dengan ${pkg.name}. ${prev.catatan || ''}`.trim(),
+    }));
+    // Smooth scroll down to inquiry section
+    document.getElementById('inquiry-section')?.scrollIntoView({ behavior: 'smooth' });
+    showToast(`Paket "${pkg.name}" telah dipilih dalam formulir.`, 'info');
   };
 
   return (
@@ -160,82 +124,110 @@ export default function KateringPage() {
           >
             Cita Rasa Terbaik untuk Setiap Momen Istimewa
           </h1>
-          <a
-            href={`https://wa.me/${WHATSAPP_NUMBER}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="nav-label px-8 min-h-[44px] inline-flex items-center justify-center text-white transition-opacity duration-400 hover:opacity-85 focus-visible:outline-none"
-            style={{ fontSize: '14px', fontWeight: 500, letterSpacing: '0.12em', backgroundColor: 'var(--caramel)' }}
-          >
-            KONSULTASI VIA WHATSAPP
-          </a>
+          <div className="flex flex-wrap justify-center gap-4">
+            <a
+              href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Halo RiaMiranda Katering, saya ingin konsultasi kebutuhan acara.')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="nav-label px-8 min-h-[44px] inline-flex items-center justify-center gap-2 text-white transition-opacity duration-400 hover:opacity-85 focus-visible:outline-none"
+              style={{ fontSize: '13px', fontWeight: 500, letterSpacing: '0.12em', backgroundColor: 'var(--caramel)' }}
+            >
+              <MessageCircle size={16} />
+              KONSULTASI VIA WHATSAPP
+            </a>
+            <button
+              onClick={() => document.getElementById('inquiry-section')?.scrollIntoView({ behavior: 'smooth' })}
+              className="nav-label px-8 min-h-[44px] inline-flex items-center justify-center border border-white text-white hover:bg-white hover:text-charcoal transition-colors focus-visible:outline-none"
+              style={{ fontSize: '13px', letterSpacing: '0.12em' }}
+            >
+              ISI FORM KONSULTASI
+            </button>
+          </div>
         </div>
       </section>
 
       {/* Intro */}
       <section className="max-w-screen-lg mx-auto px-5 sm:px-8 py-16 md:py-24 text-center">
         <p
-          className="font-light leading-relaxed max-w-2xl mx-auto"
-          style={{ color: 'var(--ink)', fontFamily: 'Jost', fontSize: '16px', lineHeight: 2 }}
+          className="font-light leading-relaxed max-w-2xl mx-auto text-ink"
+          style={{ fontFamily: 'Jost', fontSize: '16px', lineHeight: 2 }}
         >
           RiaMiranda Katering hadir untuk merayakan momen penting Anda bersama orang-orang tercinta.
-          Dengan resep autentik dan bahan-bahan segar pilihan, kami menghadirkan cita rasa rumahan yang hangat dalam skala profesional.
-          Dari pengajian sederhana hingga pernikahan besar, setiap hidangan kami racik dengan sepenuh hati.
+          Dengan resep warisan nusantara dan bahan-bahan segar pilihan bersertifikasi halal, kami menghadirkan kehangatan sajian dalam skala perjamuan profesional.
         </p>
       </section>
 
-      {/* Paket Unggulan */}
-      <section className="border-t" style={{ borderColor: 'var(--line)' }}>
+      {/* Paket Unggulan — Clicking opens detail modal */}
+      <section className="border-t border-line">
         <div className="max-w-screen-xl mx-auto px-5 sm:px-8 lg:px-12 py-16 md:py-24">
-          <p className="nav-label text-center mb-16" style={{ fontSize: '10px', color: 'var(--muted)', letterSpacing: '0.2em' }}>
-            PAKET UNGGULAN
+          <p className="nav-label text-center mb-16 text-muted" style={{ fontSize: '10px', letterSpacing: '0.2em' }}>
+            PAKET UNGGULAN PERJAMUAN
           </p>
-          <div className="space-y-0">
+
+          <div className="space-y-8">
             {packages.map((pkg, i) => (
               <div
                 key={pkg.name}
-                className="grid grid-cols-1 md:grid-cols-2 border-b"
-                style={{ borderColor: 'var(--line)' }}
+                onClick={() => setSelectedPackage(pkg)}
+                className="grid grid-cols-1 md:grid-cols-2 border border-line bg-bg hover:border-charcoal transition-colors cursor-pointer group shadow-xs"
               >
                 <div
-                  className={`py-12 px-6 sm:px-10 flex flex-col justify-center border-b md:border-b-0 md:border-r ${i % 2 !== 0 ? 'md:order-2' : ''}`}
-                  style={{ borderColor: 'var(--line)' }}
+                  className={`py-10 px-6 sm:px-10 flex flex-col justify-between border-b md:border-b-0 md:border-r border-line ${i % 2 !== 0 ? 'md:order-2' : ''}`}
                 >
-                  <p className="nav-label mb-4" style={{ fontSize: '10px', color: 'var(--caramel-deep)', letterSpacing: '0.2em' }}>
-                    PAKET {String(i + 1).padStart(2, '0')}
-                  </p>
-                  <h3 className="font-cormorant font-light mb-3" style={{ fontSize: 'clamp(1.5rem, 2.5vw, 2.2rem)', color: 'var(--charcoal)' }}>
-                    {pkg.name}
-                  </h3>
-                  <p className="font-light mb-6 leading-relaxed" style={{ color: 'var(--muted)', fontFamily: 'Jost', fontSize: '14px', lineHeight: 1.8 }}>
-                    {pkg.description}
-                  </p>
-                  <div className="mb-6">
-                    <span className="font-light" style={{ color: 'var(--caramel-deep)', fontFamily: 'Jost', fontSize: '20px' }}>
-                      mulai dari {formatRupiah(pkg.price)}
-                    </span>
-                    <span className="font-light" style={{ color: 'var(--muted)', fontFamily: 'Jost', fontSize: '13px' }}>
-                      /{pkg.unit}
-                    </span>
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <p className="nav-label text-caramel-deep text-[10px]" style={{ letterSpacing: '0.18em' }}>
+                        PAKET {String(i + 1).padStart(2, '0')}
+                      </p>
+                      <span className="flex items-center gap-1 nav-label text-muted text-[10px] group-hover:text-charcoal transition-colors">
+                        <Eye size={13} />
+                        LIHAT DETAIL
+                      </span>
+                    </div>
+
+                    <h3 className="font-cormorant font-light mb-3 text-charcoal group-hover:text-caramel-deep transition-colors" style={{ fontSize: 'clamp(1.5rem, 2.5vw, 2.2rem)' }}>
+                      {pkg.name}
+                    </h3>
+                    <p className="font-light mb-6 leading-relaxed text-muted text-sm" style={{ fontFamily: 'Jost', lineHeight: 1.8 }}>
+                      {pkg.description}
+                    </p>
                   </div>
-                  <p className="nav-label" style={{ fontSize: '9px', color: 'var(--muted)', letterSpacing: '0.12em' }}>
-                    Min. {pkg.minOrder} {pkg.minUnit}
-                  </p>
+
+                  <div>
+                    <div className="mb-2">
+                      <span className="font-light text-caramel-deep text-2xl" style={{ fontFamily: 'Jost' }}>
+                        mulai {format(pkg.price)}
+                      </span>
+                      <span className="font-light text-muted text-sm" style={{ fontFamily: 'Jost' }}>
+                        /{pkg.unit}
+                      </span>
+                    </div>
+                    <p className="nav-label text-muted text-[9px]" style={{ letterSpacing: '0.12em' }}>
+                      Minimal Pemesanan: {pkg.minOrder} {pkg.minUnit}
+                    </p>
+                  </div>
                 </div>
-                <div className={`py-12 px-6 sm:px-10 flex flex-col justify-center ${i % 2 !== 0 ? 'md:order-1' : ''}`} style={{ backgroundColor: 'var(--surface)' }}>
-                  <p className="nav-label mb-5" style={{ fontSize: '10px', color: 'var(--charcoal)', letterSpacing: '0.16em' }}>
-                    SUDAH TERMASUK
+
+                <div className={`py-10 px-6 sm:px-10 flex flex-col justify-center bg-surface ${i % 2 !== 0 ? 'md:order-1' : ''}`}>
+                  <p className="nav-label mb-5 text-charcoal text-[10px]" style={{ letterSpacing: '0.16em' }}>
+                    MENU & FASILITAS TERMASUK
                   </p>
                   <ul className="space-y-3">
                     {pkg.inclusions.map((item) => (
                       <li key={item} className="flex items-start gap-3">
                         <span style={{ color: 'var(--caramel-deep)', marginTop: 2, flexShrink: 0 }}>—</span>
-                        <span className="font-light" style={{ color: 'var(--ink)', fontFamily: 'Jost', fontSize: '14px' }}>
+                        <span className="font-light text-ink text-sm" style={{ fontFamily: 'Jost', fontSize: '14px' }}>
                           {item}
                         </span>
                       </li>
                     ))}
                   </ul>
+
+                  <div className="pt-6 mt-6 border-t border-line flex items-center justify-between">
+                    <span className="nav-label text-[10px] text-caramel-deep group-hover:underline">
+                      KLIK UNTUK KONSULTASI PAKET INI →
+                    </span>
+                  </div>
                 </div>
               </div>
             ))}
@@ -245,14 +237,14 @@ export default function KateringPage() {
 
       {/* Menu Gallery — masonry-style */}
       <section className="max-w-screen-xl mx-auto px-5 sm:px-8 lg:px-12 py-16 md:py-24">
-        <p className="nav-label text-center mb-10" style={{ fontSize: '10px', color: 'var(--muted)', letterSpacing: '0.2em' }}>
-          GALERI HIDANGAN
+        <p className="nav-label text-center mb-10 text-muted" style={{ fontSize: '10px', letterSpacing: '0.2em' }}>
+          GALERI HIDANGAN PERJAMUAN
         </p>
         <div className="columns-2 md:columns-3 gap-4 space-y-0">
           {menuItems.map((item) => (
             <div key={item.name} className="break-inside-avoid mb-4">
               <Placeholder ratio={item.ratio} label={item.name} className="w-full" />
-              <p className="nav-label mt-2 text-center" style={{ fontSize: '10px', color: 'var(--muted)', letterSpacing: '0.14em' }}>
+              <p className="nav-label mt-2 text-center text-muted" style={{ fontSize: '10px', letterSpacing: '0.14em' }}>
                 {item.name.toUpperCase()}
               </p>
             </div>
@@ -260,73 +252,29 @@ export default function KateringPage() {
         </div>
       </section>
 
-      {/* Cara Pemesanan */}
-      <section className="border-t border-b" style={{ borderColor: 'var(--line)' }}>
-        <div className="max-w-screen-xl mx-auto px-5 sm:px-8 lg:px-12 py-16 md:py-24">
-          <p className="nav-label text-center mb-14" style={{ fontSize: '10px', color: 'var(--muted)', letterSpacing: '0.2em' }}>
-            CARA PEMESANAN
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-0 lg:divide-x" style={{ '--tw-divide-opacity': 1 } as React.CSSProperties}>
-            {steps.map((step) => (
-              <div key={step.num} className="px-4 lg:px-8 py-4 text-center" style={{ borderColor: 'var(--line)' }}>
-                <p className="font-cormorant font-light mb-4" style={{ fontSize: '3rem', color: 'var(--caramel-deep)' }}>
-                  {step.num}
-                </p>
-                <p className="nav-label mb-3" style={{ fontSize: '11px', color: 'var(--charcoal)', letterSpacing: '0.14em' }}>
-                  {step.title.toUpperCase()}
-                </p>
-                <p className="font-light leading-relaxed" style={{ color: 'var(--muted)', fontFamily: 'Jost', fontSize: '13px', lineHeight: 1.75 }}>
-                  {step.text}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Acara yang Dilayani */}
-      <section className="max-w-screen-lg mx-auto px-5 sm:px-8 py-16 md:py-24">
-        <p className="nav-label text-center mb-12" style={{ fontSize: '10px', color: 'var(--muted)', letterSpacing: '0.2em' }}>
-          ACARA YANG KAMI LAYANI
-        </p>
-        <div className="border-t" style={{ borderColor: 'var(--line)' }}>
-          {events.map((event) => (
-            <div
-              key={event}
-              className="flex items-center justify-center py-5 border-b"
-              style={{ borderColor: 'var(--line)' }}
-            >
-              <span className="font-cormorant font-light" style={{ fontSize: 'clamp(1.2rem, 2.5vw, 1.8rem)', color: 'var(--charcoal)', letterSpacing: '0.04em' }}>
-                {event}
-              </span>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* Testimoni */}
-      <section style={{ backgroundColor: 'var(--surface)' }}>
+      <section className="bg-surface border-t border-b border-line">
         <div className="max-w-screen-xl mx-auto px-5 sm:px-8 lg:px-12 py-16 md:py-24">
-          <p className="nav-label text-center mb-12" style={{ fontSize: '10px', color: 'var(--muted)', letterSpacing: '0.2em' }}>
+          <p className="nav-label text-center mb-12 text-muted" style={{ fontSize: '10px', letterSpacing: '0.2em' }}>
             KATA PELANGGAN KAMI
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimoni.map((t, i) => (
-              <div key={i} className="flex flex-col bg-bg p-8" style={{ backgroundColor: 'var(--bg)' }}>
+              <div key={i} className="flex flex-col bg-bg p-8 border border-line">
                 <div className="flex gap-0.5 mb-4">
                   {[1, 2, 3, 4, 5].map((s) => (
                     <Star key={s} size={12} fill="var(--caramel)" color="var(--caramel)" strokeWidth={0} />
                   ))}
                 </div>
                 <blockquote
-                  className="font-cormorant font-light mb-6 flex-1 leading-relaxed"
-                  style={{ fontSize: 'clamp(1rem, 2vw, 1.25rem)', color: 'var(--charcoal)', fontStyle: 'italic' }}
+                  className="font-cormorant font-light mb-6 flex-1 leading-relaxed text-charcoal italic"
+                  style={{ fontSize: 'clamp(1rem, 2vw, 1.25rem)' }}
                 >
                   "{t.quote}"
                 </blockquote>
                 <div>
-                  <p className="nav-label" style={{ fontSize: '10px', color: 'var(--charcoal)', letterSpacing: '0.14em' }}>{t.name}</p>
-                  <p className="text-xs font-light" style={{ color: 'var(--muted)', fontFamily: 'Jost', fontSize: '11px' }}>
+                  <p className="nav-label text-charcoal text-[10px]" style={{ letterSpacing: '0.14em' }}>{t.name}</p>
+                  <p className="text-xs font-light text-muted mt-0.5" style={{ fontFamily: 'Jost', fontSize: '11px' }}>
                     {t.city} · {t.event}
                   </p>
                 </div>
@@ -336,42 +284,51 @@ export default function KateringPage() {
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* FAQ Accordion */}
       <section className="max-w-screen-lg mx-auto px-5 sm:px-8 py-16 md:py-24">
-        <p className="nav-label text-center mb-12" style={{ fontSize: '10px', color: 'var(--muted)', letterSpacing: '0.2em' }}>
-          PERTANYAAN UMUM
+        <p className="nav-label text-center mb-12 text-muted" style={{ fontSize: '10px', letterSpacing: '0.2em' }}>
+          PERTANYAAN UMUM SEPUTAR KATERING
         </p>
-        <div className="border-t" style={{ borderColor: 'var(--line)' }}>
+        <div className="border-t border-line">
           {faqs.map((faq) => (
             <FaqItem key={faq.q} q={faq.q} a={faq.a} />
           ))}
         </div>
       </section>
 
-      {/* Inquiry Form with safe area padding so floating elements never cover */}
-      <section className="border-t" style={{ borderColor: 'var(--line)', backgroundColor: 'var(--surface)' }}>
+      {/* Inquiry Form */}
+      <section id="inquiry-section" className="border-t border-line bg-surface">
         <div className="max-w-screen-md mx-auto px-5 sm:px-8 pt-16 md:pt-24 pb-28 md:pb-36">
-          <p className="nav-label text-center mb-4" style={{ fontSize: '10px', color: 'var(--caramel-deep)', letterSpacing: '0.2em' }}>
+          <p className="nav-label text-center mb-4 text-caramel-deep" style={{ fontSize: '10px', letterSpacing: '0.2em' }}>
             FORMULIR KONSULTASI
           </p>
-          <h2 className="font-cormorant font-light text-center mb-12" style={{ fontSize: 'clamp(1.6rem, 3vw, 2.5rem)', color: 'var(--charcoal)' }}>
-            Ceritakan Kebutuhan Anda
+          <h2 className="font-cormorant font-light text-center mb-12 text-charcoal" style={{ fontSize: 'clamp(1.6rem, 3vw, 2.5rem)' }}>
+            Ceritakan Kebutuhan Acara Anda
           </h2>
 
           {submitted ? (
-            <div className="text-center py-12">
-              <p className="font-cormorant font-light text-2xl mb-4" style={{ color: 'var(--caramel-deep)' }}>
-                Terima kasih!
+            <div className="text-center py-12 border border-line bg-bg p-8">
+              <p className="font-cormorant font-light text-2xl mb-4 text-caramel-deep">
+                Terima Kasih, {form.nama}!
               </p>
-              <p className="font-light" style={{ color: 'var(--ink)', fontFamily: 'Jost', fontSize: '15px' }}>
-                Pesan Anda telah terkirim. Tim kami akan menghubungi Anda segera.
+              <p className="font-light text-ink text-sm mb-6" style={{ fontFamily: 'Jost', fontSize: '15px' }}>
+                Formulir konsultasi Anda telah terkirim ke tim jamuan kami. Kami akan menghubungi Anda untuk rincian penawaran dan jadwal uji rasa (*food tasting*).
               </p>
+              <button
+                onClick={() => {
+                  setSubmitted(false);
+                  setForm({ nama: '', tanggalAcara: '', jumlahPorsi: 0, catatan: '' });
+                }}
+                className="nav-label px-6 py-2.5 border border-charcoal text-charcoal hover:bg-surface text-xs"
+              >
+                KIRIM PERMINTAAN LAIN
+              </button>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-8">
+            <form onSubmit={handleSubmit} className="space-y-8 border border-line bg-bg p-6 sm:p-10 shadow-xs">
               <div>
-                <label className="nav-label block mb-2" style={{ fontSize: '9px', color: 'var(--muted)', letterSpacing: '0.14em' }}>
-                  NAMA LENGKAP *
+                <label className="nav-label block mb-2 text-muted text-[9px]" style={{ letterSpacing: '0.14em' }}>
+                  NAMA LENGKAP PENYELENGGARA *
                 </label>
                 <input
                   type="text"
@@ -384,52 +341,54 @@ export default function KateringPage() {
                 />
               </div>
 
-              <div>
-                <label className="nav-label block mb-2" style={{ fontSize: '9px', color: 'var(--muted)', letterSpacing: '0.14em' }}>
-                  TANGGAL ACARA *
-                </label>
-                <input
-                  type="date"
-                  name="tanggalAcara"
-                  value={form.tanggalAcara}
-                  onChange={handleChange}
-                  className="input-underline min-h-[44px]"
-                  required
-                />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <label className="nav-label block mb-2 text-muted text-[9px]" style={{ letterSpacing: '0.14em' }}>
+                    TANGGAL PELAKSANAAN ACARA *
+                  </label>
+                  <input
+                    type="date"
+                    name="tanggalAcara"
+                    value={form.tanggalAcara}
+                    onChange={handleChange}
+                    className="input-underline min-h-[44px]"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="nav-label block mb-2 text-muted text-[9px]" style={{ letterSpacing: '0.14em' }}>
+                    ESTIMASI JUMLAH PORSI / TAMU *
+                  </label>
+                  <input
+                    type="number"
+                    name="jumlahPorsi"
+                    value={form.jumlahPorsi || ''}
+                    onChange={handleChange}
+                    placeholder="Contoh: 150"
+                    min={1}
+                    className="input-underline min-h-[44px]"
+                    required
+                  />
+                </div>
               </div>
 
               <div>
-                <label className="nav-label block mb-2" style={{ fontSize: '9px', color: 'var(--muted)', letterSpacing: '0.14em' }}>
-                  JUMLAH PORSI *
-                </label>
-                <input
-                  type="number"
-                  name="jumlahPorsi"
-                  value={form.jumlahPorsi || ''}
-                  onChange={handleChange}
-                  placeholder="Estimasi jumlah porsi"
-                  min={1}
-                  className="input-underline min-h-[44px]"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="nav-label block mb-2" style={{ fontSize: '9px', color: 'var(--muted)', letterSpacing: '0.14em' }}>
-                  CATATAN TAMBAHAN
+                <label className="nav-label block mb-2 text-muted text-[9px]" style={{ letterSpacing: '0.14em' }}>
+                  CATATAN TAMBAHAN ATAU MENU PILIHAN
                 </label>
                 <textarea
                   name="catatan"
                   value={form.catatan}
                   onChange={handleChange}
-                  placeholder="Ceritakan jenis acara, preferensi menu, atau pertanyaan lainnya..."
+                  placeholder="Ceritakan jenis acara (resepsi, akad, aqiqah, rapat kantor), preferensi hidangan, atau lokasi acara..."
                   rows={4}
                   className="input-underline resize-none"
                 />
               </div>
 
               {formError && (
-                <p className="text-sm font-light" style={{ color: 'var(--occupied)', fontFamily: 'Jost' }}>
+                <p className="text-sm font-light text-occupied" style={{ fontFamily: 'Jost' }}>
                   {formError}
                 </p>
               )}
@@ -438,14 +397,22 @@ export default function KateringPage() {
                 type="submit"
                 disabled={submitting}
                 className="nav-label w-full min-h-[44px] py-4 text-white transition-opacity duration-400 hover:opacity-85 disabled:opacity-50 focus-visible:outline-none"
-                style={{ fontSize: '14px', fontWeight: 500, letterSpacing: '0.14em', backgroundColor: 'var(--caramel)' }}
+                style={{ fontSize: '12px', fontWeight: 500, letterSpacing: '0.16em', backgroundColor: 'var(--caramel)' }}
               >
-                {submitting ? 'MENGIRIM...' : 'KIRIM PESAN'}
+                {submitting ? 'MENGIRIMKAN KONSULTASI...' : 'KIRIM FORMULIR KONSULTASI'}
               </button>
             </form>
           )}
         </div>
       </section>
+
+      {/* Package Detail Modal */}
+      <PackageDetailModal
+        isOpen={Boolean(selectedPackage)}
+        onClose={() => setSelectedPackage(null)}
+        pkg={selectedPackage}
+        onSelectInquiry={handleSelectPackageForInquiry}
+      />
     </>
   );
 }

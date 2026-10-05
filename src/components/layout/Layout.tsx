@@ -1,8 +1,7 @@
 // ============================================================
 // Layout — wraps every page
 // Single cohesive fixed top bar (z-40)
-// Hero pages start behind transparent header (pt-[84px])
-// Non-hero pages start below solid header (pt-[144px] lg:pt-[156px])
+// Mounts all drawers, modals, panels, and toast container
 // ============================================================
 import React from 'react';
 import { useLocation } from 'react-router-dom';
@@ -12,6 +11,12 @@ import Header from './Header';
 import Footer from './Footer';
 import FloatingElements from './FloatingElements';
 import CartDrawer from '../busana/CartDrawer';
+import WishlistDrawer from '../drawers/WishlistDrawer';
+import RewardsDrawer from '../drawers/RewardsDrawer';
+import ChatPanel from '../chat/ChatPanel';
+import SearchOverlay from '../modals/SearchOverlay';
+import AuthModal from '../modals/AuthModal';
+import ToastContainer from '../ui/ToastContainer';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -28,6 +33,9 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <div className="min-h-screen flex flex-col bg-bg text-ink">
+      {/* Toast Notification Container (z-70) */}
+      <ToastContainer />
+
       {/* Unified fixed top navigation (z-40 per design token scale) */}
       <div className="fixed top-0 left-0 right-0 z-[40]">
         <BrandTabStrip />
@@ -49,7 +57,14 @@ export default function Layout({ children }: LayoutProps) {
 
       <Footer />
       <FloatingElements />
+
+      {/* Drawers & Modals (z-60 to z-70) */}
       <CartDrawer />
+      <WishlistDrawer />
+      <RewardsDrawer />
+      <ChatPanel />
+      <SearchOverlay />
+      <AuthModal />
     </div>
   );
 }
