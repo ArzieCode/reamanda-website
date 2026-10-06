@@ -8,7 +8,7 @@ import { packages, faqs, menuItems, type CateringPackage } from '../data/katerin
 import { sendInquiry, type InquiryData, WHATSAPP_NUMBER } from '../services/katering';
 import { useCurrency } from '../context/CurrencyContext';
 import { useToast } from '../context/ToastContext';
-import { ChevronDown, Star, MessageCircle, Utensils, Eye } from 'lucide-react';
+import { ChevronDown, Star, MessageCircle, Eye } from 'lucide-react';
 import PackageDetailModal from '../components/modals/PackageDetailModal';
 
 const testimoni = [
@@ -103,7 +103,7 @@ export default function KateringPage() {
 
   return (
     <>
-      {/* Hero with flat charcoal overlay (0.45) and dark placeholder */}
+      {/* Hero with editorial dark gradient overlay */}
       <section
         className="relative w-full overflow-hidden flex items-center justify-center"
         style={{ minHeight: 'clamp(520px, 80svh, 860px)' }}
@@ -112,15 +112,17 @@ export default function KateringPage() {
           <Placeholder ratio="16/9" dark={true} label="Katering RiaMiranda" className="w-full h-full object-cover" />
         </div>
         <div
-          className="absolute inset-0 flex flex-col items-center justify-center text-center px-6"
-          style={{ backgroundColor: 'rgba(79, 77, 74, 0.45)' }}
+          className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 transition-all duration-500"
+          style={{
+            background: 'var(--color-hero-overlay)',
+          }}
         >
-          <p className="nav-label text-white mb-4 select-none" style={{ fontSize: '11px', letterSpacing: '0.2em' }}>
+          <p className="nav-label mb-4 select-none" style={{ fontSize: '11px', letterSpacing: '0.24em', color: 'var(--caramel-deep)' }}>
             KATERING RIAMIRANDA
           </p>
           <h1
-            className="font-cormorant font-light text-white mb-8 max-w-3xl leading-snug"
-            style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', letterSpacing: '0.04em' }}
+            className="font-cormorant font-light mb-8 max-w-3xl leading-snug drop-shadow-sm text-[#F7F4EE]"
+            style={{ fontSize: 'clamp(2.2rem, 5.2vw, 4.25rem)', letterSpacing: '0.04em' }}
           >
             Cita Rasa Terbaik untuk Setiap Momen Istimewa
           </h1>
@@ -129,16 +131,16 @@ export default function KateringPage() {
               href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Halo RiaMiranda Katering, saya ingin konsultasi kebutuhan acara.')}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="nav-label px-8 min-h-[44px] inline-flex items-center justify-center gap-2 text-white transition-opacity duration-400 hover:opacity-85 focus-visible:outline-none"
-              style={{ fontSize: '13px', fontWeight: 500, letterSpacing: '0.12em', backgroundColor: 'var(--caramel)' }}
+              className="btn-primary gap-2"
+              style={{ fontSize: '11px', letterSpacing: '0.14em' }}
             >
               <MessageCircle size={16} />
               KONSULTASI VIA WHATSAPP
             </a>
             <button
               onClick={() => document.getElementById('inquiry-section')?.scrollIntoView({ behavior: 'smooth' })}
-              className="nav-label px-8 min-h-[44px] inline-flex items-center justify-center border border-white text-white hover:bg-white hover:text-charcoal transition-colors focus-visible:outline-none"
-              style={{ fontSize: '13px', letterSpacing: '0.12em' }}
+              className="btn-hero-secondary"
+              style={{ fontSize: '11px', letterSpacing: '0.14em' }}
             >
               ISI FORM KONSULTASI
             </button>

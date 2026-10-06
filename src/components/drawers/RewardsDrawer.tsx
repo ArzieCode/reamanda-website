@@ -3,7 +3,7 @@
 // Points balance, tier progress, earn rules, redeem list
 // ============================================================
 import { useState } from 'react';
-import { X, Award, Check, ChevronRight } from 'lucide-react';
+import { X, Award } from 'lucide-react';
 import { useRewards } from '../../context/RewardsContext';
 import { formatRupiah } from '../../utils/format';
 

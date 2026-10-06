@@ -1,6 +1,12 @@
 // ============================================================
 // Types — Auth & User Account
 // ============================================================
+export interface UserAddress {
+  street: string;
+  city: string;
+  postalCode: string;
+}
+
 export interface User {
   id: string;
   name: string;
@@ -9,6 +15,7 @@ export interface User {
   role: 'customer' | 'admin';
   points: number;
   tier: 'Silver' | 'Gold' | 'Platinum';
+  address?: UserAddress;
   createdAt: string;
 }
 
@@ -22,4 +29,5 @@ export interface RegisterData {
   email: string;
   phone: string;
   password?: string;
+  address?: UserAddress;
 }

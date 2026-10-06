@@ -508,11 +508,10 @@ export default function CheckoutPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full nav-label min-h-[44px] py-4 text-white hover:opacity-85 disabled:opacity-50 transition-opacity focus-visible:outline-none"
+                className="btn-primary w-full py-4 text-white hover:opacity-90 disabled:opacity-50"
                 style={{
                   fontSize: '11px',
                   letterSpacing: '0.18em',
-                  backgroundColor: 'var(--charcoal)',
                 }}
               >
                 {loading ? 'MEMPROSES PESANAN...' : 'BUAT PESANAN SEKARANG'}

@@ -1,5 +1,6 @@
 /* ============================================================
    RIAMIRANDA — Global Base Styles
+   Editorial, quiet, strictly tokenized
    ============================================================ */
 @import './tokens.css';
 
@@ -9,81 +10,220 @@
 
 @layer base {
   html {
-    background-color: var(--bg);
-    color: var(--ink);
+    background-color: var(--bg-page);
+    color: var(--text-on-light);
     scroll-behavior: smooth;
+    scroll-padding-top: var(--chrome-height);
   }
 
   body {
     font-family: 'Jost', sans-serif;
     font-weight: 300;
-    background-color: var(--bg);
-    color: var(--ink);
+    background-color: var(--bg-page);
+    color: var(--text-on-light);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Cormorant Garamond', serif;
     font-weight: 300;
-    letter-spacing: 0.04em;
-    color: var(--charcoal);
+    color: var(--color-text-headings);
+    letter-spacing: 0.02em;
   }
 
-  /* Thin line icons — set stroke-width on svg */
+  h1 {
+    font-size: clamp(2.25rem, 4.5vw, 4rem);
+    line-height: 1.1;
+  }
+
+  h2 {
+    font-size: clamp(1.75rem, 3vw, 2.75rem);
+    line-height: 1.15;
+  }
+
+  h3 {
+    font-size: 1.375rem;
+    line-height: 1.25;
+  }
+
+  p {
+    line-height: 1.65;
+  }
+
+  /* Thin line icons */
   svg {
     stroke-width: 1.25;
   }
 
   /* Visible focus states for accessibility */
   :focus-visible {
-    outline: 2px solid var(--caramel);
+    outline: 2px solid var(--focus);
     outline-offset: 2px;
   }
 
-  /* Underline-only inputs (used in forms) */
+  /* Form inputs — 48px height minimum */
+  input, select, textarea {
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--text-on-light);
+  }
+
   .input-underline {
     background: transparent;
     border: none;
     border-bottom: 1px solid var(--line);
     border-radius: 0;
-    padding: 0.5rem 0;
+    padding: 0.75rem 0;
+    min-height: 48px;
     width: 100%;
-    font-family: 'Jost', sans-serif;
-    font-weight: 300;
-    color: var(--ink);
-    transition: border-color 400ms ease;
+    color: var(--text-on-light);
+    transition: border-color 300ms ease;
   }
 
   .input-underline:focus {
     outline: none;
-    border-bottom-color: var(--caramel);
+    border-bottom-color: var(--color-accent);
   }
 
   .input-underline::placeholder {
-    color: var(--muted);
-    font-size: 0.875rem;
+    color: var(--muted-aa);
+    font-size: 13px;
+    font-weight: 300;
+  }
+}
+
+@layer components {
+  /* Editorial luxury primary and secondary buttons */
+  .btn-primary {
+    background-color: var(--color-accent);
+    color: #ffffff;
+    font-family: 'Jost', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    min-height: 44px;
+    padding: 0 1.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 300ms ease;
+    border: 1px solid transparent;
+  }
+  .btn-primary:hover {
+    opacity: 0.90;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(234, 51, 183, 0.28);
+  }
+
+  .btn-secondary {
+    background-color: transparent;
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border-strong);
+    font-family: 'Jost', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    min-height: 44px;
+    padding: 0 1.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 300ms ease;
+  }
+  .btn-secondary:hover {
+    background-color: var(--color-text-primary);
+    color: var(--color-bg-body);
+  }
+
+  /* Specific hero button on dark photographic overlay in BOTH modes */
+  .btn-hero-secondary {
+    background-color: transparent;
+    color: #F7F4EE;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    min-height: 44px;
+    padding: 0 1.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 300ms ease;
+  }
+  .btn-hero-secondary:hover {
+    background-color: #F7F4EE;
+    color: #1F1E1C;
+    border-color: #F7F4EE;
+  }
+
+  /* Editorial Card */
+  .editorial-card {
+    background-color: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    transition: all 300ms ease;
+  }
+  .editorial-card:hover {
+    border-color: var(--color-border-strong);
+    background-color: var(--color-bg-elevated);
   }
 }
 
 @layer utilities {
-  /* Fade-in on scroll utility */
-  .fade-in {
-    opacity: 0;
-    transform: translateY(16px);
-    transition: opacity 600ms ease, transform 600ms ease;
+  /* Site standard container: max-width 1280px with responsive padding */
+  .site-container {
+    width: 100%;
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 20px;
+    padding-right: 20px;
   }
-  .fade-in.visible {
-    opacity: 1;
-    transform: translateY(0);
+
+  @media (min-width: 640px) {
+    .site-container {
+      padding-left: 32px;
+      padding-right: 32px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .site-container {
+      padding-left: 48px;
+      padding-right: 48px;
+    }
   }
 
   /* Nav label style */
   .nav-label {
     font-family: 'Jost', sans-serif;
     font-size: 12px;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    font-weight: 400;
+  }
+
+  /* Hide scrollbars while maintaining functionality */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

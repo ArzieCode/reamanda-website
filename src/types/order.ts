@@ -4,9 +4,11 @@
 import type { CartItem } from './busana';
 
 export interface ShippingAddress {
-  fullName: string;
+  fullName?: string;
+  name?: string;
   phone: string;
-  address: string;
+  address?: string;
+  street?: string;
   city: string;
   postalCode: string;
   notes?: string;
@@ -20,14 +22,29 @@ export interface CourierOption {
   estimatedDays: string;
 }
 
-export type PaymentMethodType = 'qris' | 'bca_va' | 'mandiri_va' | 'credit_card';
+export type PaymentMethodType = 'qris' | 'bca_va' | 'mandiri_va' | 'credit_card' | string;
+
+export interface OrderItem {
+  product: {
+    id: string;
+    name: string;
+    slug?: string;
+    price: number;
+    salePrice?: number;
+    images?: string[];
+  };
+  size: string;
+  color: string;
+  quantity: number;
+  price: number;
+}
 
 export interface Order {
   id: string;
   orderNumber: string;
-  userId: string;
+  userId?: string;
   date: string;
-  items: CartItem[];
+  items: Array<CartItem | OrderItem>;
   shippingAddress: ShippingAddress;
   courier: CourierOption;
   paymentMethod: PaymentMethodType;

@@ -43,7 +43,7 @@ export default function PropertiPage() {
 
   return (
     <>
-      {/* Hero with flat charcoal overlay (0.45) and dark placeholder */}
+      {/* Hero with editorial dark gradient overlay */}
       <section
         className="relative w-full overflow-hidden flex items-center justify-center"
         style={{ minHeight: 'clamp(520px, 80svh, 860px)' }}
@@ -52,15 +52,17 @@ export default function PropertiPage() {
           <Placeholder ratio="16/9" dark={true} label="Properti & Hotel" className="w-full h-full object-cover" />
         </div>
         <div
-          className="absolute inset-0 flex flex-col items-center justify-center text-center px-6"
-          style={{ backgroundColor: 'rgba(79, 77, 74, 0.45)' }}
+          className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 transition-all duration-500"
+          style={{
+            background: 'var(--color-hero-overlay)',
+          }}
         >
-          <p className="nav-label text-white mb-4 select-none" style={{ fontSize: '11px', letterSpacing: '0.2em' }}>
+          <p className="nav-label mb-4 select-none" style={{ fontSize: '11px', letterSpacing: '0.24em', color: 'var(--indigo)' }}>
             PROPERTI & HOTEL
           </p>
           <h1
-            className="font-cormorant font-light text-white max-w-3xl leading-snug"
-            style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', letterSpacing: '0.04em' }}
+            className="font-cormorant font-light max-w-3xl leading-snug drop-shadow-sm text-[#F7F4EE]"
+            style={{ fontSize: 'clamp(2.2rem, 5.2vw, 4.25rem)', letterSpacing: '0.04em' }}
           >
             Platform Lelang Properti Eksklusif
           </h1>

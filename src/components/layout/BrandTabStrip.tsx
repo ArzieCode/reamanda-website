@@ -1,5 +1,7 @@
 // ============================================================
-// Brand Tab Strip — folder-tab style, 44px high, left-aligned
+// Brand Tab Strip — 40px high, 12px uppercase, 20px side padding
+// Left-aligned to container, horizontally scrollable on mobile
+// Active: charcoal/white; Inactive: white/ink with 1px border
 // ============================================================
 import { Link, useLocation } from 'react-router-dom';
 
@@ -16,43 +18,36 @@ export default function BrandTabStrip() {
     if (pathname.startsWith('/busana')) return 'Busana';
     if (pathname.startsWith('/properti')) return 'Properti';
     if (pathname.startsWith('/katering')) return 'Katering';
-    return 'Busana'; // default on landing
+    return 'Busana'; // default
   };
 
   const activeTab = getActive();
 
   return (
     <div
-      className="w-full border-b"
-      style={{ borderColor: 'var(--line)', backgroundColor: 'var(--bg)' }}
+      className="w-full bg-bg border-b border-line"
+      style={{ height: 'var(--tab-strip-height)' }}
     >
-      <div className="max-w-screen-xl mx-auto px-5 sm:px-8 lg:px-12 flex justify-start">
-        <div className="flex items-center overflow-x-auto no-scrollbar whitespace-nowrap">
+      <div className="site-container h-full flex justify-start items-center">
+        <div className="flex items-center overflow-x-auto no-scrollbar whitespace-nowrap h-full">
           {tabs.map((tab, i) => {
             const isActive = tab.label === activeTab;
-            const isCaramel = !isActive && tab.label === 'Katering' && activeTab !== 'Katering';
 
             return (
               <Link
                 key={tab.label}
                 to={tab.path}
-                className="nav-label h-11 px-5 inline-flex items-center justify-center min-w-[44px] transition-colors duration-400 border-r"
+                className="nav-label inline-flex items-center justify-center px-5 h-full transition-colors duration-300 focus-visible:outline-none hover:text-charcoal"
                 style={{
                   fontSize: '11px',
                   letterSpacing: '0.16em',
-                  borderColor: 'var(--line)',
-                  borderLeftWidth: i === 0 ? 1 : 0,
-                  backgroundColor: isActive
-                    ? 'var(--charcoal)'
-                    : isCaramel
-                    ? 'var(--caramel)'
-                    : 'transparent',
-                  color: isActive
-                    ? '#ffffff'
-                    : isCaramel
-                    ? '#ffffff'
-                    : 'var(--muted)',
-                  fontWeight: isCaramel || isActive ? 500 : 400,
+                  backgroundColor: isActive ? 'var(--color-bg-primary-surface)' : 'transparent',
+                  color: isActive ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
+                  borderRight: '1px solid var(--line)',
+                  borderLeft: i === 0 ? '1px solid var(--line)' : 'none',
+                  borderBottom: isActive ? '2px solid var(--color-accent)' : 'none',
+                  fontWeight: isActive ? 500 : 400,
+                  minWidth: '44px',
                 }}
               >
                 {tab.label.toUpperCase()}

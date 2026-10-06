@@ -16,7 +16,7 @@ export interface Property {
   minimumIncrement: number;
   status: PropertyStatus;
   description: string;
-  specs: Record<string, string>;
+  specs: Record<string, any>;
   auctionEnd: Date;
   images: string[];
 }
@@ -24,7 +24,7 @@ export interface Property {
 export interface Bid {
   id: string;
   propertyId: string;
-  bidderName: string; // already masked: "A***d"
+  bidderName: string; // masked: "A***d"
   amount: number;
   timestamp: Date;
 }

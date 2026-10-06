@@ -247,7 +247,7 @@ export default function AkunPage() {
                     <input
                       type="tel"
                       value={profilePhone}
-                      onChange={(e) => setPhone(e.target.value)}
+                      onChange={(e) => setProfilePhone(e.target.value)}
                       className="input-underline min-h-[44px]"
                       required
                     />
@@ -379,14 +379,17 @@ export default function AkunPage() {
                       </div>
 
                       <ul className="space-y-2">
-                        {ord.items.map((item, idx) => (
-                          <li key={idx} className="flex justify-between text-xs font-light text-muted" style={{ fontFamily: 'Jost, sans-serif' }}>
-                            <span>
-                              {item.product.name} ({item.size}, {item.color}) × {item.quantity}
-                            </span>
-                            <span className="text-charcoal">{format(item.price * item.quantity)}</span>
-                          </li>
-                        ))}
+                        {ord.items.map((item, idx) => {
+                          const unitPrice = item.price ?? item.product?.salePrice ?? item.product?.price ?? 0;
+                          return (
+                            <li key={idx} className="flex justify-between text-xs font-light text-muted" style={{ fontFamily: 'Jost, sans-serif' }}>
+                              <span>
+                                {item.product.name} ({item.size}, {item.color}) × {item.quantity}
+                              </span>
+                              <span className="text-charcoal">{format(unitPrice * item.quantity)}</span>
+                            </li>
+                          );
+                        })}
                       </ul>
 
                       <div className="pt-2 text-right">

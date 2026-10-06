@@ -65,7 +65,7 @@ export default function ProdukDetailPage() {
   const [notifyEmail, setNotifyEmail] = useState('');
   const [notifySubmitted, setNotifySubmitted] = useState(false);
 
-  const { dispatch, addItem, toggleCart } = useCart();
+  const { addItem, toggleCart } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { format } = useCurrency();
   const { showToast } = useToast();

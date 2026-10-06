@@ -132,21 +132,24 @@ export default function OrderSuccessPage() {
             PRODUK YANG DIBELI
           </p>
           <ul className="divide-y divide-line">
-            {order.items.map((item, idx) => (
-              <li key={idx} className="py-3 flex items-center justify-between text-xs font-light" style={{ fontFamily: 'Jost, sans-serif' }}>
-                <div>
-                  <p className="nav-label text-charcoal" style={{ fontSize: '11px', letterSpacing: '0.08em' }}>
-                    {item.product.name}
-                  </p>
-                  <p className="text-muted text-[11px]">
-                    Ukuran: {item.size} · Warna: {item.color} · Qty: {item.quantity}
-                  </p>
-                </div>
-                <span className="text-charcoal font-medium">
-                  {format(item.price * item.quantity)}
-                </span>
-              </li>
-            ))}
+            {order.items.map((item, idx) => {
+              const unitPrice = item.price ?? item.product?.salePrice ?? item.product?.price ?? 0;
+              return (
+                <li key={idx} className="py-3 flex items-center justify-between text-xs font-light" style={{ fontFamily: 'Jost, sans-serif' }}>
+                  <div>
+                    <p className="nav-label text-charcoal" style={{ fontSize: '11px', letterSpacing: '0.08em' }}>
+                      {item.product.name}
+                    </p>
+                    <p className="text-muted text-[11px]">
+                      Ukuran: {item.size} · Warna: {item.color} · Qty: {item.quantity}
+                    </p>
+                  </div>
+                  <span className="text-charcoal font-medium">
+                    {format(unitPrice * item.quantity)}
+                  </span>
+                </li>
+              );
+            })}
           </ul>
         </div>
 

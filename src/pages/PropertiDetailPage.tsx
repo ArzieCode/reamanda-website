@@ -317,7 +317,7 @@ export default function PropertiDetailPage() {
             <div className="border-t border-line">
               <Accordion title="Fasilitas & Keunggulan">
                 <ul className="space-y-2">
-                  {property.specs.features.map((f) => (
+                  {property.specs.features?.map((f: string) => (
                     <li key={f} className="flex items-center gap-2">
                       <span className="w-1.5 h-1.5 rounded-full bg-indigo-brand inline-block" />
                       <span>{f}</span>

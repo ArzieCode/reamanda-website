@@ -62,30 +62,34 @@ export default function HeroCarousel() {
               />
             </div>
 
-            {/* Flat charcoal overlay (rgba(79,77,74,0.45)) */}
+            {/* Luxurious Editorial Dark Gradient Overlay */}
             <div
-              className="absolute inset-0 flex flex-col items-center justify-center text-center px-6"
-              style={{ backgroundColor: 'rgba(79, 77, 74, 0.45)' }}
+              className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 transition-all duration-500"
+              style={{
+                background: 'var(--color-hero-overlay)',
+              }}
             >
               <p
-                className="nav-label text-white mb-5 select-none"
-                style={{ fontSize: '11px', letterSpacing: '0.2em' }}
+                className="nav-label mb-5 select-none"
+                style={{ fontSize: '11px', letterSpacing: '0.24em', color: 'var(--caramel-deep)' }}
               >
                 {slide.eyebrow}
               </p>
               <h1
-                className="font-cormorant font-light text-white mb-8 max-w-3xl leading-snug"
-                style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', letterSpacing: '0.04em' }}
+                className="font-cormorant font-light mb-8 max-w-3xl leading-snug drop-shadow-sm text-[#F7F4EE]"
+                style={{
+                  fontSize: 'clamp(2.2rem, 5.2vw, 4.25rem)',
+                  letterSpacing: '0.04em',
+                }}
               >
                 {slide.headline}
               </h1>
               <Link
                 to={slide.path}
-                className="nav-label text-white border-b pb-1 min-h-[44px] inline-flex items-center transition-opacity duration-400 hover:opacity-75"
+                className="btn-hero-secondary"
                 style={{
                   fontSize: '11px',
-                  letterSpacing: '0.2em',
-                  borderColor: 'rgba(255, 255, 255, 0.8)',
+                  letterSpacing: '0.22em',
                 }}
               >
                 {slide.cta}
@@ -111,9 +115,9 @@ export default function HeroCarousel() {
                 className="nav-label"
                 style={{
                   fontSize: '13px',
-                  letterSpacing: '0.1em',
-                  color: isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.7)',
-                  borderBottom: isActive ? '1px solid #ffffff' : 'none',
+                  letterSpacing: '0.12em',
+                  color: isActive ? '#F7F4EE' : 'rgba(247, 244, 238, 0.55)',
+                  borderBottom: isActive ? '1px solid #F7F4EE' : 'none',
                   paddingBottom: isActive ? '2px' : '0',
                   fontWeight: isActive ? 500 : 400,
                 }}

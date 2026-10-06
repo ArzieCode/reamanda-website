@@ -1,7 +1,8 @@
 // ============================================================
 // Layout — wraps every page
-// Single cohesive fixed top bar (z-40)
-// Mounts all drawers, modals, panels, and toast container
+// Fixed top navigation stack (z-40): Tab Strip (40px) + Announcement (40px) + Header (60/72px)
+// Hero pages start beneath announcement bar (pt-[80px]), behind transparent header
+// Non-hero pages start beneath solid header (pt-[140px] min-[1100px]:pt-[152px])
 // ============================================================
 import React from 'react';
 import { useLocation } from 'react-router-dom';
@@ -32,24 +33,24 @@ export default function Layout({ children }: LayoutProps) {
     pathname === '/katering';
 
   return (
-    <div className="min-h-screen flex flex-col bg-bg text-ink">
+    <div className="min-h-screen flex flex-col bg-bg text-ink relative">
       {/* Toast Notification Container (z-70) */}
       <ToastContainer />
 
       {/* Unified fixed top navigation (z-40 per design token scale) */}
-      <div className="fixed top-0 left-0 right-0 z-[40]">
+      <div className="fixed top-0 left-0 right-0 z-40">
         <BrandTabStrip />
         <AnnouncementBar />
         <Header />
       </div>
 
       {/* Main content:
-          - Hero pages: start at 84px (beneath announcement bar, behind transparent header)
-          - Non-hero pages: start at 144px mobile / 156px desktop (beneath solid header)
+          - Hero pages: start at 80px (beneath announcement bar, behind transparent header)
+          - Non-hero pages: start at 140px mobile / 152px desktop (beneath solid header)
       */}
       <main
         className={`flex-1 ${
-          isHeroPage ? 'pt-[84px]' : 'pt-[144px] lg:pt-[156px]'
+          isHeroPage ? 'pt-[80px]' : 'pt-[140px] min-[1100px]:pt-[152px]'
         }`}
       >
         {children}

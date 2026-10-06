@@ -36,10 +36,10 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   return (
     <>
-      <article className="relative">
+      <article className="relative bg-card border border-line p-2.5 transition-all duration-300 hover:border-line-strong group">
         <Link
           to={`/busana/produk/${product.slug}`}
-          className="block group"
+          className="block"
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
         >
@@ -62,14 +62,14 @@ export default function ProductCard({ product }: ProductCardProps) {
             </div>
 
             {/* Badges (Top Left) */}
-            <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
+            <div className="absolute top-2.5 left-2.5 flex flex-col gap-1.5 z-10">
               {product.isNewArrival && (
                 <span
-                  className="nav-label px-2 py-0.5 text-white"
+                  className="nav-label px-2 py-0.5 text-white border border-white/20"
                   style={{
                     fontSize: '8px',
                     letterSpacing: '0.14em',
-                    backgroundColor: 'var(--charcoal)',
+                    backgroundColor: 'rgba(20, 19, 18, 0.85)',
                   }}
                 >
                   TERBARU
@@ -77,7 +77,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               )}
               {product.isSale && (
                 <span
-                  className="nav-label px-2 py-0.5 text-white rounded-full"
+                  className="nav-label px-2 py-0.5 text-white rounded-full font-medium"
                   style={{
                     fontSize: '8px',
                     letterSpacing: '0.14em',
@@ -93,7 +93,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             <button
               onClick={handleWishlistClick}
               aria-label={isFavorited ? `Hapus ${product.name} dari Wishlist` : `Simpan ${product.name} ke Wishlist`}
-              className="absolute top-2.5 right-2.5 z-10 w-9 h-9 rounded-full bg-bg/80 backdrop-blur-xs flex items-center justify-center text-charcoal hover:bg-bg transition-all shadow-xs focus-visible:outline-none"
+              className="absolute top-2.5 right-2.5 z-10 w-9 h-9 rounded-full bg-surface/90 backdrop-blur-xs border border-line flex items-center justify-center hover:border-line-strong transition-all shadow-xs focus-visible:outline-none"
             >
               <Heart
                 size={16}
@@ -113,11 +113,10 @@ export default function ProductCard({ product }: ProductCardProps) {
             >
               <button
                 onClick={handleQuickAddClick}
-                className="w-full nav-label py-3 text-white transition-opacity duration-400 hover:opacity-85 focus-visible:outline-none"
+                className="w-full nav-label py-3 bg-charcoal text-white font-medium hover:bg-sale hover:text-white transition-colors duration-300 focus-visible:outline-none"
                 style={{
                   fontSize: '10px',
                   letterSpacing: '0.16em',
-                  backgroundColor: 'var(--charcoal)',
                 }}
               >
                 + PILIH UKURAN & TAMBAH
@@ -126,9 +125,9 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
 
           {/* Info */}
-          <div className="mt-3 space-y-1">
+          <div className="mt-3.5 px-0.5 space-y-1">
             <p
-              className="nav-label text-charcoal truncate"
+              className="nav-label text-charcoal font-medium truncate"
               style={{ fontSize: '11px', letterSpacing: '0.14em' }}
             >
               {product.name}
@@ -137,7 +136,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               {product.isSale && product.salePrice ? (
                 <>
                   <span
-                    className="text-sm font-light"
+                    className="text-sm font-medium"
                     style={{ color: 'var(--sale)', fontFamily: 'Jost, sans-serif', fontSize: '13px' }}
                   >
                     {format(product.salePrice)}

@@ -80,8 +80,8 @@ export default function Footer() {
 
   return (
     <footer
-      className="border-t mt-16 md:mt-24"
-      style={{ borderColor: 'var(--line)', backgroundColor: 'var(--bg)' }}
+      className="border-t mt-16 md:mt-24 transition-colors duration-300"
+      style={{ borderColor: 'var(--color-border-subtle)', backgroundColor: 'var(--color-bg-footer)' }}
     >
       <div className="max-w-screen-xl mx-auto px-5 sm:px-8 lg:px-12 pt-16 md:pt-24 pb-28 md:pb-36">
         {/* Top row: wordmark + newsletter */}
@@ -90,11 +90,11 @@ export default function Footer() {
             <Link
               to="/"
               className="font-cormorant text-2xl tracking-widest uppercase font-light mb-2 block hover:opacity-80 transition-opacity"
-              style={{ color: 'var(--charcoal)', letterSpacing: '0.25em' }}
+              style={{ color: 'var(--color-text-on-dark)', letterSpacing: '0.25em' }}
             >
               RiaMiranda
             </Link>
-            <p className="text-sm font-jost font-light" style={{ color: 'var(--muted)' }}>
+            <p className="text-sm font-jost font-light" style={{ color: 'var(--color-text-secondary-on-dark)' }}>
               Jakarta, est. 2009 · Keanggunan Muslimah & Gaya Hidup Holistik
             </p>
           </div>
@@ -102,7 +102,7 @@ export default function Footer() {
           <div className="max-w-sm w-full">
             <p
               className="nav-label mb-3"
-              style={{ fontSize: '10px', color: 'var(--charcoal)', letterSpacing: '0.16em' }}
+              style={{ fontSize: '10px', color: 'var(--color-text-on-dark)', letterSpacing: '0.16em' }}
             >
               LANGGANAN BULETIN EKSKLUSIF
             </p>
@@ -112,7 +112,7 @@ export default function Footer() {
               </p>
             ) : (
               <form onSubmit={handleSubscribe} className="space-y-1">
-                <div className="flex gap-0 border-b" style={{ borderColor: 'var(--line)' }}>
+                <div className="flex gap-0 border-b" style={{ borderColor: 'var(--color-border-subtle)' }}>
                   <input
                     type="email"
                     value={email}
@@ -122,7 +122,7 @@ export default function Footer() {
                     }}
                     placeholder="Alamat email Anda"
                     className="flex-1 bg-transparent border-none outline-none text-sm font-light py-2 min-h-[44px]"
-                    style={{ color: 'var(--ink)', fontFamily: 'Jost, sans-serif', fontSize: '13px' }}
+                    style={{ color: 'var(--color-text-on-dark)', fontFamily: 'Jost, sans-serif', fontSize: '13px' }}
                     required
                   />
                   <button
@@ -150,7 +150,7 @@ export default function Footer() {
             <div key={col.title}>
               <p
                 className="nav-label mb-5"
-                style={{ fontSize: '10px', color: 'var(--charcoal)', letterSpacing: '0.16em' }}
+                style={{ fontSize: '10px', color: 'var(--color-text-on-dark)', letterSpacing: '0.16em' }}
               >
                 {col.title.toUpperCase()}
               </p>
@@ -159,8 +159,8 @@ export default function Footer() {
                   <li key={link.label}>
                     <Link
                       to={link.href}
-                      className="text-sm font-light transition-opacity duration-400 hover:opacity-60 block"
-                      style={{ color: 'var(--muted)', fontFamily: 'Jost, sans-serif', fontSize: '13px' }}
+                      className="text-sm font-light transition-colors duration-300 hover:text-[#F7F4EE] block"
+                      style={{ color: 'var(--color-text-secondary-on-dark)', fontFamily: 'Jost, sans-serif', fontSize: '13px' }}
                     >
                       {link.label}
                     </Link>
@@ -173,7 +173,7 @@ export default function Footer() {
           <div>
             <p
               className="nav-label mb-5"
-              style={{ fontSize: '10px', color: 'var(--charcoal)', letterSpacing: '0.16em' }}
+              style={{ fontSize: '10px', color: 'var(--color-text-on-dark)', letterSpacing: '0.16em' }}
             >
               IKUTI KAMI
             </p>
@@ -184,8 +184,8 @@ export default function Footer() {
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm font-light transition-opacity duration-400 hover:opacity-60 block"
-                    style={{ color: 'var(--muted)', fontFamily: 'Jost, sans-serif', fontSize: '13px' }}
+                    className="text-sm font-light transition-colors duration-300 hover:text-[#F7F4EE] block"
+                    style={{ color: 'var(--color-text-secondary-on-dark)', fontFamily: 'Jost, sans-serif', fontSize: '13px' }}
                   >
                     {link.label}
                   </a>
@@ -198,11 +198,11 @@ export default function Footer() {
         {/* Bottom: copyright + payment methods */}
         <div
           className="pt-8 border-t flex flex-col md:flex-row justify-between items-center gap-4"
-          style={{ borderColor: 'var(--line)' }}
+          style={{ borderColor: 'var(--color-border-subtle)' }}
         >
           <p
             className="text-xs font-light text-center md:text-left"
-            style={{ color: 'var(--muted)', fontFamily: 'Jost, sans-serif', letterSpacing: '0.06em' }}
+            style={{ color: 'var(--color-text-secondary-on-dark)', fontFamily: 'Jost, sans-serif', letterSpacing: '0.06em' }}
           >
             © 2024 RiaMiranda (PT Miranda Mode Indonesia). Hak cipta dilindungi undang-undang.
           </p>
@@ -214,8 +214,8 @@ export default function Footer() {
                 className="nav-label px-2.5 py-1 border"
                 style={{
                   fontSize: '9px',
-                  color: 'var(--muted)',
-                  borderColor: 'var(--line)',
+                  color: 'var(--color-text-secondary-on-dark)',
+                  borderColor: 'var(--color-border-subtle)',
                   letterSpacing: '0.1em',
                   borderRadius: 2,
                 }}

@@ -1,7 +1,7 @@
 // ============================================================
 // Floating Elements — Wishlist tab, Rewards, Chat Us
 // Standardized z-index 50, collapsed to 44px icon circles under 768px
-// Wired to global drawers and chat panel
+// Wired to global drawers and chat panel — theme-aware surfaces
 // ============================================================
 import { MessageCircle, Gift } from 'lucide-react';
 import { useWishlist } from '../../context/WishlistContext';
@@ -22,14 +22,12 @@ export default function FloatingElements() {
       >
         <button
           onClick={() => toggleWishlistDrawer(true)}
-          className="nav-label px-2.5 py-4 text-white transition-opacity duration-400 hover:opacity-85 focus-visible:outline-none flex flex-col items-center justify-center gap-2 relative shadow-md"
+          className="nav-label px-2.5 py-4 text-charcoal bg-surface border border-line border-r-0 rounded-l transition-opacity duration-400 hover:opacity-85 focus-visible:outline-none flex flex-col items-center justify-center gap-2 relative shadow-lg"
           style={{
             fontSize: '10px',
             letterSpacing: '0.18em',
             writingMode: 'vertical-rl',
             textOrientation: 'mixed',
-            backgroundColor: 'var(--charcoal)',
-            borderRadius: '4px 0 0 4px',
             width: '36px',
             boxSizing: 'border-box',
           }}
@@ -38,8 +36,8 @@ export default function FloatingElements() {
           <span>WISHLIST</span>
           {wishlistItems.length > 0 && (
             <span
-              className="w-4 h-4 rounded-full bg-caramel text-white flex items-center justify-center text-[9px] font-medium"
-              style={{ writingMode: 'horizontal-tb' }}
+              className="w-4 h-4 rounded-full text-white flex items-center justify-center text-[9px] font-semibold"
+              style={{ writingMode: 'horizontal-tb', backgroundColor: 'var(--sale)' }}
             >
               {wishlistItems.length}
             </span>
@@ -51,20 +49,17 @@ export default function FloatingElements() {
       <div className="fixed bottom-6 left-4 sm:left-6 z-[50]">
         <button
           onClick={() => toggleRewardsDrawer(true)}
-          className="flex items-center justify-center text-white rounded-full transition-opacity duration-400 hover:opacity-85 focus-visible:outline-none w-11 h-11 md:w-auto md:h-11 md:px-4 md:gap-2 shadow-md"
+          className="flex items-center justify-center text-charcoal bg-surface border border-line rounded-full transition-all duration-300 hover:opacity-90 focus-visible:outline-none w-11 h-11 md:w-auto md:h-11 md:px-4 md:gap-2 shadow-xl"
           style={{
-            backgroundColor: 'var(--caramel)',
             fontFamily: 'Jost, sans-serif',
           }}
           aria-label={`Program Hadiah (${points} poin)`}
         >
-          <Gift size={16} strokeWidth={1.25} color="#ffffff" className="flex-shrink-0" />
+          <Gift size={16} strokeWidth={1.25} color="var(--caramel-deep)" className="flex-shrink-0" />
           <span
-            className="hidden md:inline"
+            className="hidden md:inline text-xs font-medium text-charcoal"
             style={{
-              fontSize: '14px',
-              fontWeight: 500,
-              letterSpacing: '0.06em',
+              letterSpacing: '0.08em',
             }}
           >
             Hadiah ({points} Poin)
@@ -76,20 +71,17 @@ export default function FloatingElements() {
       <div className="fixed bottom-6 right-4 sm:right-6 z-[50]">
         <button
           onClick={() => toggleChat(true)}
-          className="flex items-center justify-center text-white rounded-full transition-opacity duration-400 hover:opacity-85 focus-visible:outline-none w-11 h-11 md:w-auto md:h-11 md:px-4 md:gap-2 shadow-md"
+          className="flex items-center justify-center text-charcoal bg-surface border border-line rounded-full transition-all duration-300 hover:opacity-90 focus-visible:outline-none w-11 h-11 md:w-auto md:h-11 md:px-4 md:gap-2 shadow-xl"
           style={{
-            backgroundColor: 'var(--charcoal)',
             fontFamily: 'Jost, sans-serif',
           }}
           aria-label="Buka Obrolan Layanan Konsultan"
         >
-          <MessageCircle size={16} strokeWidth={1.25} color="#ffffff" className="flex-shrink-0" />
+          <MessageCircle size={16} strokeWidth={1.25} color="var(--color-accent)" className="flex-shrink-0" />
           <span
-            className="hidden md:inline"
+            className="hidden md:inline text-xs font-normal text-charcoal"
             style={{
-              fontSize: '14px',
-              fontWeight: 400,
-              letterSpacing: '0.06em',
+              letterSpacing: '0.08em',
             }}
           >
             Tanya Kami

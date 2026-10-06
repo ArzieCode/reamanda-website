@@ -3,7 +3,7 @@
 // 14-day exchange & return terms, conditions, procedures
 // ============================================================
 import { Link } from 'react-router-dom';
-import { RefreshCw, CheckCircle, AlertCircle } from 'lucide-react';
+import { CheckCircle, AlertCircle } from 'lucide-react';
 
 export default function KebijakanPengembalianPage() {
   return (

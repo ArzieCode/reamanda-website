@@ -1,6 +1,6 @@
 // ============================================================
 // UI Component: Placeholder
-// Warm neutral placeholder div with correct aspect ratio.
+// Theme-aware neutral placeholder div with correct aspect ratio.
 // Use everywhere real photography would appear.
 // ============================================================
 import React from 'react';
@@ -26,15 +26,23 @@ export default function Placeholder({ ratio = '3/4', label, className = '', styl
   const aspectClass = ratioMap[ratio] ?? 'aspect-[3/4]';
   return (
     <div
-      className={`${aspectClass} w-full ${dark ? 'bg-surface-hero' : 'bg-surface'} flex items-center justify-center overflow-hidden ${className}`}
-      style={style}
+      className={`${aspectClass} w-full flex items-center justify-center overflow-hidden transition-colors duration-300 ${className}`}
+      style={{
+        backgroundColor: dark ? 'var(--color-bg-hero, #181715)' : 'var(--color-placeholder-bg)',
+        border: `1px solid ${dark ? 'rgba(255, 255, 255, 0.08)' : 'var(--color-placeholder-border)'}`,
+        ...style,
+      }}
       aria-label={label ?? 'Gambar'}
       role="img"
     >
       {label && (
         <span
-          className={`nav-label select-none ${dark ? 'text-white/60' : 'text-muted'}`}
-          style={{ fontSize: '10px', letterSpacing: '0.14em' }}
+          className="nav-label select-none"
+          style={{
+            fontSize: '10px',
+            letterSpacing: '0.16em',
+            color: dark ? 'rgba(245, 241, 233, 0.55)' : 'var(--color-placeholder-text)',
+          }}
         >
           {label.toUpperCase()}
         </span>

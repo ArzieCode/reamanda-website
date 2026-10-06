@@ -4,7 +4,7 @@
 // ============================================================
 import { useRewards } from '../context/RewardsContext';
 import { useAuth } from '../context/AuthContext';
-import { Award, Gift, Star, ChevronRight } from 'lucide-react';
+import { Award, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function LoyaltyPage() {

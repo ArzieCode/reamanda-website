@@ -346,11 +346,10 @@ export default function CartDrawer() {
 
             <button
               onClick={handleProceedToCheckout}
-              className="w-full flex items-center justify-center gap-2 nav-label py-4 text-white transition-opacity duration-400 hover:opacity-85 focus-visible:outline-none shadow-sm"
+              className="btn-primary w-full py-4 text-white flex items-center justify-center gap-2"
               style={{
                 fontSize: '11px',
                 letterSpacing: '0.18em',
-                backgroundColor: 'var(--charcoal)',
               }}
             >
               LANJUT KE CHECKOUT

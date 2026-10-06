@@ -18,6 +18,7 @@ export interface Product {
   material: string;
   care: string;
   description: string;
+  stock?: number;
 }
 
 export interface Collection {
@@ -32,6 +33,7 @@ export interface CartItem {
   size: string;
   color: string;
   quantity: number;
+  price?: number;
 }
 
 export interface Voucher {
@@ -40,5 +42,6 @@ export interface Voucher {
   minPurchase: number;
   expiry: string;
   discount: number;
-  isPercentage: boolean;
+  isPercentage?: boolean;
+  type?: 'percent' | 'fixed';
 }
