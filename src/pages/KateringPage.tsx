@@ -1,420 +1,490 @@
-// ============================================================
-// Katering Page (/katering)
-// Package cards open detail modal, WhatsApp CTA, Inquiry form with validation, FAQ accordion
-// ============================================================
 import React, { useState } from 'react';
-import Placeholder from '../components/ui/Placeholder';
-import { packages, faqs, menuItems, type CateringPackage } from '../data/katering';
-import { sendInquiry, type InquiryData, WHATSAPP_NUMBER } from '../services/katering';
-import { useCurrency } from '../context/CurrencyContext';
-import { useToast } from '../context/ToastContext';
-import { ChevronDown, Star, MessageCircle, Eye } from 'lucide-react';
-import PackageDetailModal from '../components/modals/PackageDetailModal';
+import { SmartImage } from '../components/ui/SmartImage';
+import { useAdmin } from '../context/AdminContext';
+import type { KateringPackageItem, KateringDishItem } from '../data/katering';
+import { KateringInquiryModal } from '../components/modals/KateringInquiryModal';
+import { Modal } from '../components/ui/Modal';
+import { BRAND } from '../config/brand';
+import { ArrowRight, Check, Edit2 } from 'lucide-react';
 
-const testimoni = [
-  {
-    quote: 'Pernikahan putri kami berjalan begitu khidmat dan seluruh tamu memuji hidangan prasmanannya. Rasa rendang dan sup kimlonya autentik.',
-    name: 'Ibu Ratna Dewi',
-    city: 'Jakarta Selatan',
-    event: 'Resepsi Pernikahan (800 porsi)',
-  },
-  {
-    quote: 'Penyajian tumpeng mini untuk syukuran kantor sangat rapi dan estetik. Kemasannya mewah, tidak mengecewakan.',
-    name: 'Bapak Hendra W.',
-    city: 'Tangerang Selatan',
-    event: 'Syukuran Kantor (120 porsi)',
-  },
-  {
-    quote: 'Pelayanan konsultan katering RiaMiranda sangat teliti dan sigap saat koordinasi di hari H. Terima kasih banyak!',
-    name: 'Sarah & Fikri',
-    city: 'Bandung',
-    event: 'Akad Nikah & Intimate Dinner',
-  },
-];
+export const KateringPage: React.FC = () => {
+  const { packages, dishes, settings, isEditMode, updatePackage, updateDish } = useAdmin();
 
-function FaqItem({ q, a }: { q: string; a: string }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="border-b border-line">
-      <button
-        onClick={() => setOpen((o) => !o)}
-        className="w-full flex items-center justify-between py-5 text-left transition-opacity duration-400 hover:opacity-75 focus-visible:outline-none"
-      >
-        <span className="font-light text-charcoal text-sm sm:text-base" style={{ fontFamily: 'Jost' }}>
-          {q}
-        </span>
-        <ChevronDown
-          size={16}
-          strokeWidth={1.25}
-          color="var(--caramel-deep)"
-          style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 300ms ease', flexShrink: 0, marginLeft: 16 }}
-        />
-      </button>
-      {open && (
-        <p className="pb-5 font-light leading-relaxed text-muted text-xs sm:text-sm" style={{ fontFamily: 'Jost', lineHeight: 1.85 }}>
-          {a}
-        </p>
-      )}
-    </div>
-  );
-}
+  const [selectedPackage, setSelectedPackage] = useState<KateringPackageItem | null>(null);
+  const [selectedDish, setSelectedDish] = useState<KateringDishItem | null>(null);
+  const [inquiryModalOpen, setInquiryModalOpen] = useState(false);
 
-export default function KateringPage() {
-  const { format } = useCurrency();
-  const { showToast } = useToast();
+  // Edit states for admin
+  const [editingPackage, setEditingPackage] = useState<KateringPackageItem | null>(null);
+  const [editingDish, setEditingDish] = useState<KateringDishItem | null>(null);
 
-  const [form, setForm] = useState<InquiryData>({ nama: '', tanggalAcara: '', jumlahPorsi: 0, catatan: '' });
-  const [submitting, setSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [formError, setFormError] = useState('');
-
-  // Selected package detail modal state
-  const [selectedPackage, setSelectedPackage] = useState<CateringPackage | null>(null);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: name === 'jumlahPorsi' ? Number(value) : value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleEditPackageSave = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.nama || !form.tanggalAcara || !form.jumlahPorsi) {
-      setFormError('Mohon lengkapi seluruh kolom wajib yang bertanda bintang (*).');
-      return;
+    if (editingPackage) {
+      updatePackage(editingPackage);
+      setEditingPackage(null);
     }
-    setFormError('');
-    setSubmitting(true);
-    await sendInquiry(form);
-    setSubmitting(false);
-    setSubmitted(true);
-    showToast('Formulir konsultasi Anda berhasil terkirim!', 'success');
   };
 
-  const handleSelectPackageForInquiry = (pkg: CateringPackage) => {
-    setForm((prev) => ({
-      ...prev,
-      jumlahPorsi: prev.jumlahPorsi || pkg.minOrder,
-      catatan: `Tertarik dengan ${pkg.name}. ${prev.catatan || ''}`.trim(),
-    }));
-    // Smooth scroll down to inquiry section
-    document.getElementById('inquiry-section')?.scrollIntoView({ behavior: 'smooth' });
-    showToast(`Paket "${pkg.name}" telah dipilih dalam formulir.`, 'info');
+  const handleEditDishSave = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (editingDish) {
+      updateDish(editingDish);
+      setEditingDish(null);
+    }
   };
+
+  const formatRupiah = (val: number) => {
+    return 'Rp ' + val.toLocaleString('id-ID');
+  };
+
+  const directWaUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
+    `Halo ${BRAND.name} Katering, saya ingin berkonsultasi mengenai paket katering perjamuan.`
+  )}`;
 
   return (
-    <>
-      {/* Hero with editorial dark gradient overlay */}
-      <section
-        className="relative w-full overflow-hidden flex items-center justify-center"
-        style={{ minHeight: 'clamp(520px, 80svh, 860px)' }}
-      >
-        <div className="absolute inset-0 w-full h-full">
-          <Placeholder ratio="16/9" dark={true} label="Katering RiaMiranda" className="w-full h-full object-cover" />
+    <div className="w-full bg-surface">
+      {/* 1. Katering Hero with Caramel-Deep Accent */}
+      <section className="relative w-full h-[65vh] min-h-[460px] max-h-[640px] bg-charcoal flex items-center overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <SmartImage
+            slot="katering-hero"
+            aspectRatio="custom"
+            className="w-full h-full object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-overlay" />
         </div>
-        <div
-          className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 transition-all duration-500"
-          style={{
-            background: 'var(--color-hero-overlay)',
-          }}
-        >
-          <p className="nav-label mb-4 select-none" style={{ fontSize: '11px', letterSpacing: '0.24em', color: 'var(--caramel-deep)' }}>
-            KATERING RIAMIRANDA
-          </p>
-          <h1
-            className="font-cormorant font-light mb-8 max-w-3xl leading-snug drop-shadow-sm text-[#F7F4EE]"
-            style={{ fontSize: 'clamp(2.2rem, 5.2vw, 4.25rem)', letterSpacing: '0.04em' }}
-          >
-            Cita Rasa Terbaik untuk Setiap Momen Istimewa
+
+        <div className="site-container relative z-10 text-white space-y-4">
+          <span className="label-editorial text-white/90 block">
+            {BRAND.name} Katering & Perjamuan Adat
+          </span>
+          <h1 className="font-display text-white max-w-3xl font-light">
+            Cita Rasa Nusantara dalam Suasana Khidmat
           </h1>
-          <div className="flex flex-wrap justify-center gap-4">
+          <p className="text-white/90 text-sm sm:text-base max-w-lg font-sans font-light leading-relaxed">
+            Menyajikan keagungan bumbu rempah autentik Minang dan Nusantara untuk perhelatan pernikahan, jamuan resmi korporasi, tumpeng syukuran, dan hantaran keluarga.
+          </p>
+          <div className="pt-2 flex flex-wrap gap-4">
             <a
-              href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Halo RiaMiranda Katering, saya ingin konsultasi kebutuhan acara.')}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary gap-2"
-              style={{ fontSize: '11px', letterSpacing: '0.14em' }}
+              href="#paket"
+              className="px-6 py-3 bg-white text-caramel-deep hover:bg-white/90 text-xs uppercase tracking-[0.18em] font-sans transition-colors inline-flex items-center gap-2 font-medium"
+              style={{ borderRadius: '2px' }}
             >
-              <MessageCircle size={16} />
-              KONSULTASI VIA WHATSAPP
+              <span>Pilihan Paket Perjamuan</span>
+              <ArrowRight size={14} className="stroke-[1.25]" />
             </a>
-            <button
-              onClick={() => document.getElementById('inquiry-section')?.scrollIntoView({ behavior: 'smooth' })}
-              className="btn-hero-secondary"
-              style={{ fontSize: '11px', letterSpacing: '0.14em' }}
+            <a
+              href="#menu"
+              className="px-6 py-3 bg-transparent border border-white/60 text-white hover:bg-white hover:text-charcoal text-xs uppercase tracking-[0.18em] font-sans transition-colors inline-flex items-center gap-2"
+              style={{ borderRadius: '2px' }}
             >
-              ISI FORM KONSULTASI
-            </button>
+              <span>Daftar Menu Hidangan</span>
+            </a>
           </div>
         </div>
       </section>
 
-      {/* Intro */}
-      <section className="max-w-screen-lg mx-auto px-5 sm:px-8 py-16 md:py-24 text-center">
-        <p
-          className="font-light leading-relaxed max-w-2xl mx-auto text-ink"
-          style={{ fontFamily: 'Jost', fontSize: '16px', lineHeight: 2 }}
-        >
-          RiaMiranda Katering hadir untuk merayakan momen penting Anda bersama orang-orang tercinta.
-          Dengan resep warisan nusantara dan bahan-bahan segar pilihan bersertifikasi halal, kami menghadirkan kehangatan sajian dalam skala perjamuan profesional.
-        </p>
-      </section>
-
-      {/* Paket Unggulan — Clicking opens detail modal */}
-      <section className="border-t border-line">
-        <div className="max-w-screen-xl mx-auto px-5 sm:px-8 lg:px-12 py-16 md:py-24">
-          <p className="nav-label text-center mb-16 text-muted" style={{ fontSize: '10px', letterSpacing: '0.2em' }}>
-            PAKET UNGGULAN PERJAMUAN
+      {/* 2. Three Main Packages (#paket) */}
+      <section id="paket" className="section-padding site-container">
+        <div className="text-center max-w-2xl mx-auto mb-16">
+          <span className="label-editorial text-caramel-deep block mb-1">
+            Paket Perhelatan Pilihan
+          </span>
+          <h2 className="font-section-title text-charcoal">
+            Tiga Konsep Layanan Jamuan
+          </h2>
+          <p className="text-muted text-sm mt-2">
+            Disiapkan oleh koki berpengalaman dengan standar higienis tinggi dan bahan baku segar bergaransi halal.
           </p>
+          <div className="w-12 h-[1px] bg-caramel-deep mx-auto mt-4" />
+        </div>
 
-          <div className="space-y-8">
-            {packages.map((pkg, i) => (
-              <div
-                key={pkg.name}
-                onClick={() => setSelectedPackage(pkg)}
-                className="grid grid-cols-1 md:grid-cols-2 border border-line bg-bg hover:border-charcoal transition-colors cursor-pointer group shadow-xs"
-              >
-                <div
-                  className={`py-10 px-6 sm:px-10 flex flex-col justify-between border-b md:border-b-0 md:border-r border-line ${i % 2 !== 0 ? 'md:order-2' : ''}`}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {packages.map((pkg) => (
+            <div
+              key={pkg.id}
+              className="bg-white border border-line p-6 flex flex-col justify-between hover:border-caramel-deep transition-colors relative group"
+              style={{ borderRadius: '2px' }}
+            >
+              {/* Inline Admin Edit */}
+              {isEditMode && (
+                <button
+                  onClick={() => setEditingPackage(pkg)}
+                  className="absolute top-4 right-4 z-20 p-1.5 bg-indigo text-white hover:opacity-90"
+                  style={{ borderRadius: '2px' }}
+                  title="Edit data paket ini"
                 >
-                  <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <p className="nav-label text-caramel-deep text-[10px]" style={{ letterSpacing: '0.18em' }}>
-                        PAKET {String(i + 1).padStart(2, '0')}
-                      </p>
-                      <span className="flex items-center gap-1 nav-label text-muted text-[10px] group-hover:text-charcoal transition-colors">
-                        <Eye size={13} />
-                        LIHAT DETAIL
-                      </span>
-                    </div>
+                  <Edit2 size={13} />
+                </button>
+              )}
 
-                    <h3 className="font-cormorant font-light mb-3 text-charcoal group-hover:text-caramel-deep transition-colors" style={{ fontSize: 'clamp(1.5rem, 2.5vw, 2.2rem)' }}>
-                      {pkg.name}
-                    </h3>
-                    <p className="font-light mb-6 leading-relaxed text-muted text-sm" style={{ fontFamily: 'Jost', lineHeight: 1.8 }}>
-                      {pkg.description}
-                    </p>
-                  </div>
-
-                  <div>
-                    <div className="mb-2">
-                      <span className="font-light text-caramel-deep text-2xl" style={{ fontFamily: 'Jost' }}>
-                        mulai {format(pkg.price)}
-                      </span>
-                      <span className="font-light text-muted text-sm" style={{ fontFamily: 'Jost' }}>
-                        /{pkg.unit}
-                      </span>
-                    </div>
-                    <p className="nav-label text-muted text-[9px]" style={{ letterSpacing: '0.12em' }}>
-                      Minimal Pemesanan: {pkg.minOrder} {pkg.minUnit}
-                    </p>
-                  </div>
+              <div>
+                <div className="aspect-[16/9] overflow-hidden mb-6 bg-surface-2 border border-line">
+                  <SmartImage
+                    slot={pkg.imageSlot}
+                    alt={pkg.name}
+                    aspectRatio="16:9"
+                    className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                  />
                 </div>
 
-                <div className={`py-10 px-6 sm:px-10 flex flex-col justify-center bg-surface ${i % 2 !== 0 ? 'md:order-1' : ''}`}>
-                  <p className="nav-label mb-5 text-charcoal text-[10px]" style={{ letterSpacing: '0.16em' }}>
-                    MENU & FASILITAS TERMASUK
-                  </p>
-                  <ul className="space-y-3">
-                    {pkg.inclusions.map((item) => (
-                      <li key={item} className="flex items-start gap-3">
-                        <span style={{ color: 'var(--caramel-deep)', marginTop: 2, flexShrink: 0 }}>—</span>
-                        <span className="font-light text-ink text-sm" style={{ fontFamily: 'Jost', fontSize: '14px' }}>
-                          {item}
-                        </span>
+                <span className="label-editorial text-caramel-deep block mb-1">
+                  {pkg.minOrder}
+                </span>
+
+                <h3 className="font-serif text-charcoal text-2xl font-light mb-2">
+                  {pkg.name}
+                </h3>
+
+                <p className="text-xs text-muted font-sans leading-relaxed mb-4">
+                  {pkg.description}
+                </p>
+
+                <div className="bg-surface p-3.5 border border-line mb-6 space-y-2">
+                  <span className="label-editorial text-[10px] text-muted block">
+                    Sorotan Menu Termasuk:
+                  </span>
+                  <ul className="space-y-1.5 text-xs font-sans text-ink">
+                    {pkg.menuHighlights.slice(0, 4).map((h, i) => (
+                      <li key={i} className="flex items-start gap-2">
+                        <Check size={13} className="text-caramel-deep shrink-0 mt-0.5" />
+                        <span>{h}</span>
                       </li>
                     ))}
                   </ul>
-
-                  <div className="pt-6 mt-6 border-t border-line flex items-center justify-between">
-                    <span className="nav-label text-[10px] text-caramel-deep group-hover:underline">
-                      KLIK UNTUK KONSULTASI PAKET INI →
-                    </span>
-                  </div>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* Menu Gallery — masonry-style */}
-      <section className="max-w-screen-xl mx-auto px-5 sm:px-8 lg:px-12 py-16 md:py-24">
-        <p className="nav-label text-center mb-10 text-muted" style={{ fontSize: '10px', letterSpacing: '0.2em' }}>
-          GALERI HIDANGAN PERJAMUAN
-        </p>
-        <div className="columns-2 md:columns-3 gap-4 space-y-0">
-          {menuItems.map((item) => (
-            <div key={item.name} className="break-inside-avoid mb-4">
-              <Placeholder ratio={item.ratio} label={item.name} className="w-full" />
-              <p className="nav-label mt-2 text-center text-muted" style={{ fontSize: '10px', letterSpacing: '0.14em' }}>
-                {item.name.toUpperCase()}
-              </p>
+              <div className="border-t border-line pt-4 space-y-3">
+                <div className="flex items-baseline justify-between">
+                  <span className="text-xs text-muted font-sans uppercase tracking-wider">
+                    Tarif Acuan:
+                  </span>
+                  <span className="font-serif text-caramel-deep text-lg font-medium">
+                    {pkg.startingPrice}
+                  </span>
+                </div>
+
+                <button
+                  onClick={() => {
+                    setSelectedPackage(pkg);
+                    setSelectedDish(null);
+                    setInquiryModalOpen(true);
+                  }}
+                  className="w-full py-3 bg-caramel-deep text-white hover:bg-caramel text-xs uppercase tracking-[0.16em] font-sans transition-colors flex items-center justify-center gap-2"
+                  style={{ borderRadius: '2px' }}
+                >
+                  <span>Pesan / Konsultasi Paket</span>
+                  <ArrowRight size={13} className="stroke-[1.25]" />
+                </button>
+              </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Testimoni */}
-      <section className="bg-surface border-t border-b border-line">
-        <div className="max-w-screen-xl mx-auto px-5 sm:px-8 lg:px-12 py-16 md:py-24">
-          <p className="nav-label text-center mb-12 text-muted" style={{ fontSize: '10px', letterSpacing: '0.2em' }}>
-            KATA PELANGGAN KAMI
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimoni.map((t, i) => (
-              <div key={i} className="flex flex-col bg-bg p-8 border border-line">
-                <div className="flex gap-0.5 mb-4">
-                  {[1, 2, 3, 4, 5].map((s) => (
-                    <Star key={s} size={12} fill="var(--caramel)" color="var(--caramel)" strokeWidth={0} />
-                  ))}
-                </div>
-                <blockquote
-                  className="font-cormorant font-light mb-6 flex-1 leading-relaxed text-charcoal italic"
-                  style={{ fontSize: 'clamp(1rem, 2vw, 1.25rem)' }}
-                >
-                  "{t.quote}"
-                </blockquote>
+      {/* 3. Dish Menu Grid (#menu) - 8 dishes with SmartImage, pax info, description */}
+      <section id="menu" className="bg-white border-y border-line section-padding">
+        <div className="site-container">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
+            <div>
+              <span className="label-editorial text-caramel-deep block mb-1">
+                Koleksi Resep Warisan
+              </span>
+              <h2 className="font-section-title text-charcoal">
+                Daftar Menu Hidangan Pilihan
+              </h2>
+              <p className="text-xs text-muted font-sans mt-1">
+                Dapat dipesan per porsi satuan, bento box, atau pelengkap buffet
+              </p>
+            </div>
+            <button
+              onClick={() => {
+                setSelectedPackage(null);
+                setSelectedDish(null);
+                setInquiryModalOpen(true);
+              }}
+              className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.16em] font-sans text-caramel-deep hover:underline font-medium"
+            >
+              <span>Konsultasikan Menu Kustom</span>
+              <ArrowRight size={14} className="stroke-[1.25]" />
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {dishes.map((dish) => (
+              <div
+                key={dish.id}
+                className="bg-surface border border-line p-4 flex flex-col justify-between hover:border-caramel-deep transition-colors relative group"
+                style={{ borderRadius: '2px' }}
+              >
+                {/* Admin edit button */}
+                {isEditMode && (
+                  <button
+                    onClick={() => setEditingDish(dish)}
+                    className="absolute top-3 right-3 z-20 p-1.5 bg-indigo text-white hover:opacity-90"
+                    style={{ borderRadius: '2px' }}
+                    title="Edit menu ini"
+                  >
+                    <Edit2 size={12} />
+                  </button>
+                )}
+
                 <div>
-                  <p className="nav-label text-charcoal text-[10px]" style={{ letterSpacing: '0.14em' }}>{t.name}</p>
-                  <p className="text-xs font-light text-muted mt-0.5" style={{ fontFamily: 'Jost', fontSize: '11px' }}>
-                    {t.city} · {t.event}
+                  <div className="aspect-square overflow-hidden mb-4 bg-surface-2 border border-line">
+                    <SmartImage
+                      slot={dish.imageSlot}
+                      alt={dish.name}
+                      aspectRatio="1:1"
+                      className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                    />
+                  </div>
+
+                  <span className="label-editorial text-muted text-[10px] block mb-1">
+                    {dish.category} · {dish.paxInfo}
+                  </span>
+
+                  <h3 className="font-serif text-charcoal text-lg font-normal leading-tight mb-2">
+                    {dish.name}
+                  </h3>
+
+                  <p className="text-xs text-ink font-sans leading-relaxed mb-4 line-clamp-3">
+                    {dish.description}
                   </p>
                 </div>
+
+                <div className="border-t border-line pt-3 flex items-center justify-between">
+                  <span className="font-serif text-charcoal text-base">
+                    {formatRupiah(dish.pricePerPax)}
+                  </span>
+                  <button
+                    onClick={() => {
+                      setSelectedDish(dish);
+                      setSelectedPackage(null);
+                      setInquiryModalOpen(true);
+                    }}
+                    className="text-xs uppercase tracking-wider font-sans text-caramel-deep hover:underline flex items-center gap-1"
+                  >
+                    <span>Pilih</span>
+                    <ArrowRight size={12} />
+                  </button>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* FAQ Accordion */}
-      <section className="max-w-screen-lg mx-auto px-5 sm:px-8 py-16 md:py-24">
-        <p className="nav-label text-center mb-12 text-muted" style={{ fontSize: '10px', letterSpacing: '0.2em' }}>
-          PERTANYAAN UMUM SEPUTAR KATERING
-        </p>
-        <div className="border-t border-line">
-          {faqs.map((faq) => (
-            <FaqItem key={faq.q} q={faq.q} a={faq.a} />
-          ))}
+      {/* 4. Cara Pemesanan (#cara-pesan) */}
+      <section id="cara-pesan" className="section-padding site-container">
+        <div className="text-center max-w-xl mx-auto mb-16">
+          <span className="label-editorial text-caramel-deep block mb-1">
+            Panduan Reservasi
+          </span>
+          <h2 className="font-section-title text-charcoal">
+            Empat Langkah Menuju Perjamuan Sempurna
+          </h2>
+          <div className="w-12 h-[1px] bg-caramel-deep mx-auto mt-4" />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="bg-white border border-line p-6 space-y-3">
+            <span className="font-serif text-3xl text-caramel-deep block font-light">01</span>
+            <h3 className="font-serif text-xl text-charcoal">Pilih Paket & Menu</h3>
+            <p className="text-xs text-muted leading-relaxed font-sans">
+              Tentukan paket resepsi, jamuan bento korporat, atau tumpeng sesuai tanggal dan perkiraan tamu.
+            </p>
+          </div>
+
+          <div className="bg-white border border-line p-6 space-y-3">
+            <span className="font-serif text-3xl text-caramel-deep block font-light">02</span>
+            <h3 className="font-serif text-xl text-charcoal">Konsultasi & Test Food</h3>
+            <p className="text-xs text-muted leading-relaxed font-sans">
+              Tim perjamuan kami menyusun penawaran resmi dan menjadwalkan sesi cicip menu di galeri Senopati.
+            </p>
+          </div>
+
+          <div className="bg-white border border-line p-6 space-y-3">
+            <span className="font-serif text-3xl text-caramel-deep block font-light">03</span>
+            <h3 className="font-serif text-xl text-charcoal">Konfirmasi & DP</h3>
+            <p className="text-xs text-muted leading-relaxed font-sans">
+              Penguncian tanggal acara dengan deposit resmi dan penandatanganan lembar kerja teknis tata meja.
+            </p>
+          </div>
+
+          <div className="bg-white border border-line p-6 space-y-3">
+            <span className="font-serif text-3xl text-caramel-deep block font-light">04</span>
+            <h3 className="font-serif text-xl text-charcoal">Pelaksanaan Khidmat</h3>
+            <p className="text-xs text-muted leading-relaxed font-sans">
+              Tim pramusaji santun kami tiba 3 jam sebelum acara untuk penataan meja buffet dan layanan terbaik.
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* Inquiry Form */}
-      <section id="inquiry-section" className="border-t border-line bg-surface">
-        <div className="max-w-screen-md mx-auto px-5 sm:px-8 pt-16 md:pt-24 pb-28 md:pb-36">
-          <p className="nav-label text-center mb-4 text-caramel-deep" style={{ fontSize: '10px', letterSpacing: '0.2em' }}>
-            FORMULIR KONSULTASI
-          </p>
-          <h2 className="font-cormorant font-light text-center mb-12 text-charcoal" style={{ fontSize: 'clamp(1.6rem, 3vw, 2.5rem)' }}>
-            Ceritakan Kebutuhan Acara Anda
+      {/* 5. Kontak Khusus Katering (#kontak) */}
+      <section id="kontak" className="bg-surface-2 border-t border-line py-16">
+        <div className="site-container max-w-2xl text-center space-y-6">
+          <span className="label-editorial text-caramel-deep block">Layanan Konsultasi Langsung</span>
+          <h2 className="font-section-title text-charcoal">
+            Rencanakan Perjamuan Anda Bersama Kami
           </h2>
+          <p className="text-sm text-ink font-sans leading-relaxed">
+            Hubungi konsultan katering {BRAND.name} untuk mendiskusikan kebutuhan anggaran, tema dekorasi meja, atau pilihan menu alergen khusus.
+          </p>
+          <div className="pt-2">
+            <a
+              href={directWaUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-8 py-3.5 bg-caramel-deep text-white hover:opacity-90 text-xs uppercase tracking-[0.18em] font-sans transition-opacity inline-flex items-center gap-2 font-medium"
+              style={{ borderRadius: '2px' }}
+            >
+              <span>Hubungi Konsultan via WhatsApp</span>
+              <ArrowRight size={14} className="stroke-[1.25]" />
+            </a>
+          </div>
+        </div>
+      </section>
 
-          {submitted ? (
-            <div className="text-center py-12 border border-line bg-bg p-8">
-              <p className="font-cormorant font-light text-2xl mb-4 text-caramel-deep">
-                Terima Kasih, {form.nama}!
-              </p>
-              <p className="font-light text-ink text-sm mb-6" style={{ fontFamily: 'Jost', fontSize: '15px' }}>
-                Formulir konsultasi Anda telah terkirim ke tim jamuan kami. Kami akan menghubungi Anda untuk rincian penawaran dan jadwal uji rasa (*food tasting*).
-              </p>
-              <button
-                onClick={() => {
-                  setSubmitted(false);
-                  setForm({ nama: '', tanggalAcara: '', jumlahPorsi: 0, catatan: '' });
-                }}
-                className="nav-label px-6 py-2.5 border border-charcoal text-charcoal hover:bg-surface text-xs"
-              >
-                KIRIM PERMINTAAN LAIN
-              </button>
+      {/* Inquiry Modal */}
+      {inquiryModalOpen && (
+        <KateringInquiryModal
+          initialPackage={selectedPackage}
+          initialDish={selectedDish}
+          onClose={() => {
+            setInquiryModalOpen(false);
+            setSelectedPackage(null);
+            setSelectedDish(null);
+          }}
+        />
+      )}
+
+      {/* Admin Edit Package Modal */}
+      {editingPackage && (
+        <Modal
+          id="admin-edit-package-modal"
+          isOpen={Boolean(editingPackage)}
+          onClose={() => setEditingPackage(null)}
+          maxWidth="md"
+          title={`Edit Paket Katering: ${editingPackage.name}`}
+          eyebrow="Mode Administrator"
+        >
+          <form onSubmit={handleEditPackageSave} className="space-y-4 text-xs font-sans">
+            <div>
+              <label className="block text-muted mb-1 uppercase tracking-wider">Nama Paket</label>
+              <input
+                type="text"
+                value={editingPackage.name}
+                onChange={(e) => setEditingPackage({ ...editingPackage, name: e.target.value })}
+                className="w-full px-3 py-2 border border-line text-sm text-ink focus:border-caramel-deep focus:outline-none bg-white"
+                style={{ borderRadius: '2px' }}
+              />
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-8 border border-line bg-bg p-6 sm:p-10 shadow-xs">
-              <div>
-                <label className="nav-label block mb-2 text-muted text-[9px]" style={{ letterSpacing: '0.14em' }}>
-                  NAMA LENGKAP PENYELENGGARA *
-                </label>
-                <input
-                  type="text"
-                  name="nama"
-                  value={form.nama}
-                  onChange={handleChange}
-                  placeholder="Masukkan nama lengkap Anda"
-                  className="input-underline min-h-[44px]"
-                  required
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div>
-                  <label className="nav-label block mb-2 text-muted text-[9px]" style={{ letterSpacing: '0.14em' }}>
-                    TANGGAL PELAKSANAAN ACARA *
-                  </label>
-                  <input
-                    type="date"
-                    name="tanggalAcara"
-                    value={form.tanggalAcara}
-                    onChange={handleChange}
-                    className="input-underline min-h-[44px]"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="nav-label block mb-2 text-muted text-[9px]" style={{ letterSpacing: '0.14em' }}>
-                    ESTIMASI JUMLAH PORSI / TAMU *
-                  </label>
-                  <input
-                    type="number"
-                    name="jumlahPorsi"
-                    value={form.jumlahPorsi || ''}
-                    onChange={handleChange}
-                    placeholder="Contoh: 150"
-                    min={1}
-                    className="input-underline min-h-[44px]"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="nav-label block mb-2 text-muted text-[9px]" style={{ letterSpacing: '0.14em' }}>
-                  CATATAN TAMBAHAN ATAU MENU PILIHAN
-                </label>
-                <textarea
-                  name="catatan"
-                  value={form.catatan}
-                  onChange={handleChange}
-                  placeholder="Ceritakan jenis acara (resepsi, akad, aqiqah, rapat kantor), preferensi hidangan, atau lokasi acara..."
-                  rows={4}
-                  className="input-underline resize-none"
-                />
-              </div>
-
-              {formError && (
-                <p className="text-sm font-light text-occupied" style={{ fontFamily: 'Jost' }}>
-                  {formError}
-                </p>
-              )}
-
+            <div>
+              <label className="block text-muted mb-1 uppercase tracking-wider">Tarif Acuan</label>
+              <input
+                type="text"
+                value={editingPackage.startingPrice}
+                onChange={(e) => setEditingPackage({ ...editingPackage, startingPrice: e.target.value })}
+                className="w-full px-3 py-2 border border-line text-sm text-ink focus:border-caramel-deep focus:outline-none bg-white"
+                style={{ borderRadius: '2px' }}
+              />
+            </div>
+            <div>
+              <label className="block text-muted mb-1 uppercase tracking-wider">Minimal Pemesanan</label>
+              <input
+                type="text"
+                value={editingPackage.minOrder}
+                onChange={(e) => setEditingPackage({ ...editingPackage, minOrder: e.target.value })}
+                className="w-full px-3 py-2 border border-line text-sm text-ink focus:border-caramel-deep focus:outline-none bg-white"
+                style={{ borderRadius: '2px' }}
+              />
+            </div>
+            <div className="flex justify-end gap-2 pt-4 border-t border-line">
+              <button
+                type="button"
+                onClick={() => setEditingPackage(null)}
+                className="px-4 py-2 border border-line text-muted hover:text-charcoal transition-colors"
+                style={{ borderRadius: '2px' }}
+              >
+                Batal
+              </button>
               <button
                 type="submit"
-                disabled={submitting}
-                className="nav-label w-full min-h-[44px] py-4 text-white transition-opacity duration-400 hover:opacity-85 disabled:opacity-50 focus-visible:outline-none"
-                style={{ fontSize: '12px', fontWeight: 500, letterSpacing: '0.16em', backgroundColor: 'var(--caramel)' }}
+                className="px-5 py-2 bg-indigo text-white uppercase tracking-wider transition-opacity hover:opacity-90 font-medium"
+                style={{ borderRadius: '2px' }}
               >
-                {submitting ? 'MENGIRIMKAN KONSULTASI...' : 'KIRIM FORMULIR KONSULTASI'}
+                Simpan Perubahan
               </button>
-            </form>
-          )}
-        </div>
-      </section>
+            </div>
+          </form>
+        </Modal>
+      )}
 
-      {/* Package Detail Modal */}
-      <PackageDetailModal
-        isOpen={Boolean(selectedPackage)}
-        onClose={() => setSelectedPackage(null)}
-        pkg={selectedPackage}
-        onSelectInquiry={handleSelectPackageForInquiry}
-      />
-    </>
+      {/* Admin Edit Dish Modal */}
+      {editingDish && (
+        <Modal
+          id="admin-edit-dish-modal"
+          isOpen={Boolean(editingDish)}
+          onClose={() => setEditingDish(null)}
+          maxWidth="md"
+          title={`Edit Menu Hidangan: ${editingDish.name}`}
+          eyebrow="Mode Administrator"
+        >
+          <form onSubmit={handleEditDishSave} className="space-y-4 text-xs font-sans">
+            <div>
+              <label className="block text-muted mb-1 uppercase tracking-wider">Nama Menu</label>
+              <input
+                type="text"
+                value={editingDish.name}
+                onChange={(e) => setEditingDish({ ...editingDish, name: e.target.value })}
+                className="w-full px-3 py-2 border border-line text-sm text-ink focus:border-caramel-deep focus:outline-none bg-white"
+                style={{ borderRadius: '2px' }}
+              />
+            </div>
+            <div>
+              <label className="block text-muted mb-1 uppercase tracking-wider">Harga (Rp)</label>
+              <input
+                type="number"
+                value={editingDish.pricePerPax}
+                onChange={(e) => setEditingDish({ ...editingDish, pricePerPax: Number(e.target.value) })}
+                className="w-full px-3 py-2 border border-line text-sm text-ink focus:border-caramel-deep focus:outline-none bg-white"
+                style={{ borderRadius: '2px' }}
+              />
+            </div>
+            <div>
+              <label className="block text-muted mb-1 uppercase tracking-wider">Keterangan Porsi</label>
+              <input
+                type="text"
+                value={editingDish.paxInfo}
+                onChange={(e) => setEditingDish({ ...editingDish, paxInfo: e.target.value })}
+                className="w-full px-3 py-2 border border-line text-sm text-ink focus:border-caramel-deep focus:outline-none bg-white"
+                style={{ borderRadius: '2px' }}
+              />
+            </div>
+            <div className="flex justify-end gap-2 pt-4 border-t border-line">
+              <button
+                type="button"
+                onClick={() => setEditingDish(null)}
+                className="px-4 py-2 border border-line text-muted hover:text-charcoal transition-colors"
+                style={{ borderRadius: '2px' }}
+              >
+                Batal
+              </button>
+              <button
+                type="submit"
+                className="px-5 py-2 bg-indigo text-white uppercase tracking-wider transition-opacity hover:opacity-90 font-medium"
+                style={{ borderRadius: '2px' }}
+              >
+                Simpan Perubahan
+              </button>
+            </div>
+          </form>
+        </Modal>
+      )}
+    </div>
   );
-}
+};

@@ -1,267 +1,399 @@
-// ============================================================
-// Landing Page (/)
-// ============================================================
-import React, { useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Placeholder from '../components/ui/Placeholder';
+import { SmartImage } from '../components/ui/SmartImage';
+import { useAdmin } from '../context/AdminContext';
+import { ArrowRight, Sparkles } from 'lucide-react';
+import { QuickViewModal } from '../components/busana/QuickViewModal';
+import { PropertyInquiryModal } from '../components/modals/PropertyInquiryModal';
+import { KateringInquiryModal } from '../components/modals/KateringInquiryModal';
+import type { BusanaProduct } from '../data/busana';
+import type { PropertyListing } from '../data/properti';
+import type { KateringPackageItem } from '../data/katering';
+import { BRAND } from '../config/brand';
 
-function useFadeIn() {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          el.classList.add('visible');
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.15 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-  return ref;
-}
+export const HomePage: React.FC = () => {
+  const { products, properties, isEditMode } = useAdmin();
 
-const businessLines = [
-  {
-    label: 'BUSANA MUSLIMAH',
-    title: 'Mode yang Merayakan Keanggunan',
-    description:
-      'Koleksi busana muslimah yang dirancang untuk wanita Indonesia modern — elegan, nyaman, dan timeless.',
-    path: '/busana',
-    accent: 'var(--charcoal)',
-    imageLeft: true,
-  },
-  {
-    label: 'PROPERTI & HOTEL',
-    title: 'Investasi Properti Terpilih',
-    description:
-      'Platform lelang properti eksklusif — hotel, hunian, dan komersial pilihan di lokasi strategis.',
-    path: '/properti',
-    accent: 'var(--indigo-brand)',
-    imageLeft: false,
-  },
-  {
-    label: 'KATERING',
-    title: 'Cita Rasa untuk Setiap Momen',
-    description:
-      'Layanan katering profesional untuk pengajian, pernikahan, dan acara korporat — dengan sentuhan khas masakan Indonesia.',
-    path: '/katering',
-    accent: 'var(--caramel)',
-    imageLeft: true,
-  },
-];
+  // Modals state
+  const [selectedProduct, setSelectedProduct] = useState<BusanaProduct | null>(null);
+  const [selectedProperty, setSelectedProperty] = useState<PropertyListing | null>(null);
+  const [selectedPackage, setSelectedPackage] = useState<KateringPackageItem | null>(null);
 
-export default function HomePage() {
-  const aboutRef = useFadeIn();
-  const valuesRef = useFadeIn();
-  const bizRef = useFadeIn();
+  // Featured items
+  const featuredProducts = products.slice(0, 4);
+  const featuredProperties = properties.slice(0, 3);
 
   return (
-    <>
-      {/* Hero */}
-      <section className="relative w-full overflow-hidden flex items-center justify-center" style={{ minHeight: 'clamp(520px, 80svh, 860px)' }}>
-        <div className="absolute inset-0 w-full h-full">
-          <Placeholder ratio="16/9" dark={true} label="RiaMiranda — Beranda" className="w-full h-full object-cover" />
+    <div className="w-full bg-surface">
+      {/* 1. Hero Section */}
+      <section className="relative w-full h-[80vh] min-h-[560px] max-h-[820px] bg-charcoal overflow-hidden flex items-center">
+        <div className="absolute inset-0 z-0">
+          <SmartImage
+            slot="hero"
+            aspectRatio="custom"
+            className="w-full h-full object-cover"
+            priority
+          />
+          {/* Strict required overlay token */}
+          <div className="absolute inset-0 bg-overlay" />
         </div>
-        <div
-          className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 transition-all duration-500"
-          style={{
-            background: 'var(--color-hero-overlay)',
-          }}
-        >
-          <p
-            className="nav-label mb-4"
-            style={{ fontSize: '11px', letterSpacing: '0.24em', color: 'var(--caramel-deep)' }}
-          >
-            JAKARTA, EST. 2009
-          </p>
-          <h1
-            className="font-cormorant font-light mb-8 max-w-3xl leading-snug drop-shadow-sm text-[#F7F4EE]"
-            style={{
-              fontSize: 'clamp(2.2rem, 5.2vw, 4.25rem)',
-              letterSpacing: '0.04em',
-            }}
-          >
-            Elegan, Tulus, dan Abadi
+
+        <div className="site-container relative z-10 text-white space-y-6">
+          <div className="inline-flex items-center gap-2 border border-white/30 px-3.5 py-1 text-white text-[11px] uppercase tracking-[0.2em] font-sans">
+            <Sparkles size={12} className="stroke-[1.25]" />
+            BUSANA · PROPERTI · KATERING
+          </div>
+
+          <h1 className="font-display text-white max-w-4xl font-light">
+            Keanggunan Santun dalam Setiap Langkah Kehidupan
           </h1>
-          <Link
-            to="/busana"
-            className="btn-hero-secondary"
-            style={{ fontSize: '11px', letterSpacing: '0.22em' }}
-          >
-            KENALI KAMI
-          </Link>
+
+          <p className="text-white/90 text-base sm:text-lg max-w-xl font-sans font-light leading-relaxed">
+            Menghadirkan harmoni nilai luhur dan modernitas santun melalui busana muslimah kontemporer, peristirahatan berarsitektur tenang, serta hidangan perjamuan berselera.
+          </p>
+
+          <div className="flex flex-wrap items-center gap-4 pt-4">
+            <Link
+              to="/busana"
+              className="px-8 py-3.5 bg-white text-charcoal hover:bg-caramel-deep hover:text-white text-xs uppercase tracking-[0.18em] font-sans transition-colors inline-flex items-center gap-2 font-medium"
+              style={{ borderRadius: '2px' }}
+            >
+              <span>Jelajahi Busana</span>
+              <ArrowRight size={14} className="stroke-[1.25]" />
+            </Link>
+
+            <Link
+              to="/properti"
+              className="px-8 py-3.5 bg-transparent border border-white/60 text-white hover:bg-white hover:text-charcoal text-xs uppercase tracking-[0.18em] font-sans transition-colors inline-flex items-center gap-2"
+              style={{ borderRadius: '2px' }}
+            >
+              <span>Hospitality & Living</span>
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* Tentang RiaMiranda — Body Tone */}
-      <section className="bg-body transition-colors duration-300">
-        <div className="max-w-screen-xl mx-auto px-5 sm:px-8 lg:px-12 py-16 md:py-24">
-          <div ref={aboutRef} className="fade-in grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20 items-start">
-            {/* Portrait image, offset left */}
-            <div className="md:translate-y-8">
-              <Placeholder ratio="3/4" label="Indria Miranda" className="w-full max-w-sm mx-auto md:mx-0" />
+      {/* Statement Band per spec */}
+      <section className="bg-charcoal text-white py-6 border-y border-line text-center">
+        <div className="site-container">
+          <p className="text-xs sm:text-sm uppercase tracking-[0.18em] font-sans text-white/90 font-light">
+            Tiga lini usaha, satu komitmen: kualitas yang dirawat dengan tulus.
+          </p>
+        </div>
+      </section>
+
+      {/* 2. Three Business Lines Feature Tiles */}
+      <section className="section-padding site-container">
+        <div className="text-center max-w-2xl mx-auto mb-16">
+          <span className="label-editorial text-muted block mb-2">Tiga Lini Usaha</span>
+          <h2 className="font-section-title text-charcoal">
+            Ekosistem Gaya Hidup Santun {BRAND.name}
+          </h2>
+          <div className="w-12 h-[1px] bg-charcoal mx-auto mt-4" />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Tile 1: Busana (Accent: charcoal) */}
+          <div className="bg-white border border-line p-6 flex flex-col justify-between group hover:border-charcoal transition-colors">
+            <div>
+              <div className="w-full aspect-[4/3] mb-6 overflow-hidden">
+                <SmartImage
+                  slot="tile-busana"
+                  aspectRatio="4:3"
+                  className="w-full h-full group-hover:scale-[1.02] transition-transform duration-500"
+                />
+              </div>
+              <span className="label-editorial text-charcoal block mb-1">Busana Muslimah</span>
+              <h3 className="font-serif text-2xl text-charcoal font-light mb-3">
+                Koleksi Busana Santun
+              </h3>
+              <p className="text-muted text-sm leading-relaxed mb-6">
+                Rancangan busana muslimah berkarakter lembut dengan palet pastel hangat, serat alami ramah iklim tropis, dan bordir monogram songket kontemporer.
+              </p>
+            </div>
+            <Link
+              to="/busana"
+              className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] font-sans text-charcoal group-hover:text-caramel-deep border-t border-line pt-4 transition-colors font-medium"
+            >
+              <span>Buka Katalog Busana</span>
+              <ArrowRight size={14} className="stroke-[1.25]" />
+            </Link>
+          </div>
+
+          {/* Tile 2: Properti (Accent: indigo) */}
+          <div className="bg-white border border-line p-6 flex flex-col justify-between group hover:border-indigo transition-colors">
+            <div>
+              <div className="w-full aspect-[4/3] mb-6 overflow-hidden">
+                <SmartImage
+                  slot="tile-properti"
+                  aspectRatio="4:3"
+                  className="w-full h-full group-hover:scale-[1.02] transition-transform duration-500"
+                />
+              </div>
+              <span className="label-editorial text-indigo block mb-1">Living & Hospitality</span>
+              <h3 className="font-serif text-charcoal text-2xl font-light mb-3">
+                Ruang Inap & Properti Pilihan
+              </h3>
+              <p className="text-muted text-sm leading-relaxed mb-6">
+                Boutique hotel di jantung ibu kota, vila privat di Bali, ruko komersial di Senopati, serta kavling tanah eksklusif dengan privasi terjaga.
+              </p>
+            </div>
+            <Link
+              to="/properti"
+              className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] font-sans text-indigo border-t border-line pt-4 transition-opacity font-medium"
+            >
+              <span>Eksplorasi Properti</span>
+              <ArrowRight size={14} className="stroke-[1.25]" />
+            </Link>
+          </div>
+
+          {/* Tile 3: Katering (Accent: caramel-deep) */}
+          <div className="bg-white border border-line p-6 flex flex-col justify-between group hover:border-caramel-deep transition-colors">
+            <div>
+              <div className="w-full aspect-[4/3] mb-6 overflow-hidden">
+                <SmartImage
+                  slot="tile-katering"
+                  aspectRatio="4:3"
+                  className="w-full h-full group-hover:scale-[1.02] transition-transform duration-500"
+                />
+              </div>
+              <span className="label-editorial text-caramel-deep block mb-1">Katering & Perjamuan</span>
+              <h3 className="font-serif text-charcoal text-2xl font-light mb-3">
+                Tata Meja Rasa Nusantara
+              </h3>
+              <p className="text-muted text-sm leading-relaxed mb-6">
+                Sajian kuliner halal autentik resep turun-temurun untuk resepsi pernikahan agung, jamuan korporasi, tumpeng syukuran, dan hantaran keluarga.
+              </p>
+            </div>
+            <Link
+              to="/katering"
+              className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] font-sans text-caramel-deep border-t border-line pt-4 transition-colors font-medium"
+            >
+              <span>Pilihan Menu Perjamuan</span>
+              <ArrowRight size={14} className="stroke-[1.25]" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. Featured Busana Products */}
+      <section className="bg-white border-y border-line section-padding">
+        <div className="site-container">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+            <div>
+              <span className="label-editorial text-muted block mb-2">Busana Terpilih</span>
+              <h2 className="font-section-title text-charcoal">
+                Koleksi Pilihan Musim Ini
+              </h2>
+            </div>
+            <Link
+              to="/busana"
+              className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.16em] font-sans text-charcoal hover:text-caramel-deep font-medium"
+            >
+              <span>Lihat Semua Busana ({products.length})</span>
+              <ArrowRight size={14} className="stroke-[1.25]" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+            {featuredProducts.map((p) => {
+              const displayPrice = p.isSale && p.salePrice ? p.salePrice : p.price;
+              return (
+                <div
+                  key={p.id}
+                  className="group bg-surface border border-line p-3 flex flex-col justify-between cursor-pointer hover:border-charcoal transition-colors"
+                  onClick={() => setSelectedProduct(p)}
+                >
+                  <div className="relative aspect-[3/4] overflow-hidden mb-3 bg-surface-2">
+                    <SmartImage
+                      slot={p.imageSlot1}
+                      alt={p.name}
+                      aspectRatio="3:4"
+                      className="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-0"
+                    />
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <SmartImage
+                        slot={p.imageSlot2}
+                        alt={`${p.name} tampak alternatif`}
+                        aspectRatio="3:4"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+
+                    {p.isSale && (
+                      <span
+                        className="absolute top-2 left-2 bg-sale text-white px-2 py-0.5 text-[9px] tracking-[0.14em] font-sans font-medium z-10"
+                        style={{ borderRadius: '9999px' }}
+                      >
+                        SALE
+                      </span>
+                    )}
+                  </div>
+
+                  <div>
+                    <span className="label-editorial text-muted text-[10px] block mb-1">
+                      {p.category} · {p.collection}
+                    </span>
+                    <h3 className="font-serif text-charcoal text-base font-normal leading-tight mb-2 group-hover:text-caramel-deep transition-colors">
+                      {p.name}
+                    </h3>
+                    <div className="flex items-baseline gap-2">
+                      <span className="font-serif text-charcoal text-sm font-medium">
+                        Rp {displayPrice.toLocaleString('id-ID')}
+                      </span>
+                      {p.isSale && p.salePrice && (
+                        <span className="text-xs text-muted line-through font-sans">
+                          Rp {p.price.toLocaleString('id-ID')}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* 4. Tentang Rea Manda */}
+      <section className="section-padding site-container">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div className="lg:col-span-5">
+            <div className="border border-line p-2 bg-white">
+              <SmartImage
+                slot="about-portrait"
+                alt={`Studio dan Ruang Karya ${BRAND.name}`}
+                aspectRatio="3:4"
+                className="w-full h-full"
+              />
+            </div>
+          </div>
+
+          <div className="lg:col-span-7 space-y-6">
+            <div className="flex items-center justify-between">
+              <span className="label-editorial text-muted block">Tentang {BRAND.name}</span>
+              {isEditMode && (
+                <span className="text-[11px] font-sans text-caramel-deep bg-caramel/10 border border-caramel/30 px-2 py-0.5" style={{ borderRadius: '2px' }}>
+                  Konten contoh, edit dari mode admin
+                </span>
+              )}
             </div>
 
-            {/* Text */}
-            <div className="md:pt-12">
-              <p
-                className="nav-label mb-5"
-                style={{ fontSize: '10px', color: 'var(--caramel-deep)', letterSpacing: '0.2em' }}
-              >
-                TENTANG RIAMIRANDA
-              </p>
-              <h2
-                className="font-cormorant font-light mb-8 leading-snug"
-                style={{ fontSize: 'clamp(1.8rem, 3.5vw, 3rem)', color: 'var(--charcoal)' }}
-              >
-                Lebih dari Satu Dekade Menemani Wanita Indonesia
-              </h2>
-              <div className="space-y-4 mb-10">
-                <p className="text-sm font-light leading-relaxed" style={{ color: 'var(--ink)', fontFamily: 'Jost', fontSize: '15px', lineHeight: 1.85 }}>
-                  RiaMiranda lahir di Jakarta pada tahun 2009, digagas oleh Indria Miranda — perancang yang percaya bahwa busana muslimah dapat sekaligus feminin, modern, dan bermartabat.
-                </p>
-                <p className="text-sm font-light leading-relaxed" style={{ color: 'var(--ink)', fontFamily: 'Jost', fontSize: '15px', lineHeight: 1.85 }}>
-                  Lulusan ESMOD Jakarta angkatan 2008, Indria terlebih dahulu berkarir sebagai fashion stylist profesional sebelum akhirnya meluncurkan label sendiri setahun kemudian. Perjalanan itulah yang membentuk mata dan rasa yang tajam: memahami tubuh wanita, memilih kain yang jatuh sempurna, dan merancang siluet yang mengangkat kepercayaan diri.
-                </p>
-                <p className="text-sm font-light leading-relaxed" style={{ color: 'var(--ink)', fontFamily: 'Jost', fontSize: '15px', lineHeight: 1.85 }}>
-                  Hari ini, RiaMiranda hadir dalam tiga lini — busana, properti, dan katering — namun semua berakar pada satu filosofi: kejujuran dalam kualitas, keindahan dalam kesederhanaan.
-                </p>
-              </div>
+            <h2 className="font-section-title text-charcoal font-light leading-tight">
+              Tiga lini usaha, satu komitmen: kualitas yang dirawat dengan tulus.
+            </h2>
 
-              {/* Stats */}
-              <div className="flex gap-0 border-t border-b py-6" style={{ borderColor: 'var(--line)' }}>
-                {[
-                  { num: '2009', label: 'Berdiri' },
-                  { num: '3', label: 'Lini Bisnis' },
-                  { num: '15+', label: 'Tahun Berkarya' },
-                ].map((stat, i) => (
-                  <div
-                    key={stat.label}
-                    className="flex-1 text-center"
-                    style={{
-                      borderRight: i < 2 ? '1px solid var(--line)' : 'none',
-                    }}
-                  >
-                    <p
-                      className="font-cormorant font-light"
-                      style={{ fontSize: '2rem', color: 'var(--charcoal)' }}
-                    >
-                      {stat.num}
-                    </p>
-                    <p className="nav-label mt-1" style={{ fontSize: '9px', color: 'var(--muted)', letterSpacing: '0.14em' }}>
-                      {stat.label.toUpperCase()}
-                    </p>
-                  </div>
-                ))}
+            <div className="w-16 h-[1px] bg-charcoal" />
+
+            <p className="text-ink text-base leading-relaxed font-sans font-light">
+              {BRAND.name} mendedikasikan karya pada kesantunan dan kenyamanan hidup. Melalui busana muslimah kontemporer, kami menghadirkan siluet anggun berbahan serat alami yang sejuk dan ramah untuk keseharian maupun perayaan.
+            </p>
+
+            <p className="text-muted text-sm leading-relaxed font-sans">
+              Lini properti dan hotel menghadirkan ruang tinggal berarsitektur teduh dengan privasi keluarga yang terjaga. Sementara layanan katering menyajikan hidangan perjamuan autentik bercita rasa luhur untuk momen berharga Anda.
+            </p>
+
+            {/* Stats row: show only items that have a value; hide "Berdiri" when foundedYear is null */}
+            <div className="pt-4 border-t border-line grid grid-cols-3 gap-6 text-left">
+              <div>
+                <span className="font-serif text-2xl sm:text-3xl text-charcoal block">3</span>
+                <span className="label-editorial text-muted text-[10px] sm:text-[11px] block mt-1">Lini Usaha</span>
               </div>
+              <div>
+                <span className="font-serif text-2xl sm:text-3xl text-charcoal block">100%</span>
+                <span className="label-editorial text-muted text-[10px] sm:text-[11px] block mt-1">Bahan Pilihan</span>
+              </div>
+              {BRAND.foundedYear ? (
+                <div>
+                  <span className="font-serif text-2xl sm:text-3xl text-charcoal block">{BRAND.foundedYear}</span>
+                  <span className="label-editorial text-muted text-[10px] sm:text-[11px] block mt-1">Berdiri</span>
+                </div>
+              ) : (
+                <div>
+                  <span className="font-serif text-2xl sm:text-3xl text-charcoal block">24/7</span>
+                  <span className="label-editorial text-muted text-[10px] sm:text-[11px] block mt-1">Layanan Tamu</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Nilai Kami — Primary Surface Tonal Depth */}
-      <section
-        className="border-t border-b py-16 md:py-24 bg-primary-surface transition-colors duration-300"
-        style={{ borderColor: 'var(--line)' }}
-      >
-        <div className="max-w-screen-xl mx-auto px-5 sm:px-8 lg:px-12">
-          <div ref={valuesRef} className="fade-in grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x" style={{ '--tw-divide-opacity': 1 } as React.CSSProperties}>
-            {[
-              {
-                label: 'KUALITAS',
-                text: 'Setiap helai kain dipilih dengan teliti untuk memastikan kenyamanan dan keindahan sepanjang hari.',
-              },
-              {
-                label: 'KEANGGUNAN',
-                text: 'Desain yang timeless dan feminin, terinspirasi dari keindahan wanita Indonesia modern.',
-              },
-              {
-                label: 'KEPERCAYAAN',
-                text: 'Lebih dari satu dekade menemani perjalanan gaya wanita muslimah Indonesia.',
-              },
-            ].map((v) => (
+      {/* 5. Properti & Katering Highlights Row */}
+      <section className="bg-surface-2 border-t border-line section-padding">
+        <div className="site-container space-y-16">
+          {/* Properti Section Header */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div>
+              <span className="label-editorial text-indigo block mb-2">Hospitality & Living</span>
+              <h2 className="font-section-title text-charcoal">
+                Destinasi Menginap & Ruang Investasi
+              </h2>
+            </div>
+            <Link
+              to="/properti"
+              className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.16em] font-sans text-indigo font-medium"
+            >
+              <span>Katalog Lengkap Properti ({properties.length})</span>
+              <ArrowRight size={14} className="stroke-[1.25]" />
+            </Link>
+          </div>
+
+          {/* Properti Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {featuredProperties.map((prop) => (
               <div
-                key={v.label}
-                className="px-6 md:px-8 py-8"
-                style={{ borderColor: 'var(--line)' }}
+                key={prop.id}
+                className="bg-white border border-line p-4 flex flex-col justify-between cursor-pointer hover:border-indigo transition-colors"
+                onClick={() => setSelectedProperty(prop)}
               >
-                <p
-                  className="nav-label mb-4"
-                  style={{ fontSize: '10px', color: 'var(--caramel-deep)', letterSpacing: '0.2em' }}
-                >
-                  {v.label}
-                </p>
-                <p className="text-sm font-light leading-relaxed" style={{ color: 'var(--ink)', fontFamily: 'Jost', fontSize: '14px', lineHeight: 1.8 }}>
-                  {v.text}
-                </p>
+                <div>
+                  <div className="relative aspect-[4/3] overflow-hidden mb-4 bg-surface-2">
+                    <SmartImage slot={prop.imageSlots[0]} aspectRatio="4:3" />
+                    <span
+                      className={`absolute top-2 left-2 px-2.5 py-1 text-[10px] font-sans uppercase tracking-widest text-white ${
+                        prop.status === 'Tersedia'
+                          ? 'bg-status-available'
+                          : prop.status === 'Sudah DP'
+                          ? 'bg-status-deposit'
+                          : 'bg-status-occupied'
+                      }`}
+                      style={{ borderRadius: '2px' }}
+                    >
+                      {prop.status}
+                    </span>
+                  </div>
+
+                  <span className="label-editorial text-muted text-[10px] block mb-1">
+                    {prop.type} · {prop.landArea}
+                  </span>
+                  <h3 className="font-serif text-charcoal text-xl font-normal leading-tight mb-1">
+                    {prop.name}
+                  </h3>
+                  <p className="text-xs text-muted font-sans mb-3">{prop.location}</p>
+                </div>
+
+                <div className="border-t border-line pt-3 flex items-center justify-between">
+                  <span className="font-serif text-indigo text-base font-medium">
+                    {prop.priceFormatted}
+                  </span>
+                  <span className="text-xs text-indigo font-sans uppercase tracking-wider flex items-center gap-1">
+                    Rincian <ArrowRight size={12} />
+                  </span>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Lini Bisnis — Secondary Surface Featured Section */}
-      <section className="py-16 md:py-24 bg-secondary-surface border-b transition-colors duration-300" style={{ borderColor: 'var(--line)' }}>
-        <div className="max-w-screen-xl mx-auto px-5 sm:px-8 lg:px-12">
-          <div ref={bizRef} className="fade-in">
-            <p
-              className="nav-label text-center mb-16"
-              style={{ fontSize: '10px', color: 'var(--muted)', letterSpacing: '0.2em' }}
-            >
-              LINI BISNIS KAMI
-            </p>
-            <div className="space-y-24">
-              {businessLines.map((biz) => (
-                <div
-                  key={biz.label}
-                  className={`grid grid-cols-1 md:grid-cols-2 gap-10 items-center ${
-                    biz.imageLeft ? '' : 'md:grid-flow-dense'
-                  }`}
-                >
-                  {/* Image */}
-                  <div className={biz.imageLeft ? '' : 'md:col-start-2'}>
-                    <Placeholder ratio="3/4" label={biz.label} className="w-full max-w-sm mx-auto" />
-                  </div>
-
-                  {/* Text */}
-                  <div className={`${biz.imageLeft ? '' : 'md:col-start-1 md:row-start-1'} flex flex-col justify-center px-4`}>
-                    <p
-                      className="nav-label mb-4"
-                      style={{ fontSize: '10px', letterSpacing: '0.2em', color: biz.accent === 'var(--caramel)' ? 'var(--caramel-deep)' : biz.accent }}
-                    >
-                      {biz.label}
-                    </p>
-                    <h3
-                      className="font-cormorant font-light mb-5 leading-snug"
-                      style={{ fontSize: 'clamp(1.6rem, 3vw, 2.5rem)', color: 'var(--charcoal)' }}
-                    >
-                      {biz.title}
-                    </h3>
-                    <p
-                      className="font-light leading-relaxed mb-8"
-                      style={{ color: 'var(--ink)', fontFamily: 'Jost', fontSize: '14px', lineHeight: 1.85 }}
-                    >
-                      {biz.description}
-                    </p>
-                    <Link
-                      to={biz.path}
-                      className="nav-label inline-flex items-center gap-2 border-b pb-1 min-h-[44px] w-fit transition-opacity duration-400 hover:opacity-60"
-                      style={{ fontSize: '11px', letterSpacing: '0.16em', color: biz.accent === 'var(--caramel)' ? 'var(--caramel-deep)' : biz.accent, borderColor: biz.accent === 'var(--caramel)' ? 'var(--caramel-deep)' : biz.accent }}
-                    >
-                      JELAJAHI →
-                    </Link>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-    </>
+      {/* Modals */}
+      <QuickViewModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
+      <PropertyInquiryModal property={selectedProperty} onClose={() => setSelectedProperty(null)} />
+      <KateringInquiryModal
+        initialPackage={selectedPackage}
+        onClose={() => setSelectedPackage(null)}
+      />
+    </div>
   );
-}
+};

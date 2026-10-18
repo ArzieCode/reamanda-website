@@ -1,125 +1,81 @@
-# RiaMiranda — Design System
+# Rea Manda — Design System Specification
 
-> Brand: RiaMiranda · Jakarta, est. 2009 · Founder: Indria Miranda
-> Quiet editorial fashion house, soft, feminine, restrained.
+> Brand: Rea Manda · Elegan, Tulus, dan Abadi
+> Quiet editorial Indonesian fashion house, living hospitality & catering perjamuan.
+> Clean-slate UI redesign grounded in three reference aesthetics:
+> 1. Busana: Modest editorial fashion house
+> 2. Properti: Warm sand hospitality & living
+> 3. Katering: Modern Indonesian banquet, packages & dish menus
 
 ---
 
-## Colour Tokens
+## 1. Colour Tokens (Light Only — Strictly Approved Palette)
 
-All colours **must** be used via CSS custom properties. Never hardcode hex values in components.
+All colours **must** be used via CSS custom properties. No other hex or rgb value may appear in any component:
 
-| Token | Hex | Usage |
+| Token | Value | Usage |
 |---|---|---|
-| `--bg` | `#FFFFFF` | Page background |
-| `--surface` | `#F6F4F0` | Cards, sections, placeholder bg |
-| `--ink` | `#4D4946` | Body text |
-| `--charcoal` | `#4F4D4A` | Headings, active tabs, fashion accent |
-| `--muted` | `#8B8987` | Secondary text, captions |
-| `--line` | `#E6E2DC` | Hairline dividers, borders |
-| `--caramel` | `#987245` | Brand gold, signature accent, catering accent |
-| `--indigo-brand` | `#162C74` | Deep accent, property section |
-| `--sale` | `#EA33B7` | Sale tags & one primary promo button **only** |
-| `--available` | `#7C9070` | Property: Tersedia |
-| `--occupied` | `#A8645A` | Property: Sudah Ditempati |
-| `--deposit` | `#C79A4B` | Property: Sudah DP |
+| `--white` | `#FFFFFF` | Solid header, active tab strips, card backgrounds |
+| `--surface` | `#F6F4F0` | Default page background, cards, secondary panels |
+| `--surface-2` | `#ECE7DF` | Editorial placeholders, image backs, tonal bands |
+| `--sand` | `#E7E1D1` | Properti section background (Rukita-inspired warm sand) |
+| `--line` | `#E6E2DC` | 1px hairline dividers, structural borders |
+| `--ink` | `#4D4946` | Body text (1.0625rem / 1.7) |
+| `--charcoal` | `#4F4D4A` | Headings, active tabs, Busana section accent |
+| `--muted` | `#6F6B67` | Secondary text, captions, metadata |
+| `--caramel` | `#987245` | Brand warm gold |
+| `--caramel-deep`| `#7E5D34` | Small caramel text on light, Katering section accent |
+| `--indigo` | `#162C74` | Properti section accent, admin bar |
+| `--sale` | `#EA33B7` | **ONLY** for SALE badges & Sale menu pill, nowhere else |
+| `--status-available` | `#7C9070` | Property: Tersedia |
+| `--status-deposit` | `#C79A4B` | Property: Sudah DP |
+| `--status-occupied`| `#A8645A` | Property: Sudah Ditempati |
+| `--overlay` | `rgba(79,77,74,0.45)` | Photo text overlay |
+| `--overlay-indigo` | `rgba(22,44,116,0.45)` | Properti hero overlay |
 
-### Section Accents
-- **Fashion (Busana):** charcoal + caramel
-- **Property (Properti):** indigo + caramel
-- **Catering (Katering):** caramel + warm neutrals
-
----
-
-## Typography
-
-| Role | Font | Weight | Size | Style |
-|---|---|---|---|---|
-| Wordmark | Cormorant Garamond | 300 | 1.5–2rem | tracking-widest uppercase |
-| Headings (h1–h3) | Cormorant Garamond | 300–400 | 2–4rem | wide letter-spacing |
-| Body | Jost | 300–400 | 0.875–1rem | — |
-| Nav / Labels | Jost | 400 | 12px | uppercase, letter-spacing 0.16em |
-| Captions | Jost | 300 | 11px | uppercase, letter-spacing 0.12em |
+### Section Accents & Backgrounds
+- **Busana (Fashion):** Accent `--charcoal`, Background `--white` / `--surface`
+- **Properti (Hospitality & Living):** Accent `--indigo`, Background `--sand` / `--white`
+- **Katering (Perjamuan & Events):** Accent `--caramel-deep`, Background `--surface` / `--white`
 
 ---
 
-## Spacing & Shape
+## 2. Typography
 
-- **Border-radius:** 0–4px on all elements. Pills (floating buttons, SALE badge): `border-radius: 9999px`.
-- **Borders:** 1px hairline in `--line` only. Never box-shadows heavier than `0 1px 0 var(--line)`.
-- **Whitespace:** generous — sections have at least 80px vertical padding on desktop.
-- **Photography aspect ratios:** 3:4 portrait (products), 16:9 wide (hero, property), 1:1 square (food gallery).
-
----
-
-## Motion
-
-- Hover transitions: `transition-all duration-[400ms] ease-in-out`
-- Scroll fade-in: `opacity-0 → opacity-100`, `translateY(16px) → translateY(0)`, no heavy parallax.
-- Product second-image swap: opacity cross-fade on hover.
-- No transforms > `scale(1.02)` on hover.
+- **Display Headings:** `Cormorant Garamond` light (weight 300), `clamp(3rem, 8vw, 7rem) / 1.02`
+- **Section Titles:** `Cormorant Garamond` light, `clamp(2.25rem, 4.5vw, 3.75rem)`
+- **Body:** `Jost` 300/400, `1.0625rem / 1.7`, `max-width: 58ch`
+- **Labels & Nav:** `Jost` 400, `12px` uppercase, `tracking: 0.18em` (nav tracking 0.14em)
 
 ---
 
-## Global Layout (every page)
+## 3. Shape, Borders & Spacing
 
-```
-┌─────────────────────────────────────────────────────────┐
-│  BrandTabStrip: Busana | Properti | Katering            │  ~32px, charcoal active, one caramel
-├─────────────────────────────────────────────────────────┤
-│  AnnouncementBar                                        │  40px, charcoal bg, white text, rotating
-├─────────────────────────────────────────────────────────┤
-│  Header: RIAMIRANDA · nav · IDR · 🔍 👤 🛒             │  sticky, transparent→white on scroll
-├─────────────────────────────────────────────────────────┤
-│  <page content>                                         │
-├─────────────────────────────────────────────────────────┤
-│  Footer: 4 columns + newsletter + payment row           │
-└─────────────────────────────────────────────────────────┘
-  [Wishlist] right-edge vertical tab
-  [Rewards] pill bottom-left
-  [Chat Us!] pill bottom-right
-```
+- **Border-radius:** `2px` standard UI, `4px` for cards. Only SALE badge/pill uses pill shape.
+- **Borders:** `1px` solid `--line`.
+- **Shadows & Gradients:** Strictly none, except sticky bid card & drawers. No glassmorphism.
+- **Icons:** Thin `1.25px` line icons only (`lucide-react`). No emojis.
+- **Spacing Scale:** `4`, `8`, `12`, `16`, `24`, `32`, `48`, `64`, `96`, `128`px only.
+- **Container:** Max-width `1280px` with side padding `20px` (mobile), `32px` (tablet), `48px` (desktop).
+- **Section Padding:** `80px` mobile, `128px` desktop.
+- **Z-Index Scale:** Header: `40`, Drawer: `60`, Modal: `70`, Toast: `80`.
 
 ---
 
-## Strictly Avoid
+## 4. Stacked Chrome Hierarchy (Normal Flow)
 
-- ❌ Purple/blue gradients, glassmorphism, neon, glow effects
-- ❌ Emoji icons (use inline SVG / lucide-react thin lines only)
-- ❌ `rounded-2xl`, `rounded-3xl` (except pills = `rounded-full`)
-- ❌ `shadow-lg`, `shadow-xl` (only `shadow-none` or hairline `shadow-[0_1px_0_var(--line)]`)
-- ❌ Generic copy: "Elevate your", "Seamless", "Unlock", "Discover"
-- ❌ Lorem ipsum — write realistic Bahasa Indonesia copy
-- ❌ Random stock image URLs — use `<Placeholder />` component
-- ❌ Hex values outside `tokens.css`
-
----
-
-## Rupiah Format
-
-`Rp 2.850.000` — dots as thousand separators, no decimal places.
+1. **Admin Bar (40px):** Normal flow, `--indigo` bg, white text: "Mode Admin", Edit ON/OFF switch, "Dasbor", "Keluar". Shown only when logged in.
+2. **Brand Tab Strip (40px):** White bg, 1px bottom `--line`. Tabs: Busana | Properti | Katering (12px uppercase). Active tab: `--charcoal` bg, white text. Inactive: ink on white.
+3. **Announcement Bar (40px):** `--charcoal` bg, white 12px uppercase text, one line, ellipsis on mobile. Editable by admin.
+4. **Header (72px / 60px mobile):** Sticky, solid white, 1px `--line` bottom border. CSS grid `minmax(0,1fr) auto minmax(0,1fr)`, gap 24px.
+   - Left: wordmark REA MANDA in `--charcoal`, serif.
+   - Centre (from 1100px): section-specific navigation (Busana, Properti, Katering).
+   - Right: search, cart (with count badge), admin status icon.
+   - Below 1100px: hamburger left, wordmark centred, icons right.
 
 ---
 
-## Placeholder Component
+## 5. Scope Boundaries
 
-```tsx
-<Placeholder ratio="3/4" label="Produk" className="w-full" />
-```
-
-Renders a warm `--surface` coloured div with the correct aspect ratio. Used for all images.
-
----
-
-## Routes
-
-| Path | Page |
-|---|---|
-| `/` | Landing |
-| `/busana` | Busana home |
-| `/busana/koleksi/:slug` | Collection page |
-| `/busana/produk/:slug` | Product detail |
-| `/properti` | Property listings |
-| `/properti/:id` | Property detail + bid |
-| `/katering` | Catering promo |
-| `*` | 404 Not Found |
+- **In Scope:** 3 business lines (Busana, Properti, Katering), simple cart checkout, property inquiry/bidding, catering order inquiry, admin inline CRUD & dashboard, static WhatsApp direct link.
+- **Out of Scope (strictly omitted):** External payment gateways, WhatsApp bot/API integration, dark mode toggles, chat widgets, loyalty points, customer registration/accounts, wishlist, floating widgets.

@@ -1,66 +1,72 @@
-// ============================================================
-// Announcement Bar — 40px high, single line, centred
-// Truncates with ellipsis on mobile, 12px, letter-spacing 0.12em
-// Rotation pausable on hover
-// ============================================================
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useAdmin } from '../../context/AdminContext';
+import { Edit2, Check, X } from 'lucide-react';
 
-const announcements = [
-  {
-    text: 'GRATIS ONGKIR UNTUK PEMBELIAN DI ATAS RP 500.000 • KODE: RIAFIRST',
-    link: '/busana',
-  },
-  {
-    text: 'KOLEKSI LUMINARA 2024 — KINI TERSEDIA DI SEMUA KATEGORI',
-    link: '/busana/koleksi/luminara',
-  },
-  {
-    text: 'PROGRAM LOYALITAS RIAMIRANDA — KUMPULKAN POIN SETIAP PEMBELIAN',
-    link: '/rewards',
-  },
-];
+export const AnnouncementBar: React.FC = () => {
+  const { settings, updateSettings, isEditMode } = useAdmin();
+  const [isEditing, setIsEditing] = useState(false);
+  const [editText, setEditText] = useState(settings.announcement);
 
-export default function AnnouncementBar() {
-  const [index, setIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
+  const handleSave = () => {
+    if (editText.trim()) {
+      updateSettings({ announcement: editText.trim() });
+    }
+    setIsEditing(false);
+  };
 
-  useEffect(() => {
-    if (isPaused) return;
-    const interval = setInterval(() => {
-      setIndex((i) => (i + 1) % announcements.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [isPaused]);
-
-  const current = announcements[index];
+  const handleCancel = () => {
+    setEditText(settings.announcement);
+    setIsEditing(false);
+  };
 
   return (
-    <div
-      className="w-full flex items-center justify-center px-4 border-b transition-colors duration-300"
-      style={{
-        height: 'var(--announcement-height)',
-        backgroundColor: 'var(--color-bg-announcement)',
-        borderColor: 'var(--color-border-subtle)',
-      }}
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-      onFocus={() => setIsPaused(true)}
-      onBlur={() => setIsPaused(false)}
-    >
-      <Link
-        to={current.link}
-        key={index}
-        className="nav-label text-center truncate max-w-full hover:underline transition-opacity duration-300 focus-visible:outline-none"
-        style={{
-          fontSize: '11px',
-          letterSpacing: '0.14em',
-          color: 'var(--color-text-on-dark)',
-        }}
-        aria-label={current.text}
-      >
-        {current.text}
-      </Link>
+    <div className="w-full bg-charcoal text-white h-10 border-b border-line/20 select-none">
+      <div className="site-container h-full flex items-center justify-center relative">
+        {isEditing ? (
+          <div className="flex items-center gap-2 w-full max-w-xl px-2">
+            <input
+              type="text"
+              value={editText}
+              onChange={(e) => setEditText(e.target.value)}
+              className="w-full bg-white/10 text-white text-[11px] uppercase tracking-[0.18em] px-2 py-1 border border-white/30 focus:border-white focus:outline-none"
+              style={{ borderRadius: '2px' }}
+              autoFocus
+            />
+            <button
+              onClick={handleSave}
+              className="p-1 hover:bg-white/20 text-white"
+              title="Simpan"
+            >
+              <Check size={14} className="stroke-[1.5]" />
+            </button>
+            <button
+              onClick={handleCancel}
+              className="p-1 hover:bg-white/20 text-white/70"
+              title="Batal"
+            >
+              <X size={14} className="stroke-[1.5]" />
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center justify-center gap-2 overflow-hidden px-4 w-full text-center">
+            <p className="text-white text-xs uppercase tracking-[0.18em] font-sans truncate m-0">
+              {settings.announcement}
+            </p>
+            {isEditMode && (
+              <button
+                onClick={() => {
+                  setEditText(settings.announcement);
+                  setIsEditing(true);
+                }}
+                className="text-white/60 hover:text-white p-1 ml-1 shrink-0"
+                title="Edit teks pengumuman"
+              >
+                <Edit2 size={12} className="stroke-[1.25]" />
+              </button>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
-}
+};
