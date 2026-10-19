@@ -1,12 +1,13 @@
 import React from 'react';
 import { useAdmin } from '../context/AdminContext';
+import { BRAND } from '../config/brand';
 import { MessageCircle, MapPin, Mail, Phone, Clock } from 'lucide-react';
 
 export const KontakPage: React.FC = () => {
   const { settings } = useAdmin();
 
   const directWaUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
-    'Halo Layanan Tamu RiaMiranda, saya ingin menyampaikan pertanyaan.'
+    `Halo Layanan Tamu ${BRAND.name}, saya ingin menyampaikan pertanyaan.`
   )}`;
 
   return (
@@ -14,7 +15,7 @@ export const KontakPage: React.FC = () => {
       <section className="py-20 site-container max-w-4xl text-center space-y-4">
         <span className="label-editorial text-muted block">Layanan Tamu & Komunikasi</span>
         <h1 className="font-section-title text-charcoal">
-          Hubungi RiaMiranda Studio
+          Hubungi {BRAND.name} Studio
         </h1>
         <p className="text-ink text-base sm:text-lg font-light leading-relaxed max-w-xl mx-auto">
           Kami siap menyambut Anda dengan hangat untuk pertanyaan busana, reservasi akomodasi boutique, atau janji temu konsultasi katering.

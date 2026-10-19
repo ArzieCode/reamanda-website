@@ -352,6 +352,7 @@ export const KateringPage: React.FC = () => {
       {/* Inquiry Modal */}
       {inquiryModalOpen && (
         <KateringInquiryModal
+          isOpen={inquiryModalOpen}
           initialPackage={selectedPackage}
           initialDish={selectedDish}
           onClose={() => {

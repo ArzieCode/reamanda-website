@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAdmin } from '../../context/AdminContext';
 import { Modal } from '../ui/Modal';
-import { Search, ArrowRight } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { SmartImage } from '../ui/SmartImage';
 
 interface SearchModalProps {
@@ -74,7 +74,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
     >
       <div className="space-y-5">
         {/* Search Input Bar */}
-        <div className="flex items-center gap-3 border-b border-line pb-4 pt-1 pr-10">
+        <div className="flex items-center gap-3 border-b border-line pb-4 pt-1 pr-12">
           <Search size={22} className="text-muted stroke-[1.25] shrink-0" />
           <input
             type="text"

@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCart } from '../../context/CartContext';
 import { useAdmin } from '../../context/AdminContext';
 import { useOverlay } from '../../context/OverlayContext';
 import { BRAND } from '../../config/brand';
 import { Modal } from '../ui/Modal';
-import { CheckCircle, MessageCircle, ArrowRight, ShieldCheck, Check } from 'lucide-react';
+import { CheckCircle, MessageCircle, ArrowRight, Check } from 'lucide-react';
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -23,6 +23,12 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
   const [deliveryMethod, setDeliveryMethod] = useState('Reguler Bebas Ongkir (JNE/SiCepat)');
   const [bankAccount, setBankAccount] = useState('BCA');
   const [orderConfirmedId, setOrderConfirmedId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setOrderConfirmedId(null);
+    }
+  }, [isOpen]);
 
   const formatRupiah = (amount: number) => {
     return 'Rp ' + amount.toLocaleString('id-ID');
@@ -78,6 +84,8 @@ Mohon konfirmasi ketersediaan dan rekening pembayaran. Terima kasih.`;
 
   const whatsappLink = `https://wa.me/${settings.whatsappNumber}?text=${getWhatsappMessage()}`;
 
+  if (!isOpen) return null;
+
   return (
     <Modal
       id="checkout-modal"
@@ -88,7 +96,7 @@ Mohon konfirmasi ketersediaan dan rekening pembayaran. Terima kasih.`;
     >
       {orderConfirmedId ? (
         <div className="text-center py-6 sm:py-8 space-y-6">
-          <div className="w-14 h-14 bg-surface flex items-center justify-center mx-auto text-charcoal border border-line" style={{ borderRadius: '2px' }}>
+          <div className="w-14 h-14 bg-surface flex items-center justify-center mx-auto text-charcoal border border-line rounded-[2px]">
             <CheckCircle size={32} className="stroke-[1.25]" />
           </div>
 
@@ -103,7 +111,7 @@ Mohon konfirmasi ketersediaan dan rekening pembayaran. Terima kasih.`;
             </p>
           </div>
 
-          <div className="p-4 bg-surface border border-line max-w-md mx-auto text-left text-xs font-sans space-y-1.5" style={{ borderRadius: '2px' }}>
+          <div className="p-4 bg-surface border border-line max-w-md mx-auto text-left text-xs font-sans space-y-1.5 rounded-[2px]">
             <div className="flex justify-between">
               <span className="text-muted">Total Pembayaran:</span>
               <span className="font-serif text-charcoal font-medium text-sm">{formatRupiah(subtotal)}</span>
@@ -127,8 +135,7 @@ Mohon konfirmasi ketersediaan dan rekening pembayaran. Terima kasih.`;
               href={whatsappLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 py-3.5 bg-charcoal text-white hover:bg-caramel-deep text-xs uppercase tracking-[0.16em] font-sans transition-colors inline-flex items-center justify-center gap-2 font-medium"
-              style={{ borderRadius: '2px' }}
+              className="flex-1 py-3.5 bg-charcoal text-white hover:bg-caramel-deep text-xs uppercase tracking-[0.16em] font-sans transition-colors inline-flex items-center justify-center gap-2 font-medium rounded-[2px]"
             >
               <MessageCircle size={16} className="stroke-[1.25]" />
               <span>Konfirmasi via WhatsApp</span>
@@ -136,8 +143,7 @@ Mohon konfirmasi ketersediaan dan rekening pembayaran. Terima kasih.`;
             <button
               type="button"
               onClick={onClose}
-              className="py-3.5 px-6 border border-line text-xs uppercase tracking-[0.16em] font-sans text-charcoal hover:bg-surface transition-colors inline-flex items-center justify-center gap-1.5"
-              style={{ borderRadius: '2px' }}
+              className="py-3.5 px-6 border border-line text-xs uppercase tracking-[0.16em] font-sans text-charcoal hover:bg-surface transition-colors inline-flex items-center justify-center gap-1.5 rounded-[2px]"
             >
               <Check size={14} className="stroke-[1.5]" />
               <span>Selesai</span>
@@ -147,7 +153,7 @@ Mohon konfirmasi ketersediaan dan rekening pembayaran. Terima kasih.`;
       ) : (
         <div>
           {/* Header */}
-          <div className="mb-6 pr-10">
+          <div className="mb-6 pr-12">
             <span className="label-editorial text-muted block mb-1">
               {BRAND.wordmark} ATELIER
             </span>
@@ -160,7 +166,7 @@ Mohon konfirmasi ketersediaan dan rekening pembayaran. Terima kasih.`;
           </div>
 
           {/* Items Summary Strip */}
-          <div className="mb-6 p-4 bg-surface border border-line text-xs font-sans space-y-2" style={{ borderRadius: '2px' }}>
+          <div className="mb-6 p-4 bg-surface border border-line text-xs font-sans space-y-2 rounded-[2px]">
             <div className="flex items-center justify-between text-muted">
               <span>Ringkasan Item ({items.length} jenis)</span>
               <span className="font-serif text-charcoal font-normal text-sm">{formatRupiah(subtotal)}</span>
@@ -187,8 +193,7 @@ Mohon konfirmasi ketersediaan dan rekening pembayaran. Terima kasih.`;
                   placeholder="Nama Lengkap Penerima"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-3 py-2.5 border border-line text-sm text-ink focus:border-charcoal focus:outline-none bg-white"
-                  style={{ borderRadius: '2px' }}
+                  className="w-full px-3 py-2.5 border border-line text-sm text-ink focus:border-charcoal focus:outline-none bg-white rounded-[2px]"
                 />
               </div>
 
@@ -202,8 +207,7 @@ Mohon konfirmasi ketersediaan dan rekening pembayaran. Terima kasih.`;
                   placeholder="081234567890"
                   value={whatsapp}
                   onChange={(e) => setWhatsapp(e.target.value)}
-                  className="w-full px-3 py-2.5 border border-line text-sm text-ink focus:border-charcoal focus:outline-none bg-white"
-                  style={{ borderRadius: '2px' }}
+                  className="w-full px-3 py-2.5 border border-line text-sm text-ink focus:border-charcoal focus:outline-none bg-white rounded-[2px]"
                 />
               </div>
             </div>
@@ -218,8 +222,7 @@ Mohon konfirmasi ketersediaan dan rekening pembayaran. Terima kasih.`;
                 placeholder="Jalan, Nomor Rumah, RT/RW, Kecamatan, Kota, Kode Pos"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                className="w-full px-3 py-2 border border-line text-sm text-ink focus:border-charcoal focus:outline-none bg-white"
-                style={{ borderRadius: '2px' }}
+                className="w-full px-3 py-2 border border-line text-sm text-ink focus:border-charcoal focus:outline-none bg-white rounded-[2px]"
               />
             </div>
 
@@ -231,8 +234,7 @@ Mohon konfirmasi ketersediaan dan rekening pembayaran. Terima kasih.`;
                 <select
                   value={deliveryMethod}
                   onChange={(e) => setDeliveryMethod(e.target.value)}
-                  className="w-full px-3 py-2.5 border border-line text-sm text-ink focus:border-charcoal focus:outline-none bg-white"
-                  style={{ borderRadius: '2px' }}
+                  className="w-full px-3 py-2.5 border border-line text-sm text-ink focus:border-charcoal focus:outline-none bg-white rounded-[2px]"
                 >
                   <option value="Reguler Bebas Ongkir (JNE/SiCepat)">Reguler Bebas Ongkir (Gratis Seluruh RI)</option>
                   <option value="Next Day Express (+Rp 25.000)">Next Day Express (+Rp 25.000)</option>
@@ -247,8 +249,7 @@ Mohon konfirmasi ketersediaan dan rekening pembayaran. Terima kasih.`;
                 <select
                   value={bankAccount}
                   onChange={(e) => setBankAccount(e.target.value)}
-                  className="w-full px-3 py-2.5 border border-line text-sm text-ink focus:border-charcoal focus:outline-none bg-white"
-                  style={{ borderRadius: '2px' }}
+                  className="w-full px-3 py-2.5 border border-line text-sm text-ink focus:border-charcoal focus:outline-none bg-white rounded-[2px]"
                 >
                   <option value="BCA">BCA (PT {BRAND.name} Mode)</option>
                   <option value="Mandiri">Mandiri (PT {BRAND.name} Mode)</option>
@@ -266,24 +267,22 @@ Mohon konfirmasi ketersediaan dan rekening pembayaran. Terima kasih.`;
                 placeholder="Contoh: Titipkan ke satpam, sertakan kartu ucapan Idul Fitri"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                className="w-full px-3 py-2 border border-line text-sm text-ink focus:border-charcoal focus:outline-none bg-white"
-                style={{ borderRadius: '2px' }}
+                className="w-full px-3 py-2 border border-line text-sm text-ink focus:border-charcoal focus:outline-none bg-white rounded-[2px]"
               />
             </div>
 
-            <div className="pt-3 border-t border-line flex flex-col sm:flex-row items-center justify-end gap-3">
+            {/* Sticky Actions bar inside panel on mobile */}
+            <div className="sticky bottom-0 bg-white border-t border-line pt-3 pb-1 -mx-5 px-5 sm:mx-0 sm:px-0 sm:pt-4 sm:border-t sm:static z-20 flex flex-col sm:flex-row items-center justify-end gap-3 mt-4">
               <button
                 type="button"
                 onClick={onClose}
-                className="w-full sm:w-auto px-6 py-3 border border-line text-xs uppercase tracking-wider text-muted hover:text-charcoal font-sans transition-colors order-2 sm:order-1"
-                style={{ borderRadius: '2px' }}
+                className="w-full sm:w-auto px-6 py-3 border border-line text-xs uppercase tracking-wider text-muted hover:text-charcoal font-sans transition-colors order-2 sm:order-1 rounded-[2px]"
               >
                 Batal
               </button>
               <button
                 type="submit"
-                className="w-full sm:w-auto px-8 py-3 bg-charcoal text-white hover:bg-caramel-deep text-xs uppercase tracking-[0.18em] font-sans transition-colors flex items-center justify-center gap-2 font-medium order-1 sm:order-2"
-                style={{ borderRadius: '2px' }}
+                className="w-full sm:w-auto px-8 py-3 bg-charcoal text-white hover:bg-caramel-deep text-xs uppercase tracking-[0.18em] font-sans transition-colors flex items-center justify-center gap-2 font-medium order-1 sm:order-2 rounded-[2px]"
               >
                 <span>Pesan Sekarang · {formatRupiah(subtotal)}</span>
                 <ArrowRight size={14} className="stroke-[1.25]" />

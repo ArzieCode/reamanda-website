@@ -88,7 +88,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose
         </div>
 
         {/* Product Details Column */}
-        <div className="p-6 sm:p-8 flex flex-col justify-between">
+        <div className="p-6 sm:p-8 flex flex-col justify-between pr-12 sm:pr-14">
           <div>
             <div className="flex items-center gap-2 mb-2">
               <span className="label-editorial text-muted">{product.collection}</span>

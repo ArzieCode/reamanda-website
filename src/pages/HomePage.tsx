@@ -391,6 +391,7 @@ export const HomePage: React.FC = () => {
       <QuickViewModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
       <PropertyInquiryModal property={selectedProperty} onClose={() => setSelectedProperty(null)} />
       <KateringInquiryModal
+        isOpen={Boolean(selectedPackage)}
         initialPackage={selectedPackage}
         onClose={() => setSelectedPackage(null)}
       />

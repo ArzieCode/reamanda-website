@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { PropertyListing } from '../../data/properti';
 import { useAdmin } from '../../context/AdminContext';
 import { useOverlay } from '../../context/OverlayContext';
@@ -6,12 +6,17 @@ import { BRAND } from '../../config/brand';
 import { Modal } from '../ui/Modal';
 import { CheckCircle, MessageCircle, ArrowRight, Calendar, Users, DollarSign, Check } from 'lucide-react';
 
-interface PropertyInquiryModalProps {
+export interface PropertyInquiryModalProps {
   property: PropertyListing | null;
   onClose: () => void;
+  isOpen?: boolean;
 }
 
-export const PropertyInquiryModal: React.FC<PropertyInquiryModalProps> = ({ property, onClose }) => {
+export const PropertyInquiryModal: React.FC<PropertyInquiryModalProps> = ({
+  property,
+  onClose,
+  isOpen: propIsOpen,
+}) => {
   const { settings, addOrder } = useAdmin();
   const { showToast } = useOverlay();
 
@@ -26,7 +31,15 @@ export const PropertyInquiryModal: React.FC<PropertyInquiryModalProps> = ({ prop
   const [notes, setNotes] = useState('');
   const [confirmedId, setConfirmedId] = useState<string | null>(null);
 
-  if (!property) return null;
+  const isOpen = propIsOpen !== undefined ? propIsOpen : Boolean(property);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setConfirmedId(null);
+    }
+  }, [isOpen]);
+
+  if (!property || !isOpen) return null;
 
   const isRental = property.priceType === 'sewa';
 
@@ -108,14 +121,14 @@ Mohon konfirmasi jadwal temu dengan tim representatif ${BRAND.name}. Terima kasi
   return (
     <Modal
       id="property-inquiry-modal"
-      isOpen={Boolean(property)}
+      isOpen={isOpen}
       onClose={onClose}
       isDirty={isDirty}
       maxWidth="720px"
     >
       {confirmedId ? (
         <div className="text-center py-6 sm:py-8 space-y-6">
-          <div className="w-14 h-14 bg-surface flex items-center justify-center mx-auto text-indigo border border-line" style={{ borderRadius: '2px' }}>
+          <div className="w-14 h-14 bg-surface flex items-center justify-center mx-auto text-indigo border border-line rounded-[2px]">
             <CheckCircle size={32} className="stroke-[1.25]" />
           </div>
 
@@ -132,30 +145,25 @@ Mohon konfirmasi jadwal temu dengan tim representatif ${BRAND.name}. Terima kasi
             </p>
           </div>
 
-          <div className="p-4 bg-surface border border-line max-w-md mx-auto text-left text-xs font-sans space-y-1.5" style={{ borderRadius: '2px' }}>
+          <div className="p-4 bg-surface border border-line max-w-md mx-auto text-left text-xs font-sans space-y-1.5 rounded-[2px]">
             <div className="flex justify-between">
               <span className="text-muted">Properti:</span>
               <span className="text-charcoal font-medium">{property.name}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted">Nama:</span>
-              <span className="text-charcoal font-medium">{name}</span>
+              <span className="text-muted">Tipe / Lokasi:</span>
+              <span className="text-charcoal font-medium">{property.type} · {property.location}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted">Kontak WhatsApp:</span>
-              <span className="text-charcoal font-medium">{whatsapp}</span>
+              <span className="text-muted">Pemohon:</span>
+              <span className="text-charcoal font-medium">{name} ({whatsapp})</span>
             </div>
-            {isRental ? (
-              <div className="flex justify-between">
-                <span className="text-muted">Periode & Tamu:</span>
-                <span className="text-charcoal font-medium">{checkIn || 'TBD'} s/d {checkOut || 'TBD'} ({guests})</span>
-              </div>
-            ) : (
-              <div className="flex justify-between">
-                <span className="text-muted">Survei / Tawaran:</span>
-                <span className="text-charcoal font-medium">{surveyDate || 'Segera'} · {offerAmount || property.priceFormatted}</span>
-              </div>
-            )}
+            <div className="flex justify-between">
+              <span className="text-muted">Rincian:</span>
+              <span className="text-indigo font-medium font-serif">
+                {isRental ? `${checkIn || 'TBD'} s/d ${checkOut || 'TBD'}` : (offerAmount || property.priceFormatted)}
+              </span>
+            </div>
           </div>
 
           <div className="pt-2 max-w-md mx-auto flex flex-col sm:flex-row gap-3">
@@ -163,17 +171,15 @@ Mohon konfirmasi jadwal temu dengan tim representatif ${BRAND.name}. Terima kasi
               href={whatsappLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 py-3.5 bg-indigo text-white hover:opacity-90 text-xs uppercase tracking-[0.16em] font-sans transition-opacity inline-flex items-center justify-center gap-2 font-medium"
-              style={{ borderRadius: '2px' }}
+              className="flex-1 py-3.5 bg-indigo text-white hover:opacity-90 text-xs uppercase tracking-[0.16em] font-sans transition-opacity inline-flex items-center justify-center gap-2 font-medium rounded-[2px]"
             >
               <MessageCircle size={16} className="stroke-[1.25]" />
-              <span>Lanjut via WhatsApp</span>
+              <span>Konfirmasi via WhatsApp</span>
             </a>
             <button
               type="button"
               onClick={onClose}
-              className="py-3.5 px-6 border border-line text-xs uppercase tracking-[0.16em] font-sans text-charcoal hover:bg-surface transition-colors inline-flex items-center justify-center gap-1.5"
-              style={{ borderRadius: '2px' }}
+              className="py-3.5 px-6 border border-line text-xs uppercase tracking-[0.16em] font-sans text-charcoal hover:bg-surface transition-colors inline-flex items-center justify-center gap-1.5 rounded-[2px]"
             >
               <Check size={14} className="stroke-[1.5]" />
               <span>Selesai</span>
@@ -182,18 +188,16 @@ Mohon konfirmasi jadwal temu dengan tim representatif ${BRAND.name}. Terima kasi
         </div>
       ) : (
         <div>
-          {/* Eyebrow and Form Header */}
-          <div className="mb-6 pr-10">
+          {/* Header */}
+          <div className="mb-6 pr-12">
             <span className="label-editorial text-indigo block mb-1">
-              {BRAND.wordmark} HOSPITALITY & LIVING
+              {BRAND.wordmark} LIVING & HOSPITALITY
             </span>
             <h3 className="font-serif text-charcoal text-2xl sm:text-3xl font-light mb-1.5">
-              {isRental ? `Reservasi: ${property.name}` : `Ajukan Penawaran / Survei: ${property.name}`}
+              {isRental ? 'Reservasi Akomodasi Santun' : 'Formulir Survei & Bidding Properti'}
             </h3>
             <p className="text-xs sm:text-sm text-muted font-sans leading-relaxed">
-              {isRental
-                ? `Format tarif acuan: ${property.priceFormatted}. Layanan concierge siap mengonfirmasi ketersediaan kamar.`
-                : `Harga patokan: ${property.priceFormatted}. Tim representatif akan mengontak Anda untuk kunjungan fisik.`}
+              {property.name} — {property.location} ({property.priceFormatted})
             </p>
           </div>
 
@@ -201,22 +205,21 @@ Mohon konfirmasi jadwal temu dengan tim representatif ${BRAND.name}. Terima kasi
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs uppercase tracking-widest text-muted mb-1 font-sans">
-                  Nama Lengkap *
+                  Nama Pemohon / Tamu *
                 </label>
                 <input
                   type="text"
                   required
-                  placeholder="Nama pemesan atau peminat"
+                  placeholder="Nama Lengkap"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-3 py-2.5 border border-line text-sm text-ink focus:border-indigo focus:outline-none bg-white"
-                  style={{ borderRadius: '2px' }}
+                  className="w-full px-3 py-2.5 border border-line text-sm text-ink focus:border-indigo focus:outline-none bg-white rounded-[2px]"
                 />
               </div>
 
               <div>
                 <label className="block text-xs uppercase tracking-widest text-muted mb-1 font-sans">
-                  Nomor WhatsApp *
+                  Nomor WhatsApp Aktif *
                 </label>
                 <input
                   type="tel"
@@ -224,8 +227,7 @@ Mohon konfirmasi jadwal temu dengan tim representatif ${BRAND.name}. Terima kasi
                   placeholder="081234567890"
                   value={whatsapp}
                   onChange={(e) => setWhatsapp(e.target.value)}
-                  className="w-full px-3 py-2.5 border border-line text-sm text-ink focus:border-indigo focus:outline-none bg-white"
-                  style={{ borderRadius: '2px' }}
+                  className="w-full px-3 py-2.5 border border-line text-sm text-ink focus:border-indigo focus:outline-none bg-white rounded-[2px]"
                 />
               </div>
             </div>
@@ -242,8 +244,7 @@ Mohon konfirmasi jadwal temu dengan tim representatif ${BRAND.name}. Terima kasi
                       type="date"
                       value={checkIn}
                       onChange={(e) => setCheckIn(e.target.value)}
-                      className="w-full px-3 py-2.5 border border-line text-sm text-ink focus:border-indigo focus:outline-none bg-white"
-                      style={{ borderRadius: '2px' }}
+                      className="w-full px-3 py-2.5 border border-line text-sm text-ink focus:border-indigo focus:outline-none bg-white rounded-[2px]"
                     />
                   </div>
 
@@ -256,8 +257,7 @@ Mohon konfirmasi jadwal temu dengan tim representatif ${BRAND.name}. Terima kasi
                       type="date"
                       value={checkOut}
                       onChange={(e) => setCheckOut(e.target.value)}
-                      className="w-full px-3 py-2.5 border border-line text-sm text-ink focus:border-indigo focus:outline-none bg-white"
-                      style={{ borderRadius: '2px' }}
+                      className="w-full px-3 py-2.5 border border-line text-sm text-ink focus:border-indigo focus:outline-none bg-white rounded-[2px]"
                     />
                   </div>
                 </div>
@@ -270,8 +270,7 @@ Mohon konfirmasi jadwal temu dengan tim representatif ${BRAND.name}. Terima kasi
                   <select
                     value={guests}
                     onChange={(e) => setGuests(e.target.value)}
-                    className="w-full px-3 py-2.5 border border-line text-sm text-ink focus:border-indigo focus:outline-none bg-white"
-                    style={{ borderRadius: '2px' }}
+                    className="w-full px-3 py-2.5 border border-line text-sm text-ink focus:border-indigo focus:outline-none bg-white rounded-[2px]"
                   >
                     <option value="1 Tamu">1 Tamu (Single Occupancy)</option>
                     <option value="2 Tamu">2 Tamu (Pasangan/Keluarga Inti)</option>
@@ -291,8 +290,7 @@ Mohon konfirmasi jadwal temu dengan tim representatif ${BRAND.name}. Terima kasi
                     type="date"
                     value={surveyDate}
                     onChange={(e) => setSurveyDate(e.target.value)}
-                    className="w-full px-3 py-2.5 border border-line text-sm text-ink focus:border-indigo focus:outline-none bg-white"
-                    style={{ borderRadius: '2px' }}
+                    className="w-full px-3 py-2.5 border border-line text-sm text-ink focus:border-indigo focus:outline-none bg-white rounded-[2px]"
                   />
                 </div>
 
@@ -306,8 +304,7 @@ Mohon konfirmasi jadwal temu dengan tim representatif ${BRAND.name}. Terima kasi
                     placeholder={`Patokan: ${property.priceFormatted}`}
                     value={offerAmount}
                     onChange={(e) => setOfferAmount(e.target.value)}
-                    className="w-full px-3 py-2.5 border border-line text-sm text-ink focus:border-indigo focus:outline-none bg-white"
-                    style={{ borderRadius: '2px' }}
+                    className="w-full px-3 py-2.5 border border-line text-sm text-ink focus:border-indigo focus:outline-none bg-white rounded-[2px]"
                   />
                 </div>
               </div>
@@ -322,24 +319,22 @@ Mohon konfirmasi jadwal temu dengan tim representatif ${BRAND.name}. Terima kasi
                 placeholder="Contoh: Permintaan lantai rendah, akses kursi roda, atau waktu survei saat akhir pekan"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                className="w-full px-3 py-2 border border-line text-sm text-ink focus:border-indigo focus:outline-none bg-white"
-                style={{ borderRadius: '2px' }}
+                className="w-full px-3 py-2 border border-line text-sm text-ink focus:border-indigo focus:outline-none bg-white rounded-[2px]"
               />
             </div>
 
-            <div className="pt-3 border-t border-line flex flex-col sm:flex-row items-center justify-end gap-3">
+            {/* Sticky Actions bar inside panel on mobile */}
+            <div className="sticky bottom-0 bg-white border-t border-line pt-3 pb-1 -mx-5 px-5 sm:mx-0 sm:px-0 sm:pt-4 sm:border-t sm:static z-20 flex flex-col sm:flex-row items-center justify-end gap-3 mt-4">
               <button
                 type="button"
                 onClick={onClose}
-                className="w-full sm:w-auto px-6 py-3 border border-line text-xs uppercase tracking-wider text-muted hover:text-charcoal font-sans transition-colors order-2 sm:order-1"
-                style={{ borderRadius: '2px' }}
+                className="w-full sm:w-auto px-6 py-3 border border-line text-xs uppercase tracking-wider text-muted hover:text-charcoal font-sans transition-colors order-2 sm:order-1 rounded-[2px]"
               >
                 Batal
               </button>
               <button
                 type="submit"
-                className="w-full sm:w-auto px-8 py-3 bg-indigo text-white hover:opacity-90 text-xs uppercase tracking-[0.18em] font-sans transition-opacity flex items-center justify-center gap-2 font-medium order-1 sm:order-2"
-                style={{ borderRadius: '2px' }}
+                className="w-full sm:w-auto px-8 py-3 bg-indigo text-white hover:opacity-90 text-xs uppercase tracking-[0.18em] font-sans transition-opacity flex items-center justify-center gap-2 font-medium order-1 sm:order-2 rounded-[2px]"
               >
                 <span>{isRental ? 'Kirim Permintaan Reservasi' : 'Kirim Pengajuan Survei & Penawaran'}</span>
                 <ArrowRight size={14} className="stroke-[1.25]" />

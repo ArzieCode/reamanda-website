@@ -37,7 +37,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({ isOpen, onClos
       hideHeader
     >
       <div>
-        <div className="flex items-center gap-2 mb-2 pr-10">
+        <div className="flex items-center gap-2 mb-2 pr-12">
           <ShieldCheck size={20} className="text-indigo stroke-[1.25]" />
           <span className="label-editorial text-indigo">Portal Administrator</span>
         </div>

@@ -1,17 +1,18 @@
 import React from 'react';
 import { SmartImage } from '../components/ui/SmartImage';
+import { BRAND } from '../config/brand';
 
 export const TentangKamiPage: React.FC = () => {
   return (
     <div className="w-full bg-surface">
       {/* Editorial Header */}
       <section className="py-20 site-container max-w-4xl text-center space-y-4">
-        <span className="label-editorial text-muted block">Tentang Brand RiaMiranda</span>
+        <span className="label-editorial text-muted block">Tentang Brand {BRAND.name}</span>
         <h1 className="font-section-title text-charcoal">
           Merawat Nilai Luhur Nusantara dalam Keanggunan Masa Kini
         </h1>
         <p className="text-ink text-base sm:text-lg font-light leading-relaxed max-w-2xl mx-auto">
-          Didirikan di Jakarta pada tahun 2009 oleh perancang busana Indria Miranda, kami mendedikasikan karya pada kesantunan yang memuliakan martabat wanita.
+          Didirikan di Jakarta, kami mendedikasikan karya pada kesantunan yang memuliakan martabat wanita.
         </p>
       </section>
 
@@ -23,19 +24,19 @@ export const TentangKamiPage: React.FC = () => {
               <div className="border border-line p-2 bg-surface">
                 <SmartImage
                   slot="about-portrait"
-                  alt="Indria Miranda — Pendiri RiaMiranda"
+                  alt={`Studio dan Ruang Karya ${BRAND.name}`}
                   aspectRatio="3:4"
                 />
               </div>
             </div>
 
             <div className="md:col-span-7 space-y-4 font-sans text-sm text-ink leading-relaxed">
-              <span className="label-editorial text-charcoal block">Perjalanan 16 Tahun</span>
+              <span className="label-editorial text-charcoal block">Perjalanan Santun</span>
               <h2 className="font-serif text-2xl text-charcoal font-light">
                 Dimulai dari Sketsa Teduh di Sudut Jakarta
               </h2>
               <p>
-                RiaMiranda lahir dari sebuah kegelisahan: sulitnya menemukan busana muslimah yang mengutamakan kenyamanan, siluet longgar santun, namun tetap berkarakter mode kontemporer.
+                {BRAND.name} lahir dari sebuah kegelisahan: sulitnya menemukan busana muslimah yang mengutamakan kenyamanan, siluet longgar santun, namun tetap berkarakter mode kontemporer.
               </p>
               <p>
                 Dengan menggali kekayaan motif songket Pandai Sikek dan filosofi adat Minangkabau "Adat basandi syarak, syarak basandi Kitabullah", kami menghadirkan cetakan monogram eksklusif yang lembut, elegan, dan abadi.

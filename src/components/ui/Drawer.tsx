@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { X, AlertTriangle } from 'lucide-react';
 import { useOverlay } from '../../context/OverlayContext';
 
@@ -45,7 +46,7 @@ export const Drawer: React.FC<DrawerProps> = ({
     };
   }, [isOpen, id, openOverlay, closeOverlay]);
 
-  const requestClose = useCallback(() => {
+  const handleBackdropOrEscapeClose = useCallback(() => {
     if (isDirty) {
       setShowDirtyConfirm(true);
     } else {
@@ -74,7 +75,7 @@ export const Drawer: React.FC<DrawerProps> = ({
           if (showDirtyConfirm) {
             setShowDirtyConfirm(false);
           } else {
-            requestClose();
+            handleBackdropOrEscapeClose();
           }
         }
       }
@@ -82,7 +83,7 @@ export const Drawer: React.FC<DrawerProps> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, id, isTopOverlay, showDirtyConfirm, requestClose]);
+  }, [isOpen, id, isTopOverlay, showDirtyConfirm, handleBackdropOrEscapeClose]);
 
   // Focus trap
   useEffect(() => {
@@ -90,12 +91,19 @@ export const Drawer: React.FC<DrawerProps> = ({
 
     const panel = panelRef.current;
     const focusableSelectors =
-      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+      'input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [href], [tabindex]:not([tabindex="-1"])';
 
-    const focusableElements = panel.querySelectorAll<HTMLElement>(focusableSelectors);
-    if (focusableElements.length > 0) {
-      focusableElements[0].focus();
-    }
+    const focusTimer = setTimeout(() => {
+      const firstInput = panel.querySelector<HTMLElement>('input:not([disabled]), select:not([disabled]), textarea:not([disabled])');
+      if (firstInput) {
+        firstInput.focus();
+      } else {
+        const firstFocusable = panel.querySelector<HTMLElement>(focusableSelectors);
+        if (firstFocusable) {
+          firstFocusable.focus();
+        }
+      }
+    }, 50);
 
     const handleTabKey = (e: KeyboardEvent) => {
       if (e.key !== 'Tab') return;
@@ -120,21 +128,24 @@ export const Drawer: React.FC<DrawerProps> = ({
     };
 
     panel.addEventListener('keydown', handleTabKey);
-    return () => panel.removeEventListener('keydown', handleTabKey);
+    return () => {
+      clearTimeout(focusTimer);
+      panel.removeEventListener('keydown', handleTabKey);
+    };
   }, [isOpen]);
 
-  if (!isOpen) return null;
+  if (!isOpen || typeof document === 'undefined') return null;
 
   const isLeft = side === 'left';
 
-  return (
+  const drawerNode = (
     <div
       ref={overlayRef}
-      className={`fixed inset-0 z-drawer flex ${isLeft ? 'justify-start' : 'justify-end'} transition-opacity duration-250 ease-out`}
+      className={`fixed inset-0 z-drawer flex ${isLeft ? 'justify-start' : 'justify-end'} animate-modal-overlay`}
       style={{ backgroundColor: 'var(--overlay)' }}
       onClick={(e) => {
         if (e.target === overlayRef.current) {
-          requestClose();
+          handleBackdropOrEscapeClose();
         }
       }}
     >
@@ -142,9 +153,9 @@ export const Drawer: React.FC<DrawerProps> = ({
         ref={panelRef}
         role="dialog"
         aria-modal="true"
-        className={`w-full ${maxWidth} bg-white h-full flex flex-col justify-between shadow-2xl transition-transform duration-300 ease-out ${
-          isLeft ? 'border-r' : 'border-l'
-        } border-line`}
+        className={`w-full ${maxWidth} bg-white h-full flex flex-col justify-between shadow-2xl ${
+          isLeft ? 'border-r animate-drawer-left' : 'border-l animate-drawer-right'
+        } border-line focus:outline-none`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Drawer Header */}
@@ -165,8 +176,11 @@ export const Drawer: React.FC<DrawerProps> = ({
           {/* 44x44px Touch Close (X) Button */}
           <button
             type="button"
-            onClick={requestClose}
-            className="w-11 h-11 flex items-center justify-center text-charcoal hover:text-caramel-deep transition-colors shrink-0 focus:outline-none focus:ring-1 focus:ring-charcoal"
+            onClick={() => {
+              setShowDirtyConfirm(false);
+              onClose();
+            }}
+            className="w-[44px] h-[44px] flex items-center justify-center text-charcoal hover:text-caramel-deep transition-colors shrink-0 cursor-pointer touch-manipulation focus:outline-none focus:ring-1 focus:ring-charcoal"
             aria-label="Tutup"
             style={{ borderRadius: '2px' }}
           >
@@ -178,8 +192,7 @@ export const Drawer: React.FC<DrawerProps> = ({
         {showDirtyConfirm && (
           <div
             role="alert"
-            className="m-4 p-4 bg-surface border border-line text-xs font-sans space-y-3"
-            style={{ borderRadius: '2px' }}
+            className="m-4 p-4 bg-surface border border-line text-xs font-sans space-y-3 rounded-[2px]"
           >
             <div className="flex items-center gap-2 text-charcoal font-medium">
               <AlertTriangle size={18} className="text-caramel-deep shrink-0 stroke-[1.5]" />
@@ -189,16 +202,14 @@ export const Drawer: React.FC<DrawerProps> = ({
               <button
                 type="button"
                 onClick={cancelDiscard}
-                className="px-3 py-1.5 border border-line text-ink hover:text-charcoal bg-white transition-colors"
-                style={{ borderRadius: '2px' }}
+                className="px-3.5 py-1.5 border border-line text-ink hover:text-charcoal bg-white transition-colors rounded-[2px]"
               >
                 Batal
               </button>
               <button
                 type="button"
                 onClick={confirmDiscardAndClose}
-                className="px-3 py-1.5 bg-charcoal text-white hover:bg-caramel-deep transition-colors"
-                style={{ borderRadius: '2px' }}
+                className="px-3.5 py-1.5 bg-charcoal text-white hover:bg-caramel-deep transition-colors rounded-[2px]"
               >
                 Tutup
               </button>
@@ -220,4 +231,6 @@ export const Drawer: React.FC<DrawerProps> = ({
       </div>
     </div>
   );
+
+  return createPortal(drawerNode, document.body);
 };

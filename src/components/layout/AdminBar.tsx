@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAdmin } from '../../context/AdminContext';
+import { BRAND } from '../../config/brand';
 import { ShieldCheck, Edit3, LayoutDashboard, LogOut } from 'lucide-react';
 
 export const AdminBar: React.FC = () => {
@@ -13,7 +14,7 @@ export const AdminBar: React.FC = () => {
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1.5 font-medium uppercase text-[11px] tracking-[0.18em]">
             <ShieldCheck size={14} className="stroke-[1.25]" />
-            Mode Admin RiaMiranda
+            Mode Admin {BRAND.name}
           </span>
           <span className="text-white/40">|</span>
           <button

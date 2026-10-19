@@ -51,7 +51,7 @@ export const CartDrawer: React.FC = () => {
         title="Keranjang Belanja"
         eyebrow={`Koleksi Busana (${totalItems} item)`}
         side="right"
-        maxWidth="sm:max-w-[420px]"
+        maxWidth="w-full sm:max-w-[420px]"
         footer={footerContent}
       >
         {items.length === 0 ? (
@@ -73,12 +73,11 @@ export const CartDrawer: React.FC = () => {
           </div>
         ) : (
           <div className="divide-y divide-line">
-            {items.map((item) => {
+            {items.map((item, index) => {
               const unitPrice =
                 item.product.isSale && item.product.salePrice
                   ? item.product.salePrice
                   : item.product.price;
-              const itemTotal = unitPrice * item.quantity;
 
               return (
                 <div
@@ -113,7 +112,7 @@ export const CartDrawer: React.FC = () => {
                       <div className="flex items-center border border-line">
                         <button
                           type="button"
-                          onClick={() => updateQuantity(item.product.id, item.size, item.color, item.quantity - 1)}
+                          onClick={() => updateQuantity(index, item.quantity - 1)}
                           className="w-7 h-7 flex items-center justify-center text-charcoal hover:bg-surface text-xs"
                           aria-label="Kurangi jumlah"
                         >
@@ -124,7 +123,7 @@ export const CartDrawer: React.FC = () => {
                         </span>
                         <button
                           type="button"
-                          onClick={() => updateQuantity(item.product.id, item.size, item.color, item.quantity + 1)}
+                          onClick={() => updateQuantity(index, item.quantity + 1)}
                           className="w-7 h-7 flex items-center justify-center text-charcoal hover:bg-surface text-xs"
                           aria-label="Tambah jumlah"
                         >
@@ -134,7 +133,7 @@ export const CartDrawer: React.FC = () => {
 
                       <button
                         type="button"
-                        onClick={() => removeItem(item.product.id, item.size, item.color)}
+                        onClick={() => removeItem(index)}
                         className="text-muted hover:text-charcoal p-1 transition-colors"
                         aria-label="Hapus produk"
                       >

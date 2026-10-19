@@ -8,11 +8,13 @@ export interface ToastState {
 
 interface OverlayContextType {
   activeOverlays: string[];
-  openOverlay: (id: string, triggerElement?: HTMLElement | null) => void;
+  openOverlay: (id: string, payload?: any, triggerElement?: HTMLElement | null) => void;
   closeOverlay: (id: string) => void;
   closeTopOverlay: () => boolean;
+  closeAllOverlays: () => void;
   isOverlayOpen: (id: string) => boolean;
   isTopOverlay: (id: string) => boolean;
+  getOverlayData: <T = any>(id: string) => T | undefined;
   registerTrigger: (id: string, el: HTMLElement | null) => void;
   toast: ToastState;
   showToast: (message: string, duration?: number) => void;
@@ -23,10 +25,12 @@ const OverlayContext = createContext<OverlayContextType | undefined>(undefined);
 
 export const OverlayProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [activeOverlays, setActiveOverlays] = useState<string[]>([]);
+  const [overlayData, setOverlayData] = useState<Record<string, any>>({});
   const triggersRef = useRef<Map<string, HTMLElement>>(new Map());
   const [toast, setToast] = useState<ToastState>({ visible: false, message: '' });
   const toastTimeoutRef = useRef<any>(null);
   const location = useLocation();
+  const prevPathnameRef = useRef(location.pathname);
 
   // Scroll lock manager
   useEffect(() => {
@@ -52,11 +56,13 @@ export const OverlayProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   // ALWAYS release scroll lock and close all overlays on route change
   useEffect(() => {
-    if (activeOverlays.length > 0) {
+    if (prevPathnameRef.current !== location.pathname) {
+      prevPathnameRef.current = location.pathname;
       setActiveOverlays([]);
+      setOverlayData({});
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
     }
-    document.body.style.overflow = '';
-    document.body.style.paddingRight = '';
   }, [location.pathname]);
 
   // Clean up on component unmount
@@ -73,11 +79,15 @@ export const OverlayProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, []);
 
-  const openOverlay = useCallback((id: string, triggerElement?: HTMLElement | null) => {
+  const openOverlay = useCallback((id: string, payload?: any, triggerElement?: HTMLElement | null) => {
     if (triggerElement) {
       triggersRef.current.set(id, triggerElement);
-    } else if (document.activeElement instanceof HTMLElement) {
+    } else if (typeof document !== 'undefined' && document.activeElement instanceof HTMLElement) {
       triggersRef.current.set(id, document.activeElement);
+    }
+
+    if (payload !== undefined) {
+      setOverlayData((prev) => ({ ...prev, [id]: payload }));
     }
 
     setActiveOverlays((prev) => {
@@ -88,12 +98,21 @@ export const OverlayProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const closeOverlay = useCallback((id: string) => {
     setActiveOverlays((prev) => prev.filter((item) => item !== id));
+    setOverlayData((prev) => {
+      const copy = { ...prev };
+      delete copy[id];
+      return copy;
+    });
 
     // Return focus to the trigger element
     const trigger = triggersRef.current.get(id);
     if (trigger && typeof trigger.focus === 'function') {
       setTimeout(() => {
-        trigger.focus();
+        try {
+          trigger.focus();
+        } catch {
+          // ignore if unmounted
+        }
       }, 50);
       triggersRef.current.delete(id);
     }
@@ -106,6 +125,13 @@ export const OverlayProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return true;
   }, [activeOverlays, closeOverlay]);
 
+  const closeAllOverlays = useCallback(() => {
+    setActiveOverlays([]);
+    setOverlayData({});
+    document.body.style.overflow = '';
+    document.body.style.paddingRight = '';
+  }, []);
+
   const isOverlayOpen = useCallback(
     (id: string) => activeOverlays.includes(id),
     [activeOverlays]
@@ -117,6 +143,13 @@ export const OverlayProvider: React.FC<{ children: React.ReactNode }> = ({ child
       return activeOverlays[activeOverlays.length - 1] === id;
     },
     [activeOverlays]
+  );
+
+  const getOverlayData = useCallback(
+    <T = any,>(id: string): T | undefined => {
+      return overlayData[id] as T | undefined;
+    },
+    [overlayData]
   );
 
   const showToast = useCallback((message: string, duration = 3000) => {
@@ -143,8 +176,10 @@ export const OverlayProvider: React.FC<{ children: React.ReactNode }> = ({ child
         openOverlay,
         closeOverlay,
         closeTopOverlay,
+        closeAllOverlays,
         isOverlayOpen,
         isTopOverlay,
+        getOverlayData,
         registerTrigger,
         toast,
         showToast,

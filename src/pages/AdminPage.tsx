@@ -5,7 +5,7 @@ import { ShieldCheck, User, Lock, AlertCircle, LayoutDashboard } from 'lucide-re
 export const AdminPage: React.FC = () => {
   const { isAdmin, login, openDashboard } = useAdmin();
   const [username, setUsername] = useState('admin');
-  const [password, setPassword] = useState('riamiranda2009');
+  const [password, setPassword] = useState('reamanda2025');
   const [error, setError] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -32,7 +32,7 @@ export const AdminPage: React.FC = () => {
         </h1>
 
         <p className="text-xs text-muted font-sans mb-8">
-          Didirikan di Jakarta tahun 2009 oleh Indria Miranda. Sistem manajemen pesanan terpusat dan penyuntingan langsung.
+          Sistem manajemen pesanan terpusat dan penyuntingan langsung.
         </p>
 
         {isAdmin ? (
@@ -95,7 +95,7 @@ export const AdminPage: React.FC = () => {
 
             <div className="p-3 bg-surface border border-line text-[11px] text-muted space-y-0.5 font-sans">
               <p className="m-0">Kredensial Default:</p>
-              <p className="m-0 text-charcoal font-medium">Username: <code>admin</code> · Password: <code>riamiranda2009</code></p>
+              <p className="m-0 text-charcoal font-medium">Username: <code>admin</code> · Password: <code>reamanda2025</code></p>
             </div>
 
             <button

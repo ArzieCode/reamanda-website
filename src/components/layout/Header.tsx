@@ -39,10 +39,10 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, onOpenAdminModal }
       ]
     : [
         { label: 'New Arrivals', href: '/busana?filter=new' },
-        { label: 'Hijab & Scarf', href: '/busana?cat=Hijab' },
-        { label: 'Tunik & Blouse', href: '/busana?cat=Tunik' },
-        { label: 'Abaya & Gaun', href: '/busana?cat=Abaya' },
-        { label: 'Mukena & Sholat', href: '/busana?cat=Mukena' },
+        { label: 'Hijab & Scarf', href: '/busana?kategori=Hijab' },
+        { label: 'Tunik & Blouse', href: '/busana?kategori=Tunik' },
+        { label: 'Abaya & Gaun', href: '/busana?kategori=Abaya' },
+        { label: 'Mukena & Sholat', href: '/busana?kategori=Mukena' },
         { label: 'Koleksi', href: '/busana#koleksi' },
         { label: 'Sale', href: '/busana?filter=sale', isSale: true },
       ];
@@ -224,7 +224,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, onOpenAdminModal }
         onClose={() => setMobileMenuOpen(false)}
         title={BRAND.wordmark}
         side="left"
-        maxWidth="max-w-[320px]"
+        maxWidth="w-full sm:max-w-[360px]"
         footer={drawerFooter}
       >
         <div className="space-y-6">

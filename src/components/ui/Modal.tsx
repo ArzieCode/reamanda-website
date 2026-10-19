@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { X, AlertTriangle } from 'lucide-react';
 import { useOverlay } from '../../context/OverlayContext';
 
@@ -10,7 +11,7 @@ export interface ModalProps {
   eyebrow?: string;
   ariaLabelledBy?: string;
   isDirty?: boolean;
-  maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '720px';
+  maxWidth?: string; // e.g. "min(720px, 100%)", "3xl", "4xl"
   children: React.ReactNode;
   hideHeader?: boolean;
 }
@@ -23,7 +24,7 @@ export const Modal: React.FC<ModalProps> = ({
   eyebrow,
   ariaLabelledBy,
   isDirty = false,
-  maxWidth = '720px',
+  maxWidth,
   children,
   hideHeader = false,
 }) => {
@@ -32,7 +33,7 @@ export const Modal: React.FC<ModalProps> = ({
   const panelRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
 
-  // Sync with OverlayContext
+  // Sync with OverlayContext stack
   useEffect(() => {
     if (isOpen) {
       openOverlay(id);
@@ -45,8 +46,8 @@ export const Modal: React.FC<ModalProps> = ({
     };
   }, [isOpen, id, openOverlay, closeOverlay]);
 
-  // Request close with dirty check
-  const requestClose = useCallback(() => {
+  // Request close: overlay clicks and Escape prompt if isDirty; explicit X/Batal dismiss directly
+  const handleBackdropOrEscapeClose = useCallback(() => {
     if (isDirty) {
       setShowDirtyConfirm(true);
     } else {
@@ -75,7 +76,7 @@ export const Modal: React.FC<ModalProps> = ({
           if (showDirtyConfirm) {
             setShowDirtyConfirm(false);
           } else {
-            requestClose();
+            handleBackdropOrEscapeClose();
           }
         }
       }
@@ -83,26 +84,28 @@ export const Modal: React.FC<ModalProps> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, id, isTopOverlay, showDirtyConfirm, requestClose]);
+  }, [isOpen, id, isTopOverlay, showDirtyConfirm, handleBackdropOrEscapeClose]);
 
-  // Focus trap & initial focus
+  // Focus trap & initial focus to first field
   useEffect(() => {
     if (!isOpen || !panelRef.current) return;
 
     const panel = panelRef.current;
     const focusableSelectors =
-      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+      'input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [href], [tabindex]:not([tabindex="-1"])';
 
-    const focusableElements = panel.querySelectorAll<HTMLElement>(focusableSelectors);
-    if (focusableElements.length > 0) {
-      // Focus first input or button
+    // Delay slightly to ensure children are mounted
+    const focusTimer = setTimeout(() => {
       const firstInput = panel.querySelector<HTMLElement>('input:not([disabled]), select:not([disabled]), textarea:not([disabled])');
       if (firstInput) {
         firstInput.focus();
       } else {
-        focusableElements[0].focus();
+        const firstFocusable = panel.querySelector<HTMLElement>(focusableSelectors);
+        if (firstFocusable) {
+          firstFocusable.focus();
+        }
       }
-    }
+    }, 50);
 
     const handleTabKey = (e: KeyboardEvent) => {
       if (e.key !== 'Tab') return;
@@ -127,15 +130,25 @@ export const Modal: React.FC<ModalProps> = ({
     };
 
     panel.addEventListener('keydown', handleTabKey);
-    return () => panel.removeEventListener('keydown', handleTabKey);
+    return () => {
+      clearTimeout(focusTimer);
+      panel.removeEventListener('keydown', handleTabKey);
+    };
   }, [isOpen]);
 
-  if (!isOpen) return null;
+  if (!isOpen || typeof document === 'undefined') return null;
+
+  const headingId = ariaLabelledBy || (title ? `${id}-title` : undefined);
+
+  // Width classes
+  const panelWidthStyle: React.CSSProperties = maxWidth
+    ? maxWidth.startsWith('min(') || maxWidth.endsWith('px') || maxWidth.endsWith('%')
+      ? { width: maxWidth }
+      : {}
+    : { width: 'min(720px, 100%)' };
 
   const maxWidthClass =
-    maxWidth === '720px'
-      ? 'max-w-[720px]'
-      : maxWidth === '4xl'
+    maxWidth === '4xl'
       ? 'max-w-4xl'
       : maxWidth === '3xl'
       ? 'max-w-3xl'
@@ -151,17 +164,17 @@ export const Modal: React.FC<ModalProps> = ({
       ? 'max-w-sm'
       : 'max-w-[720px]';
 
-  const headingId = ariaLabelledBy || (title ? `${id}-title` : undefined);
-
-  return (
+  const modalNode = (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-modal flex items-center justify-center p-4 sm:p-6 transition-opacity duration-250 ease-out"
-      style={{ backgroundColor: 'var(--overlay)' }}
+      className="fixed inset-0 z-modal flex items-center justify-center p-4 overflow-y-auto animate-modal-overlay"
+      style={{
+        backgroundColor: 'var(--overlay)',
+      }}
       onClick={(e) => {
         // Only close if clicking directly on the overlay backdrop
         if (e.target === overlayRef.current) {
-          requestClose();
+          handleBackdropOrEscapeClose();
         }
       }}
     >
@@ -171,14 +184,21 @@ export const Modal: React.FC<ModalProps> = ({
         role="dialog"
         aria-modal="true"
         aria-labelledby={headingId}
-        className={`relative w-full ${maxWidthClass} max-h-[calc(100dvh-32px)] overflow-y-auto bg-white border border-line p-5 sm:p-8 rounded-[4px] shadow-2xl transition-all duration-350 ease-out translate-y-0 motion-reduce:transition-none`}
+        style={{
+          ...panelWidthStyle,
+          maxHeight: 'calc(100dvh - 32px)',
+        }}
+        className={`relative w-full ${maxWidthClass} overflow-y-auto bg-white border border-line p-[20px] sm:p-[32px] rounded-[4px] shadow-2xl my-auto box-border focus:outline-none animate-modal-panel`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* 44x44px Accessible Touch Close (X) Button */}
         <button
           type="button"
-          onClick={requestClose}
-          className="absolute top-2 right-2 sm:top-3 sm:right-3 w-11 h-11 flex items-center justify-center text-charcoal hover:text-caramel-deep transition-colors z-20 focus:outline-none focus:ring-1 focus:ring-charcoal"
+          onClick={() => {
+            setShowDirtyConfirm(false);
+            onClose();
+          }}
+          className="absolute top-2 right-2 sm:top-3 sm:right-3 w-[44px] h-[44px] flex items-center justify-center text-charcoal hover:text-caramel-deep transition-colors z-50 cursor-pointer touch-manipulation focus:outline-none focus:ring-1 focus:ring-charcoal"
           style={{ borderRadius: '2px' }}
           aria-label="Tutup"
         >
@@ -189,8 +209,7 @@ export const Modal: React.FC<ModalProps> = ({
         {showDirtyConfirm && (
           <div
             role="alert"
-            className="mb-6 p-4 bg-surface border border-line flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-sans animate-in fade-in duration-150"
-            style={{ borderRadius: '2px' }}
+            className="mb-4 sm:mb-6 p-4 bg-surface border border-line flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-sans rounded-[2px]"
           >
             <div className="flex items-center gap-2 text-charcoal font-medium">
               <AlertTriangle size={18} className="text-caramel-deep shrink-0 stroke-[1.5]" />
@@ -200,16 +219,14 @@ export const Modal: React.FC<ModalProps> = ({
               <button
                 type="button"
                 onClick={cancelDiscard}
-                className="px-3 py-1.5 border border-line text-ink hover:text-charcoal bg-white transition-colors"
-                style={{ borderRadius: '2px' }}
+                className="px-3.5 py-1.5 border border-line text-ink hover:text-charcoal bg-white transition-colors rounded-[2px]"
               >
                 Lanjutkan Mengisi
               </button>
               <button
                 type="button"
                 onClick={confirmDiscardAndClose}
-                className="px-3 py-1.5 bg-charcoal text-white hover:bg-caramel-deep transition-colors"
-                style={{ borderRadius: '2px' }}
+                className="px-3.5 py-1.5 bg-charcoal text-white hover:bg-caramel-deep transition-colors rounded-[2px]"
               >
                 Ya, Tutup
               </button>
@@ -219,7 +236,7 @@ export const Modal: React.FC<ModalProps> = ({
 
         {/* Modal Header */}
         {!hideHeader && (title || eyebrow) && (
-          <div className="mb-6 pr-10">
+          <div className="mb-6 pr-12">
             {eyebrow && (
               <span className="label-editorial text-muted block mb-1.5">
                 {eyebrow}
@@ -241,4 +258,6 @@ export const Modal: React.FC<ModalProps> = ({
       </div>
     </div>
   );
+
+  return createPortal(modalNode, document.body);
 };

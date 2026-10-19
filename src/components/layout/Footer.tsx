@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAdmin } from '../../context/AdminContext';
+import { BRAND } from '../../config/brand';
 import { MessageCircle, ShieldCheck, ArrowRight, Check } from 'lucide-react';
 
 interface FooterProps {
@@ -15,7 +16,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdminModal }) => {
 
   const currentYear = 2025;
   const whatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
-    'Halo RiaMiranda, saya ingin berkonsultasi mengenai koleksi busana, akomodasi, atau katering perjamuan.'
+    `Halo ${BRAND.name}, saya ingin berkonsultasi mengenai koleksi busana, akomodasi, atau katering perjamuan.`
   )}`;
 
   const handleNewsletterSubmit = (e: React.FormEvent) => {
@@ -30,11 +31,11 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdminModal }) => {
     }
 
     try {
-      const stored = localStorage.getItem('riamiranda_newsletter_emails');
+      const stored = localStorage.getItem('reamanda_newsletter_emails');
       const list = stored ? JSON.parse(stored) : [];
       if (!list.includes(email.toLowerCase())) {
         list.push(email.toLowerCase());
-        localStorage.setItem('riamiranda_newsletter_emails', JSON.stringify(list));
+        localStorage.setItem('reamanda_newsletter_emails', JSON.stringify(list));
       }
       setIsSubscribed(true);
       setEmail('');
@@ -54,10 +55,10 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdminModal }) => {
           {/* Column 1: Brand & Founder Info */}
           <div className="space-y-4">
             <span className="font-serif text-white tracking-[0.22em] uppercase text-2xl block">
-              RIAMIRANDA
+              {BRAND.wordmark}
             </span>
             <p className="text-white/80 text-sm leading-relaxed max-w-sm font-sans font-light">
-              Didirikan di Jakarta tahun 2009 oleh Indria Miranda. Menghadirkan siluet busana muslimah bersahaja, ruang inap berarsitektur teduh, dan perjamuan adat bercita rasa luhur.
+              Menghadirkan siluet busana muslimah bersahaja, ruang inap berarsitektur teduh, dan perjamuan adat bercita rasa luhur.
             </p>
             <div className="pt-2">
               <a
@@ -159,7 +160,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdminModal }) => {
             {isSubscribed ? (
               <div className="p-3 bg-white/10 border border-caramel/40 text-xs font-sans text-white flex items-center gap-2">
                 <Check size={14} className="stroke-[1.5] text-caramel" />
-                <span>Terima kasih telah bergabung dengan warta RiaMiranda.</span>
+                <span>Terima kasih telah bergabung dengan warta {BRAND.name}.</span>
               </div>
             ) : (
               <form onSubmit={handleNewsletterSubmit} className="space-y-2">
@@ -197,7 +198,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdminModal }) => {
         {/* Bottom Sub-bar with Caramel Hairline Accent */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/70 font-sans">
           <p className="m-0">
-            © {currentYear} RiaMiranda. Seluruh hak cipta dilindungi undang-undang. Jakarta, Indonesia.
+            © {currentYear} {BRAND.name}. Seluruh hak cipta dilindungi undang-undang. Jakarta, Indonesia.
           </p>
 
           <div className="flex items-center gap-6">
