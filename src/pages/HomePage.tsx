@@ -4,24 +4,20 @@ import { SmartImage } from '../components/ui/SmartImage';
 import { useAdmin } from '../context/AdminContext';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { QuickViewModal } from '../components/busana/QuickViewModal';
-import { PropertyInquiryModal } from '../components/modals/PropertyInquiryModal';
 import { KateringInquiryModal } from '../components/modals/KateringInquiryModal';
 import type { BusanaProduct } from '../data/busana';
-import type { PropertyListing } from '../data/properti';
 import type { KateringPackageItem } from '../data/katering';
 import { BRAND } from '../config/brand';
 
 export const HomePage: React.FC = () => {
-  const { products, properties, isEditMode } = useAdmin();
+  const { products, isEditMode } = useAdmin();
 
   // Modals state
   const [selectedProduct, setSelectedProduct] = useState<BusanaProduct | null>(null);
-  const [selectedProperty, setSelectedProperty] = useState<PropertyListing | null>(null);
   const [selectedPackage, setSelectedPackage] = useState<KateringPackageItem | null>(null);
 
   // Featured items
   const featuredProducts = products.slice(0, 4);
-  const featuredProperties = properties.slice(0, 3);
 
   return (
     <div className="w-full bg-surface">
@@ -41,7 +37,7 @@ export const HomePage: React.FC = () => {
         <div className="site-container relative z-10 text-white space-y-6">
           <div className="inline-flex items-center gap-2 border border-white/30 px-3.5 py-1 text-white text-[11px] uppercase tracking-[0.2em] font-sans">
             <Sparkles size={12} className="stroke-[1.25]" />
-            BUSANA · PROPERTI · KATERING
+            BUSANA · KOST WANITA · KATERING
           </div>
 
           <h1 className="font-display text-white max-w-4xl font-light">
@@ -49,7 +45,7 @@ export const HomePage: React.FC = () => {
           </h1>
 
           <p className="text-white/90 text-base sm:text-lg max-w-xl font-sans font-light leading-relaxed">
-            Menghadirkan harmoni nilai luhur dan modernitas santun melalui busana muslimah kontemporer, peristirahatan berarsitektur tenang, serta hidangan perjamuan berselera.
+            Menghadirkan busana muslimah kontemporer, kost eksklusif untuk wanita, serta hidangan perjamuan berselera.
           </p>
 
           <div className="flex flex-wrap items-center gap-4 pt-4">
@@ -63,11 +59,11 @@ export const HomePage: React.FC = () => {
             </Link>
 
             <Link
-              to="/properti"
+              to="/kost-wanita"
               className="px-8 py-3.5 bg-transparent border border-white/60 text-white hover:bg-white hover:text-charcoal text-xs uppercase tracking-[0.18em] font-sans transition-colors inline-flex items-center gap-2"
               style={{ borderRadius: '2px' }}
             >
-              <span>Hospitality & Living</span>
+              <span>Kost Eksklusif Wanita</span>
             </Link>
           </div>
         </div>
@@ -120,29 +116,25 @@ export const HomePage: React.FC = () => {
             </Link>
           </div>
 
-          {/* Tile 2: Properti (Accent: indigo) */}
+          {/* Tile 2: Kost Eksklusif Wanita */}
           <div className="bg-white border border-line p-6 flex flex-col justify-between group hover:border-indigo transition-colors">
             <div>
-              <div className="w-full aspect-[4/3] mb-6 overflow-hidden">
-                <SmartImage
-                  slot="tile-properti"
-                  aspectRatio="4:3"
-                  className="w-full h-full group-hover:scale-[1.02] transition-transform duration-500"
-                />
+              <div className="w-full aspect-[4/3] mb-6 overflow-hidden flex items-center justify-center">
+                <img src="/d-rhea-syariah-logo.png" alt="Logo D’Rhea Syariah Guest House" className="w-full h-full object-contain p-3 sm:p-6" />
               </div>
-              <span className="label-editorial text-indigo block mb-1">Living & Hospitality</span>
+              <span className="label-editorial text-indigo block mb-1">D’Rhea Syariah Guest House</span>
               <h3 className="font-serif text-charcoal text-2xl font-light mb-3">
-                Ruang Inap & Properti Pilihan
+                Kost Eksklusif Wanita
               </h3>
               <p className="text-muted text-sm leading-relaxed mb-6">
-                Boutique hotel di jantung ibu kota, vila privat di Bali, ruko komersial di Senopati, serta kavling tanah eksklusif dengan privasi terjaga.
+                Hunian khusus wanita dengan identitas D’Rhea Syariah Guest House. Informasi kamar dan tarif akan ditampilkan setelah dikonfirmasi pengelola.
               </p>
             </div>
             <Link
-              to="/properti"
+              to="/kost-wanita"
               className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] font-sans text-indigo border-t border-line pt-4 transition-opacity font-medium"
             >
-              <span>Eksplorasi Properti</span>
+              <span>Kenali Kost Wanita</span>
               <ArrowRight size={14} className="stroke-[1.25]" />
             </Link>
           </div>
@@ -255,7 +247,7 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* 4. Tentang Rea Manda */}
+      {/* 4. Tentang Rheamanda */}
       <section className="section-padding site-container">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-5">
@@ -290,7 +282,7 @@ export const HomePage: React.FC = () => {
             </p>
 
             <p className="text-muted text-sm leading-relaxed font-sans">
-              Lini properti dan hotel menghadirkan ruang tinggal berarsitektur teduh dengan privasi keluarga yang terjaga. Sementara layanan katering menyajikan hidangan perjamuan autentik bercita rasa luhur untuk momen berharga Anda.
+              Lini kost wanita menghadirkan D’Rhea Syariah Guest House sebagai pilihan hunian khusus wanita. Sementara layanan katering menyajikan hidangan perjamuan autentik untuk momen berharga Anda.
             </p>
 
             {/* Stats row: show only items that have a value; hide "Berdiri" when foundedYear is null */}
@@ -319,77 +311,28 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* 5. Properti & Katering Highlights Row */}
+      {/* 5. Kost Wanita Highlight */}
       <section className="bg-surface-2 border-t border-line section-padding">
-        <div className="site-container space-y-16">
-          {/* Properti Section Header */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-            <div>
-              <span className="label-editorial text-indigo block mb-2">Hospitality & Living</span>
-              <h2 className="font-section-title text-charcoal">
-                Destinasi Menginap & Ruang Investasi
-              </h2>
-            </div>
-            <Link
-              to="/properti"
-              className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.16em] font-sans text-indigo font-medium"
-            >
-              <span>Katalog Lengkap Properti ({properties.length})</span>
-              <ArrowRight size={14} className="stroke-[1.25]" />
+        <div className="site-container grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-14 items-center">
+          <div className="space-y-5">
+            <span className="label-editorial text-indigo block">D’Rhea Syariah Guest House</span>
+            <h2 className="font-section-title text-charcoal">Kost Eksklusif Wanita</h2>
+            <p className="text-ink text-base leading-relaxed">
+              Kenali lini hunian khusus wanita dari {BRAND.name}. Detail kamar, tarif, dan lokasi
+              akan dilengkapi setelah mendapatkan informasi resmi dari pengelola.
+            </p>
+            <Link to="/kost-wanita" className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.16em] font-sans text-indigo font-medium hover:underline">
+              Lihat Halaman Kost <ArrowRight size={14} />
             </Link>
           </div>
-
-          {/* Properti Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {featuredProperties.map((prop) => (
-              <div
-                key={prop.id}
-                className="bg-white border border-line p-4 flex flex-col justify-between cursor-pointer hover:border-indigo transition-colors"
-                onClick={() => setSelectedProperty(prop)}
-              >
-                <div>
-                  <div className="relative aspect-[4/3] overflow-hidden mb-4 bg-surface-2">
-                    <SmartImage slot={prop.imageSlots[0]} aspectRatio="4:3" />
-                    <span
-                      className={`absolute top-2 left-2 px-2.5 py-1 text-[10px] font-sans uppercase tracking-widest text-white ${
-                        prop.status === 'Tersedia'
-                          ? 'bg-status-available'
-                          : prop.status === 'Sudah DP'
-                          ? 'bg-status-deposit'
-                          : 'bg-status-occupied'
-                      }`}
-                      style={{ borderRadius: '2px' }}
-                    >
-                      {prop.status}
-                    </span>
-                  </div>
-
-                  <span className="label-editorial text-muted text-[10px] block mb-1">
-                    {prop.type} · {prop.landArea}
-                  </span>
-                  <h3 className="font-serif text-charcoal text-xl font-normal leading-tight mb-1">
-                    {prop.name}
-                  </h3>
-                  <p className="text-xs text-muted font-sans mb-3">{prop.location}</p>
-                </div>
-
-                <div className="border-t border-line pt-3 flex items-center justify-between">
-                  <span className="font-serif text-indigo text-base font-medium">
-                    {prop.priceFormatted}
-                  </span>
-                  <span className="text-xs text-indigo font-sans uppercase tracking-wider flex items-center gap-1">
-                    Rincian <ArrowRight size={12} />
-                  </span>
-                </div>
-              </div>
-            ))}
+          <div className="flex items-center justify-center">
+            <img src="/d-rhea-syariah-logo.png" alt="Logo D’Rhea Syariah Guest House" className="w-full max-w-[520px] h-auto object-contain" />
           </div>
         </div>
       </section>
 
       {/* Modals */}
       <QuickViewModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
-      <PropertyInquiryModal property={selectedProperty} onClose={() => setSelectedProperty(null)} />
       <KateringInquiryModal
         isOpen={Boolean(selectedPackage)}
         initialPackage={selectedPackage}

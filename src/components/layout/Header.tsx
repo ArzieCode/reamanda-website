@@ -18,16 +18,12 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, onOpenAdminModal }
   const location = useLocation();
 
   // Determine section navigation items based on current business line
-  const isProperti = location.pathname.startsWith('/properti');
+  const isKost = location.pathname.startsWith('/kost-wanita');
   const isKatering = location.pathname.startsWith('/katering');
 
-  const navItems = isProperti
+  const navItems = isKost
     ? [
-        { label: 'Semua Properti', href: '/properti#semua' },
-        { label: 'Boutique Hotel', href: '/properti#hotel' },
-        { label: 'Living Santun', href: '/properti#living' },
-        { label: 'Reservasi & Sewa', href: '/properti#sewa' },
-        { label: 'Bidding / Investasi', href: '/properti#investasi' },
+        { label: 'Informasi Kost', href: '/kost-wanita#informasi-kost' },
       ]
     : isKatering
     ? [
@@ -82,25 +78,39 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, onOpenAdminModal }
   return (
     <>
       <header className="sticky top-0 z-header w-full bg-white border-b border-line h-[60px] lg:h-[72px]">
-        {/* Desktop View (>= 1100px) */}
-        <div className="hidden min-[1100px]:grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] gap-6 items-center site-container h-full">
-          {/* Left: Wordmark */}
+        {/* Desktop View (>= 1280px) */}
+        <div className="hidden min-[1280px]:flex items-center justify-between gap-6 site-container h-full">
+          {/* Left: Brand mark and name */}
           <div className="flex items-center">
             <Link
               to="/"
-              className="font-serif text-charcoal tracking-[0.22em] whitespace-nowrap uppercase text-[20px] lg:text-[24px] hover:opacity-85 transition-opacity"
+              aria-label={isKost ? 'D’Rhea Syariah Guest House — kembali ke beranda' : undefined}
+              className="inline-flex shrink-0 items-center gap-2 font-serif text-charcoal tracking-[0.02em] whitespace-nowrap text-[22px] hover:opacity-85 transition-opacity"
             >
-              {BRAND.wordmark}
+              {isKost ? (
+                <>
+                  <img src="/d-rhea-syariah-mark.png" alt="" className="h-10 w-auto" />
+                  <span className="flex flex-col leading-none">
+                    <span className="text-[20px] tracking-[0.01em]">D’Rhea Syariah</span>
+                    <span className="mt-1 font-sans text-[10px] uppercase tracking-[0.18em] text-caramel-deep">Guest House</span>
+                  </span>
+                </>
+              ) : (
+                <>
+                  <img src="/rheamanda-mark.png" alt="" className="h-9 w-auto" />
+                  {BRAND.wordmark}
+                </>
+              )}
             </Link>
           </div>
 
           {/* Centre: Navigation */}
-          <nav className="flex items-center gap-8">
+          <nav className="flex shrink-0 items-center gap-4">
             {navItems.map((item) => (
               <Link
                 key={item.label}
                 to={item.href}
-                className="text-xs uppercase tracking-[0.14em] font-sans text-ink hover:text-caramel-deep hover:underline underline-offset-4 decoration-1 transition-colors flex items-center gap-1.5"
+                className="text-xs uppercase tracking-[0.14em] font-sans text-ink hover:text-caramel-deep hover:underline underline-offset-4 decoration-1 transition-colors flex items-center gap-1.5 whitespace-nowrap"
               >
                 {item.label}
                 {item.isSale && (
@@ -166,8 +176,8 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, onOpenAdminModal }
           </div>
         </div>
 
-        {/* Mobile / Tablet View (< 1100px) */}
-        <div className="min-[1100px]:hidden flex items-center justify-between site-container h-full">
+        {/* Mobile / Tablet View (< 1280px) */}
+        <div className="min-[1280px]:hidden flex items-center justify-between site-container h-full">
           {/* Left: Hamburger */}
           <button
             type="button"
@@ -178,12 +188,26 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, onOpenAdminModal }
             <Menu size={22} className="stroke-[1.25]" />
           </button>
 
-          {/* Centre: Wordmark */}
+          {/* Centre: Brand mark and name */}
           <Link
             to="/"
-            className="font-serif text-charcoal tracking-[0.22em] whitespace-nowrap uppercase text-[18px] sm:text-[20px]"
+            aria-label={isKost ? 'D’Rhea Syariah Guest House — kembali ke beranda' : undefined}
+            className="inline-flex items-center gap-1.5 font-serif text-charcoal tracking-[0.02em] whitespace-nowrap text-[18px] sm:text-[20px]"
           >
-            {BRAND.wordmark}
+            {isKost ? (
+              <>
+                <img src="/d-rhea-syariah-mark.png" alt="" className="h-7 sm:h-8 w-auto" />
+                <span className="flex flex-col leading-none">
+                  <span className="text-[13px] sm:text-[17px] tracking-normal">D’Rhea Syariah</span>
+                  <span className="mt-0.5 font-sans text-[8px] uppercase tracking-[0.12em] text-caramel-deep">Guest House</span>
+                </span>
+              </>
+            ) : (
+              <>
+                <img src="/rheamanda-mark.png" alt="" className="h-7 sm:h-8 w-auto" />
+                {BRAND.wordmark}
+              </>
+            )}
           </Link>
 
           {/* Right: Icons */}
@@ -222,7 +246,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, onOpenAdminModal }
         id="mobile-menu-drawer"
         isOpen={mobileMenuOpen}
         onClose={() => setMobileMenuOpen(false)}
-        title={BRAND.wordmark}
+        title={isKost ? 'D’Rhea Syariah Guest House' : BRAND.wordmark}
         side="left"
         maxWidth="w-full sm:max-w-[360px]"
         footer={drawerFooter}
@@ -236,19 +260,19 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, onOpenAdminModal }
                 to="/busana"
                 onClick={() => setMobileMenuOpen(false)}
                 className={`py-1.5 text-center text-xs uppercase tracking-wider font-sans border border-line ${
-                  !isProperti && !isKatering ? 'bg-charcoal text-white' : 'bg-surface text-ink'
+                  !isKost && !isKatering ? 'bg-charcoal text-white' : 'bg-surface text-ink'
                 }`}
               >
                 Busana
               </Link>
               <Link
-                to="/properti"
+                to="/kost-wanita"
                 onClick={() => setMobileMenuOpen(false)}
                 className={`py-1.5 text-center text-xs uppercase tracking-wider font-sans border border-line ${
-                  isProperti ? 'bg-charcoal text-white' : 'bg-surface text-ink'
+                  isKost ? 'bg-charcoal text-white' : 'bg-surface text-ink'
                 }`}
               >
-                Properti
+                Kost Wanita
               </Link>
               <Link
                 to="/katering"

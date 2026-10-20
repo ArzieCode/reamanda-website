@@ -54,11 +54,12 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdminModal }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 pb-16 border-b border-caramel/30">
           {/* Column 1: Brand & Founder Info */}
           <div className="space-y-4">
-            <span className="font-serif text-white tracking-[0.22em] uppercase text-2xl block">
+            <span className="font-serif text-white tracking-[0.02em] text-2xl inline-flex items-center gap-2.5">
+              <img src="/rheamanda-mark.png" alt="" className="h-11 w-auto" />
               {BRAND.wordmark}
             </span>
             <p className="text-white/80 text-sm leading-relaxed max-w-sm font-sans font-light">
-              Menghadirkan siluet busana muslimah bersahaja, ruang inap berarsitektur teduh, dan perjamuan adat bercita rasa luhur.
+              Menghadirkan busana muslimah, kost eksklusif wanita, dan sajian katering untuk momen istimewa.
             </p>
             <div className="pt-2">
               <a
@@ -112,26 +113,21 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdminModal }) => {
             </ul>
           </div>
 
-          {/* Column 3: Living & Perjamuan */}
+          {/* Column 3: Kost Wanita & Perjamuan */}
           <div className="space-y-3">
             <span className="label-editorial text-caramel block tracking-[0.18em]">
-              Living & Perjamuan
+              Kost Wanita & Perjamuan
             </span>
             <div className="w-6 h-[1px] bg-caramel opacity-50 mb-3" />
             <ul className="space-y-2 text-sm text-white/80 font-sans font-light">
               <li>
-                <Link to="/properti?kategori=Hotel" className="hover:text-white transition-colors">
-                  Boutique Hotel Dharmawangsa
+                <Link to="/kost-wanita" className="hover:text-white transition-colors">
+                  Kost Eksklusif Wanita
                 </Link>
               </li>
               <li>
-                <Link to="/properti?kategori=Rumah" className="hover:text-white transition-colors">
-                  Villa Privat & Hunian Keluarga
-                </Link>
-              </li>
-              <li>
-                <Link to="/properti?kategori=Ruko" className="hover:text-white transition-colors">
-                  Galeri Komersial & Tanah
+                <Link to="/kost-wanita#informasi-kost" className="hover:text-white transition-colors">
+                  D’Rhea Syariah Guest House
                 </Link>
               </li>
               <li>

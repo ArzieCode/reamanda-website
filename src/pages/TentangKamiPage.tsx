@@ -55,9 +55,9 @@ export const TentangKamiPage: React.FC = () => {
               </div>
 
               <div className="bg-surface p-5 border border-line space-y-2">
-                <h3 className="font-serif text-indigo text-lg font-normal">Living & Hospitality</h3>
+                <h3 className="font-serif text-indigo text-lg font-normal">Kost Eksklusif Wanita</h3>
                 <p className="text-xs text-muted leading-relaxed">
-                  Ruang peristirahatan dan properti yang memprioritaskan privasi keluarga dan kenyamanan beribadah.
+                  D’Rhea Syariah Guest House, hunian khusus wanita dalam keluarga Rheamanda.
                 </p>
               </div>
 

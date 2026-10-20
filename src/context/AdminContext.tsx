@@ -118,7 +118,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     try {
       const saved = localStorage.getItem('reamanda:orders');
       if (saved) return JSON.parse(saved);
-      // Seed 2 realistic sample orders for demonstration
+      // Seed a sample busana order for demonstration
       return [
         {
           id: `${BRAND.orderPrefix.busana}-8021`,
@@ -130,17 +130,6 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           totalAmountFormatted: 'Rp 820.000',
           status: 'Menunggu',
           itemsOrDetails: { address: 'Pondok Indah, Jakarta Selatan' },
-        },
-        {
-          id: `RES-${BRAND.orderPrefix.busana}-3042`,
-          type: 'properti',
-          createdAt: new Date(Date.now() - 3600000 * 24).toISOString(),
-          customerName: 'Bambang Soediro',
-          whatsapp: '08112345678',
-          summary: 'Reservasi Boutique Hotel Dharmawangsa (Suite Utama)',
-          totalAmountFormatted: 'Rp 3.700.000 (2 Malam)',
-          status: 'Dikonfirmasi',
-          itemsOrDetails: { checkIn: '2025-04-10', checkOut: '2025-04-12', guests: 2 },
         },
       ];
     } catch {

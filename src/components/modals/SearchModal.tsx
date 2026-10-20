@@ -9,7 +9,6 @@ interface SearchModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectProduct?: (product: any) => void;
-  onSelectProperty?: (property: any) => void;
   onSelectPackage?: (pkg: any) => void;
 }
 
@@ -17,12 +16,11 @@ export const SearchModal: React.FC<SearchModalProps> = ({
   isOpen,
   onClose,
   onSelectProduct,
-  onSelectProperty,
   onSelectPackage,
 }) => {
   const [query, setQuery] = useState('');
   const navigate = useNavigate();
-  const { products, properties, packages, dishes } = useAdmin();
+  const { products, packages, dishes } = useAdmin();
 
   const q = query.toLowerCase().trim();
 
@@ -36,15 +34,8 @@ export const SearchModal: React.FC<SearchModalProps> = ({
       )
     : [];
 
-  const filteredProperties = q
-    ? properties.filter(
-        (p) =>
-          p.name.toLowerCase().includes(q) ||
-          p.type.toLowerCase().includes(q) ||
-          p.location.toLowerCase().includes(q) ||
-          p.description.toLowerCase().includes(q)
-      )
-    : [];
+  const matchesKost = q.length >= 3 && ['kost', 'wanita', 'd’rhea', "d'rhea", 'guest house', 'syariah']
+    .some((term) => term.includes(q) || q.includes(term));
 
   const filteredKatering = q
     ? [
@@ -57,7 +48,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
       ]
     : [];
 
-  const totalResults = filteredProducts.length + filteredProperties.length + filteredKatering.length;
+  const totalResults = filteredProducts.length + Number(matchesKost) + filteredKatering.length;
 
   const handleNavigate = (path: string) => {
     navigate(path);
@@ -81,7 +72,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
             autoFocus
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Cari busana, properti, paket katering..."
+            placeholder="Cari busana, kost wanita, paket katering..."
             className="w-full text-base sm:text-lg font-sans text-charcoal focus:outline-none border-none p-0 bg-transparent placeholder:text-muted"
           />
         </div>
@@ -91,7 +82,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
           <div className="space-y-4 pt-1">
             <span className="label-editorial text-muted block">Pencarian Populer</span>
             <div className="flex flex-wrap gap-2">
-              {['Hijab Voal', 'Abaya Nura', 'Boutique Hotel', 'Paket Pernikahan', 'Rendang Daging', 'Koleksi Senja'].map(
+              {['Hijab Voal', 'Abaya Nura', 'Kost Wanita', 'Paket Pernikahan', 'Rendang Daging', 'Koleksi Senja'].map(
                 (term) => (
                   <button
                     key={term}
@@ -118,12 +109,12 @@ export const SearchModal: React.FC<SearchModalProps> = ({
               </button>
               <button
                 type="button"
-                onClick={() => handleNavigate('/properti')}
+                onClick={() => handleNavigate('/kost-wanita')}
                 className="p-3 bg-surface hover:bg-surface-2 border border-line space-y-1 transition-colors"
                 style={{ borderRadius: '2px' }}
               >
                 <span className="label-editorial text-indigo block text-[10px]">Lini 02</span>
-                <span className="font-serif text-sm text-charcoal block">Hospitality & Living</span>
+                <span className="font-serif text-sm text-charcoal block">Kost Eksklusif Wanita</span>
               </button>
               <button
                 type="button"
@@ -185,34 +176,16 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                   </div>
                 )}
 
-                {/* Properties */}
-                {filteredProperties.length > 0 && (
+                {/* Kost Wanita */}
+                {matchesKost && (
                   <div className="space-y-2">
                     <span className="label-editorial text-indigo block text-[10px]">
-                      Hospitality & Living ({filteredProperties.length})
+                      Kost Eksklusif Wanita
                     </span>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      {filteredProperties.map((prop) => (
-                        <div
-                          key={prop.id}
-                          onClick={() => {
-                            if (onSelectProperty) onSelectProperty(prop);
-                            else handleNavigate('/properti');
-                          }}
-                          className="flex items-center gap-3 p-2 bg-surface hover:bg-surface-2 border border-line cursor-pointer transition-colors"
-                          style={{ borderRadius: '2px' }}
-                        >
-                          <div className="w-14 h-14 shrink-0">
-                            <SmartImage slot={prop.imageSlots[0]} alt={prop.name} aspectRatio="1:1" />
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <h5 className="font-serif text-sm text-charcoal truncate">{prop.name}</h5>
-                            <span className="text-[11px] text-muted block">{prop.type} · {prop.location}</span>
-                            <span className="text-xs font-serif text-indigo font-medium">{prop.priceFormatted}</span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+                    <button type="button" onClick={() => handleNavigate('/kost-wanita')} className="w-full text-left p-3 bg-surface hover:bg-surface-2 border border-line transition-colors">
+                      <span className="font-serif text-base text-charcoal block">D’Rhea Syariah Guest House</span>
+                      <span className="text-xs text-muted">Lihat informasi kost wanita</span>
+                    </button>
                   </div>
                 )}
 

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
 import { AdminProvider } from './context/AdminContext';
 import { CartProvider } from './context/CartContext';
@@ -9,7 +9,7 @@ import { Layout } from './components/layout/Layout';
 
 import { HomePage } from './pages/HomePage';
 import { BusanaPage } from './pages/BusanaPage';
-import { PropertiPage } from './pages/PropertiPage';
+import { KostWanitaPage } from './pages/KostWanitaPage';
 import { KateringPage } from './pages/KateringPage';
 import { AdminPage } from './pages/AdminPage';
 import { TentangKamiPage } from './pages/TentangKamiPage';
@@ -17,10 +17,18 @@ import { KontakPage } from './pages/KontakPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
 function ScrollToTop() {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+    if (!hash) {
+      window.scrollTo(0, 0);
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      document.getElementById(decodeURIComponent(hash.slice(1)))?.scrollIntoView({ behavior: 'instant' });
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [pathname, hash]);
   return null;
 }
 
@@ -36,7 +44,8 @@ export default function App() {
               <Route path="/" element={<Layout />}>
                 <Route index element={<HomePage />} />
                 <Route path="busana" element={<BusanaPage />} />
-                <Route path="properti" element={<PropertiPage />} />
+                <Route path="kost-wanita" element={<KostWanitaPage />} />
+                <Route path="properti" element={<Navigate to="/kost-wanita" replace />} />
                 <Route path="katering" element={<KateringPage />} />
                 <Route path="admin" element={<AdminPage />} />
                 <Route path="tentang-kami" element={<TentangKamiPage />} />
