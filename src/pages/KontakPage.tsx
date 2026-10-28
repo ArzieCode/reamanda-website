@@ -18,7 +18,7 @@ export const KontakPage: React.FC = () => {
           Hubungi {BRAND.name} Studio
         </h1>
         <p className="text-ink text-base sm:text-lg font-light leading-relaxed max-w-xl mx-auto">
-          Kami siap menyambut Anda dengan hangat untuk pertanyaan busana, reservasi akomodasi boutique, atau janji temu konsultasi katering.
+          Kami siap menyambut Anda untuk pertanyaan busana, kost eksklusif wanita, atau konsultasi katering.
         </p>
       </section>
 
@@ -35,7 +35,7 @@ export const KontakPage: React.FC = () => {
                   Layanan Tamu via WhatsApp
                 </h3>
                 <p className="text-xs text-muted leading-relaxed font-sans">
-                  Respon tercepat untuk pengecekan stok ukuran busana, status pengiriman pesanan, jadwal survei properti, atau konsultasi test food.
+                  Hubungi kami untuk pertanyaan koleksi busana, kost wanita, atau katering.
                 </p>
               </div>
 

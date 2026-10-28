@@ -12,7 +12,7 @@ export const IMAGE_MANIFEST: Record<string, ImageSlot> = {
   hero: {
     slot: 'hero',
     filename: '/images/hero.jpg',
-    alt: 'Rea Manda editorial kampanye busana santun di studio arsitektural',
+    alt: 'Rheamanda editorial kampanye busana santun di studio arsitektural',
     keyword: 'editorial modest fashion jakarta',
     category: 'Editorial',
     fallbackUrl: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1600&q=80',
@@ -20,7 +20,7 @@ export const IMAGE_MANIFEST: Record<string, ImageSlot> = {
   'about-portrait': {
     slot: 'about-portrait',
     filename: '/images/about-portrait.jpg',
-    alt: 'Studio dan Ruang Karya Rea Manda',
+    alt: 'Studio dan Ruang Karya Rheamanda',
     keyword: 'editorial creative atelier portrait elegant',
     category: 'Atelier',
     fallbackUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
@@ -28,7 +28,7 @@ export const IMAGE_MANIFEST: Record<string, ImageSlot> = {
   'tile-busana': {
     slot: 'tile-busana',
     filename: '/images/tile-busana.jpg',
-    alt: 'Rea Manda Busana — Busana Muslimah kontemporer',
+    alt: 'Rheamanda Busana — Busana Muslimah kontemporer',
     keyword: 'modest fashion collection drapery',
     category: 'Busana',
     fallbackUrl: 'https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?auto=format&fit=crop&w=900&q=80',
@@ -36,7 +36,7 @@ export const IMAGE_MANIFEST: Record<string, ImageSlot> = {
   'tile-properti': {
     slot: 'tile-properti',
     filename: '/images/tile-properti.jpg',
-    alt: 'Rea Manda Properti & Hospitality — Ruang santun berarsitektur tenang',
+    alt: 'Rheamanda Properti & Hospitality — Ruang santun berarsitektur tenang',
     keyword: 'boutique hotel interior architecture',
     category: 'Properti',
     fallbackUrl: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=900&q=80',
@@ -44,7 +44,7 @@ export const IMAGE_MANIFEST: Record<string, ImageSlot> = {
   'tile-katering': {
     slot: 'tile-katering',
     filename: '/images/tile-katering.jpg',
-    alt: 'Rea Manda Katering — Hidangan Nusantara autentik untuk perayaan istimewa',
+    alt: 'Rheamanda Katering — Hidangan Nusantara autentik untuk perayaan istimewa',
     keyword: 'indonesian culinary dining festive',
     category: 'Katering',
     fallbackUrl: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=900&q=80',
@@ -54,7 +54,7 @@ export const IMAGE_MANIFEST: Record<string, ImageSlot> = {
   'busana-hero': {
     slot: 'busana-hero',
     filename: '/images/busana-hero.jpg',
-    alt: 'Koleksi Busana Rea Manda Musim Ini',
+    alt: 'Koleksi Busana Rheamanda Musim Ini',
     keyword: 'fashion editorial flowing silk',
     category: 'Busana',
     fallbackUrl: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1600&q=80',
@@ -226,7 +226,7 @@ export const IMAGE_MANIFEST: Record<string, ImageSlot> = {
   'properti-hero': {
     slot: 'properti-hero',
     filename: '/images/properti-hero.jpg',
-    alt: 'Rea Manda Living & Hospitality arsitektur santun bernilai tinggi',
+    alt: 'Rheamanda Living & Hospitality arsitektur santun bernilai tinggi',
     keyword: 'luxury boutique hotel minimalist architecture',
     category: 'Properti',
     fallbackUrl: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1600&q=80',
@@ -380,7 +380,7 @@ export const IMAGE_MANIFEST: Record<string, ImageSlot> = {
   'katering-hero': {
     slot: 'katering-hero',
     filename: '/images/katering-hero.jpg',
-    alt: 'Rea Manda Katering — Tata Meja Perjamuan Autentik Nusantara',
+    alt: 'Rheamanda Katering — Tata Meja Perjamuan Autentik Nusantara',
     keyword: 'banquet dinner table indonesian feast',
     category: 'Katering',
     fallbackUrl: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=80',

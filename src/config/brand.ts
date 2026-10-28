@@ -1,7 +1,7 @@
 export const BRAND = {
-  name: "Rea Manda",
-  wordmark: "REA MANDA",
-  slug: "reamanda",
+  name: "Rheamanda",
+  wordmark: "Rheamanda",
+  slug: "rheamanda",
   tagline: "Elegan, Tulus, dan Abadi",
   city: "",            // fill from admin, leave empty if unknown
   foundedYear: null as number | null,   // fill from admin, hide the "Berdiri" stat if null

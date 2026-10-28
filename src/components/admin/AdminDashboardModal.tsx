@@ -46,7 +46,7 @@ export const AdminDashboardModal: React.FC = () => {
   };
 
   const handleResetData = () => {
-    if (window.confirm('Kembalikan semua data produk, properti, katering, dan pesanan ke bawaan?')) {
+    if (window.confirm('Kembalikan semua data produk, katering, dan pesanan ke bawaan? Data lama properti yang tersimpan juga akan direset.')) {
       resetAllData();
       showToast('Seluruh data berhasil dikembalikan ke bawaan.');
     }
@@ -140,7 +140,7 @@ export const AdminDashboardModal: React.FC = () => {
                 {[
                   { id: 'all', label: 'Semua Lini' },
                   { id: 'busana', label: 'Busana Muslimah' },
-                  { id: 'properti', label: 'Properti & Living' },
+                  { id: 'properti', label: 'Kost Wanita / Arsip Properti' },
                   { id: 'katering', label: 'Katering & Perjamuan' },
                 ].map((f) => (
                   <button
