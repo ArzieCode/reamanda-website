@@ -20,6 +20,10 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, onOpenAdminModal }
   // Determine section navigation items based on current business line
   const isKost = location.pathname.startsWith('/kost-wanita');
   const isKatering = location.pathname.startsWith('/katering');
+  const isBusana = location.pathname.startsWith('/busana');
+  const brandPath = isKost ? '/kost-wanita' : isKatering ? '/katering' : isBusana ? '/busana' : '/';
+  const brandName = isKost ? 'D’Rhea Syariah Guest House' : isKatering ? 'Katering Rheamanda' : isBusana ? 'Busana Rheamanda' : BRAND.wordmark;
+  const brandLogo = isKost ? '/d-rhea-syariah-mark.png' : isKatering ? '/rheamanda-mark.png' : isBusana ? '/rheamanda-fashion-logo.png' : null;
 
   const navItems = isKost
     ? [
@@ -28,19 +32,20 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, onOpenAdminModal }
     : isKatering
     ? [
         { label: 'Paket Perjamuan', href: '/katering#paket' },
-        { label: 'Pernikahan Santun', href: '/katering#pernikahan' },
-        { label: 'Jamuan Korporasi', href: '/katering#korporasi' },
         { label: 'Daftar Menu Pilihan', href: '/katering#menu' },
-        { label: 'Konsultasi Menu', href: '/katering#kontak' },
+        { label: 'Cara Pemesanan', href: '/katering#cara-pesan' },
+        { label: 'Kontak', href: '/katering#kontak' },
       ]
-    : [
-        { label: 'New Arrivals', href: '/busana?filter=new' },
-        { label: 'Hijab & Scarf', href: '/busana?kategori=Hijab' },
-        { label: 'Tunik & Blouse', href: '/busana?kategori=Tunik' },
-        { label: 'Abaya & Gaun', href: '/busana?kategori=Abaya' },
-        { label: 'Mukena & Sholat', href: '/busana?kategori=Mukena' },
+    : isBusana ? [
+        { label: 'Produk', href: '/busana#terbaru' },
+        { label: 'Hijab', href: '/busana?kategori=Hijab' },
+        { label: 'Tunik', href: '/busana?kategori=Tunik' },
         { label: 'Koleksi', href: '/busana#koleksi' },
         { label: 'Sale', href: '/busana?filter=sale', isSale: true },
+      ] : [
+        { label: 'Busana', href: '/busana' },
+        { label: 'Kost Wanita', href: '/kost-wanita' },
+        { label: 'Katering', href: '/katering' },
       ];
 
   const drawerFooter = (
@@ -83,24 +88,12 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, onOpenAdminModal }
           {/* Left: Brand mark and name */}
           <div className="flex items-center">
             <Link
-              to="/"
-              aria-label={isKost ? 'D’Rhea Syariah Guest House — kembali ke beranda' : undefined}
+              to={brandPath}
+              aria-label={brandName}
               className="inline-flex shrink-0 items-center gap-2 font-serif text-charcoal tracking-[0.02em] whitespace-nowrap text-[22px] hover:opacity-85 transition-opacity"
             >
-              {isKost ? (
-                <>
-                  <img src="/d-rhea-syariah-mark.png" alt="" className="h-10 w-auto" />
-                  <span className="flex flex-col leading-none">
-                    <span className="text-[20px] tracking-[0.01em]">D’Rhea Syariah</span>
-                    <span className="mt-1 font-sans text-[10px] uppercase tracking-[0.18em] text-caramel-deep">Guest House</span>
-                  </span>
-                </>
-              ) : (
-                <>
-                  <img src="/rheamanda-mark.png" alt="" className="h-9 w-auto" />
-                  {BRAND.wordmark}
-                </>
-              )}
+              {brandLogo && <img src={brandLogo} alt="" className="h-10 max-w-11 object-contain" />}
+              <span className="text-[20px]">{brandName}</span>
             </Link>
           </div>
 
@@ -136,7 +129,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, onOpenAdminModal }
               <Search size={18} className="stroke-[1.25]" />
             </button>
 
-            <button
+            {isBusana && <button
               type="button"
               onClick={openCart}
               className="relative p-1 text-charcoal hover:text-caramel-deep transition-colors flex items-center gap-1.5"
@@ -151,7 +144,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, onOpenAdminModal }
                   {totalItems}
                 </span>
               )}
-            </button>
+            </button>}
 
             {isAdmin ? (
               <button
@@ -190,24 +183,12 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, onOpenAdminModal }
 
           {/* Centre: Brand mark and name */}
           <Link
-            to="/"
-            aria-label={isKost ? 'D’Rhea Syariah Guest House — kembali ke beranda' : undefined}
+            to={brandPath}
+            aria-label={brandName}
             className="inline-flex items-center gap-1.5 font-serif text-charcoal tracking-[0.02em] whitespace-nowrap text-[18px] sm:text-[20px]"
           >
-            {isKost ? (
-              <>
-                <img src="/d-rhea-syariah-mark.png" alt="" className="h-7 sm:h-8 w-auto" />
-                <span className="flex flex-col leading-none">
-                  <span className="text-[13px] sm:text-[17px] tracking-normal">D’Rhea Syariah</span>
-                  <span className="mt-0.5 font-sans text-[8px] uppercase tracking-[0.12em] text-caramel-deep">Guest House</span>
-                </span>
-              </>
-            ) : (
-              <>
-                <img src="/rheamanda-mark.png" alt="" className="h-7 sm:h-8 w-auto" />
-                {BRAND.wordmark}
-              </>
-            )}
+            {brandLogo && <img src={brandLogo} alt="" className="h-8 max-w-8 object-contain" />}
+            <span className="text-[13px] sm:text-[18px] truncate max-w-[170px] sm:max-w-none">{brandName}</span>
           </Link>
 
           {/* Right: Icons */}
@@ -221,7 +202,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, onOpenAdminModal }
               <Search size={18} className="stroke-[1.25]" />
             </button>
 
-            <button
+            {isBusana && <button
               type="button"
               onClick={openCart}
               className="relative p-1 text-charcoal hover:text-caramel-deep transition-colors"
@@ -236,7 +217,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, onOpenAdminModal }
                   {totalItems}
                 </span>
               )}
-            </button>
+            </button>}
           </div>
         </div>
       </header>
@@ -246,7 +227,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, onOpenAdminModal }
         id="mobile-menu-drawer"
         isOpen={mobileMenuOpen}
         onClose={() => setMobileMenuOpen(false)}
-        title={isKost ? 'D’Rhea Syariah Guest House' : BRAND.wordmark}
+        title={brandName}
         side="left"
         maxWidth="w-full sm:max-w-[360px]"
         footer={drawerFooter}
@@ -260,7 +241,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, onOpenAdminModal }
                 to="/busana"
                 onClick={() => setMobileMenuOpen(false)}
                 className={`py-1.5 text-center text-xs uppercase tracking-wider font-sans border border-line ${
-                  !isKost && !isKatering ? 'bg-charcoal text-white' : 'bg-surface text-ink'
+                  isBusana ? 'bg-charcoal text-white' : 'bg-surface text-ink'
                 }`}
               >
                 Busana

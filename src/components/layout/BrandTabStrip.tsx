@@ -1,5 +1,6 @@
 import React from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 
 export const BrandTabStrip: React.FC = () => {
   const location = useLocation();
@@ -7,7 +8,8 @@ export const BrandTabStrip: React.FC = () => {
 
   const isKost = currentPath.startsWith('/kost-wanita');
   const isKatering = currentPath.startsWith('/katering');
-  const isBusana = currentPath.startsWith('/busana') || currentPath === '/' || (!isKost && !isKatering);
+  const isBusana = currentPath.startsWith('/busana');
+  const isHome = currentPath === '/';
 
   const tabs = [
     { label: 'Busana', path: '/busana', isActive: isBusana },
@@ -17,7 +19,14 @@ export const BrandTabStrip: React.FC = () => {
 
   return (
     <div className="w-full bg-white border-b border-line h-10 select-none">
-      <div className="site-container h-full flex items-center">
+      <div className="site-container h-full flex items-center gap-3 sm:gap-5">
+        <Link
+          to="/"
+          className={`shrink-0 inline-flex items-center gap-1 text-[10px] sm:text-xs font-sans uppercase tracking-wide hover:text-caramel-deep ${isHome ? 'text-charcoal font-medium' : 'text-ink underline underline-offset-4'}`}
+        >
+          {!isHome && <ArrowLeft size={13} />}
+          {isHome ? 'Beranda Rheamanda' : 'Kembali ke Rheamanda'}
+        </Link>
         <nav className="flex items-center gap-0.5 sm:gap-1 overflow-x-auto no-scrollbar h-full py-1">
           {tabs.map((tab) => (
             <NavLink

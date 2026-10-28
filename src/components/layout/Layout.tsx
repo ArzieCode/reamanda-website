@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { AdminBar } from './AdminBar';
 import { BrandTabStrip } from './BrandTabStrip';
 import { AnnouncementBar } from './AnnouncementBar';
@@ -13,6 +13,7 @@ import { AdminDashboardModal } from '../admin/AdminDashboardModal';
 export const Layout: React.FC = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [adminLoginOpen, setAdminLoginOpen] = useState(false);
+  const isBusana = useLocation().pathname.startsWith('/busana');
 
   return (
     <div className="min-h-screen flex flex-col bg-surface text-ink font-sans">
@@ -23,7 +24,7 @@ export const Layout: React.FC = () => {
       <BrandTabStrip />
 
       {/* 3. Announcement Bar (normal flow, 40px) */}
-      <AnnouncementBar />
+      {isBusana && <AnnouncementBar />}
 
       {/* 4. Sticky Header (solid white, 72px/60px mobile, z-header) */}
       <Header

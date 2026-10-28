@@ -45,7 +45,7 @@ export const KateringPage: React.FC = () => {
   return (
     <div className="w-full bg-surface">
       {/* 1. Katering Hero with Caramel-Deep Accent */}
-      <section className="relative w-full h-[65vh] min-h-[460px] max-h-[640px] bg-charcoal flex items-center overflow-hidden">
+      <section className="relative w-full min-h-[460px] lg:min-h-[65vh] py-16 sm:py-20 bg-charcoal flex items-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <SmartImage
             slot="katering-hero"
@@ -57,6 +57,7 @@ export const KateringPage: React.FC = () => {
         </div>
 
         <div className="site-container relative z-10 text-white space-y-4">
+          <img src="/rheamanda-mark.png" alt="Logo monogram R terbalik Katering Rheamanda" className="block w-20 h-20 object-contain brightness-0 invert" />
           <span className="label-editorial text-white/90 block">
             {BRAND.name} Katering & Perjamuan Adat
           </span>

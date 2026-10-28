@@ -55,7 +55,6 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdminModal }) => {
           {/* Column 1: Brand & Founder Info */}
           <div className="space-y-4">
             <span className="font-serif text-white tracking-[0.02em] text-2xl inline-flex items-center gap-2.5">
-              <img src="/rheamanda-mark.png" alt="" className="h-11 w-auto" />
               {BRAND.wordmark}
             </span>
             <p className="text-white/80 text-sm leading-relaxed max-w-sm font-sans font-light">
