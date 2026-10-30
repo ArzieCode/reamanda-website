@@ -56,10 +56,10 @@ export const KateringPage: React.FC = () => {
           <div className="absolute inset-0 bg-overlay" />
         </div>
 
-        <div className="site-container relative z-10 text-white space-y-4">
+        <div className="site-container relative z-10 text-white space-y-4 editorial-enter">
           <img src="/rheamanda-mark.png" alt="Logo monogram R terbalik Katering Rheamanda" className="block w-20 h-20 object-contain brightness-0 invert" />
           <span className="label-editorial text-white/90 block">
-            {BRAND.name} Katering & Perjamuan Adat
+            03 / 03 · {BRAND.name} Katering & Perjamuan
           </span>
           <h1 className="font-display text-white max-w-3xl font-light">
             Cita Rasa Nusantara dalam Suasana Khidmat

@@ -21,13 +21,13 @@ export const AdminPage: React.FC = () => {
 
   return (
     <div className="section-padding site-container max-w-xl">
-      <div className="bg-white border border-line p-8 md:p-10" style={{ borderRadius: '2px' }}>
+      <div className="bg-white border border-line p-5 sm:p-8 md:p-10" style={{ borderRadius: '2px' }}>
         <div className="flex items-center gap-2 mb-2">
           <ShieldCheck size={20} className="text-indigo stroke-[1.25]" />
           <span className="label-editorial text-indigo">Portal Administrator</span>
         </div>
 
-        <h1 className="font-serif text-charcoal text-3xl font-light mb-2">
+        <h1 className="font-serif text-charcoal text-2xl sm:text-3xl font-light mb-2">
           {isAdmin ? 'Mode Administrator Aktif' : 'Masuk Administrator'}
         </h1>
 
@@ -93,7 +93,7 @@ export const AdminPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="p-3 bg-surface border border-line text-[11px] text-muted space-y-0.5 font-sans">
+            <div className="p-3 bg-surface border border-line text-[11px] text-muted space-y-0.5 font-sans break-words">
               <p className="m-0">Kredensial Default:</p>
               <p className="m-0 text-charcoal font-medium">Username: <code>admin</code> · Password: <code>reamanda2025</code></p>
             </div>

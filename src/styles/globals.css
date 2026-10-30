@@ -79,6 +79,11 @@
     outline: none;
     border-color: var(--charcoal);
   }
+
+  :focus-visible {
+    outline: 2px solid var(--caramel-deep);
+    outline-offset: 3px;
+  }
 }
 
 @layer utilities {
@@ -123,6 +128,40 @@
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+
+  .home-line-visual--fashion {
+    background-color: var(--surface-2);
+  }
+
+  .home-line-visual--kost {
+    background-color: var(--indigo);
+  }
+
+  .home-line-visual--katering {
+    background-color: var(--sand);
+  }
+
+  .home-line-visual img {
+    transition: transform 450ms ease;
+  }
+
+  .home-line-visual:hover img,
+  .home-line-visual:focus-visible img {
+    transform: scale(1.04);
+  }
+
+  @keyframes editorialEnter {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .editorial-enter {
+    animation: editorialEnter 650ms ease-out both;
+  }
+
+  .editorial-delay {
+    animation-delay: 120ms;
   }
 
   @keyframes modalOverlayFadeIn {
@@ -176,6 +215,15 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+
+    .editorial-enter { animation: none !important; }
+
+    .home-line-visual img { transition: none !important; }
+
+    .home-line-visual:hover img,
+    .home-line-visual:focus-visible img { transform: none; }
+
     .animate-modal-overlay,
     .animate-modal-panel,
     .animate-drawer-right,

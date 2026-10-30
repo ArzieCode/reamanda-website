@@ -75,16 +75,16 @@ export const AdminDashboardModal: React.FC = () => {
     >
       <div className="-m-5 sm:-m-8">
         {/* Header */}
-        <div className="px-6 py-5 border-b border-line flex items-center justify-between bg-surface/50 pr-16">
-          <div className="flex items-center gap-3">
+        <div className="pl-4 pr-14 sm:pl-6 sm:pr-16 py-4 sm:py-5 border-b border-line bg-surface/50">
+          <div className="flex items-start sm:items-center gap-3 min-w-0">
             <div className="w-8 h-8 bg-indigo text-white flex items-center justify-center shrink-0" style={{ borderRadius: '2px' }}>
               <ShieldCheck size={18} className="stroke-[1.25]" />
             </div>
-            <div>
-              <h3 className="font-serif text-charcoal text-xl font-normal leading-tight">
+            <div className="min-w-0">
+              <h3 className="font-serif text-charcoal text-lg sm:text-xl font-normal leading-tight">
                 Dasbor Manajemen {BRAND.name}
               </h3>
-              <span className="text-[11px] text-muted font-sans uppercase tracking-widest block">
+              <span className="text-[10px] sm:text-[11px] text-muted font-sans uppercase tracking-wider sm:tracking-widest block mt-1">
                 Pesanan, Reservasi & Pengaturan Sistem
               </span>
             </div>
@@ -92,38 +92,40 @@ export const AdminDashboardModal: React.FC = () => {
         </div>
 
         {/* Tab Buttons */}
-        <div className="px-6 border-b border-line flex flex-wrap items-center justify-between bg-white gap-2">
-          <div className="flex gap-6">
+        <div className="px-4 sm:px-6 border-b border-line flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white gap-0 sm:gap-3">
+          <div className="grid grid-cols-2 sm:flex sm:gap-6 min-w-0">
             <button
               type="button"
               onClick={() => setActiveTab('orders')}
-              className={`py-3 text-xs uppercase tracking-[0.16em] font-sans border-b-2 transition-colors flex items-center gap-2 ${
+              className={`min-w-0 min-h-11 py-2 text-[11px] sm:text-xs uppercase tracking-wider sm:tracking-[0.16em] font-sans border-b-2 transition-colors flex items-center justify-center sm:justify-start gap-1.5 ${
                 activeTab === 'orders'
                   ? 'border-indigo text-indigo font-medium'
                   : 'border-transparent text-muted hover:text-charcoal'
               }`}
             >
-              <ShoppingBag size={14} />
-              <span>Daftar Pesanan & Permintaan ({orders.length})</span>
+              <ShoppingBag size={14} className="shrink-0" />
+              <span className="sm:hidden">Pesanan ({orders.length})</span>
+              <span className="hidden sm:inline">Daftar Pesanan & Permintaan ({orders.length})</span>
             </button>
             <button
               type="button"
               onClick={() => setActiveTab('settings')}
-              className={`py-3 text-xs uppercase tracking-[0.16em] font-sans border-b-2 transition-colors flex items-center gap-2 ${
+              className={`min-w-0 min-h-11 py-2 text-[11px] sm:text-xs uppercase tracking-wider sm:tracking-[0.16em] font-sans border-b-2 transition-colors flex items-center justify-center sm:justify-start gap-1.5 ${
                 activeTab === 'settings'
                   ? 'border-indigo text-indigo font-medium'
                   : 'border-transparent text-muted hover:text-charcoal'
               }`}
             >
-              <Settings size={14} />
-              <span>Setelan Situs & Kontak</span>
+              <Settings size={14} className="shrink-0" />
+              <span className="sm:hidden">Pengaturan</span>
+              <span className="hidden sm:inline">Setelan Situs & Kontak</span>
             </button>
           </div>
 
           <button
             type="button"
             onClick={handleResetData}
-            className="text-xs text-muted hover:text-status-occupied font-sans flex items-center gap-1.5 transition-colors py-2"
+            className="min-h-10 text-[11px] sm:text-xs text-muted hover:text-status-occupied font-sans flex items-center gap-1.5 transition-colors border-t border-line sm:border-0"
             title="Kembalikan semua data ke bawaan"
           >
             <RotateCcw size={13} />
@@ -132,11 +134,11 @@ export const AdminDashboardModal: React.FC = () => {
         </div>
 
         {/* Body Content */}
-        <div className="p-6 max-h-[60vh] overflow-y-auto">
+        <div className="p-4 sm:p-6 max-h-none sm:max-h-[60vh] overflow-visible sm:overflow-y-auto min-w-0">
           {activeTab === 'orders' && (
             <div>
               {/* Filter Pills */}
-              <div className="flex flex-wrap gap-2 mb-6">
+              <div className="flex flex-wrap gap-2 mb-5 sm:mb-6">
                 {[
                   { id: 'all', label: 'Semua Lini' },
                   { id: 'busana', label: 'Busana Muslimah' },
@@ -147,7 +149,7 @@ export const AdminDashboardModal: React.FC = () => {
                     key={f.id}
                     type="button"
                     onClick={() => setFilterType(f.id as any)}
-                    className={`px-3 py-1 text-xs font-sans uppercase tracking-wider border transition-colors ${
+                    className={`px-3 min-h-9 py-1 text-[11px] sm:text-xs font-sans uppercase tracking-wide sm:tracking-wider border transition-colors text-left ${
                       filterType === f.id
                         ? 'bg-charcoal text-white border-charcoal'
                         : 'bg-surface text-ink border-line hover:border-charcoal'
@@ -173,12 +175,12 @@ export const AdminDashboardModal: React.FC = () => {
                     return (
                       <div
                         key={order.id}
-                        className="p-5 border border-line bg-surface/30 space-y-3"
+                        className="p-4 sm:p-5 border border-line bg-surface/30 space-y-3 min-w-0"
                         style={{ borderRadius: '2px' }}
                       >
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-line pb-3">
-                          <div className="flex items-center gap-3">
-                            <span className="font-serif text-charcoal text-base font-normal">
+                          <div className="flex flex-wrap items-center gap-x-3 gap-y-2 min-w-0">
+                            <span className="font-serif text-charcoal text-base font-normal break-all">
                               {order.id}
                             </span>
                             <span className="text-[11px] uppercase tracking-wider font-sans text-muted">
@@ -200,7 +202,7 @@ export const AdminDashboardModal: React.FC = () => {
                             </span>
                           </div>
 
-                          <div className="text-right">
+                          <div className="sm:text-right">
                             <span className="font-serif text-charcoal text-base">
                               {order.totalAmountFormatted}
                             </span>
@@ -210,26 +212,26 @@ export const AdminDashboardModal: React.FC = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-sans">
                           <div>
                             <p className="m-0 text-muted">Pemesan:</p>
-                            <p className="m-0 font-medium text-charcoal">{order.customerName}</p>
-                            <p className="m-0 text-ink">WhatsApp: {order.whatsapp}</p>
+                            <p className="m-0 font-medium text-charcoal break-words">{order.customerName}</p>
+                            <p className="m-0 text-ink break-all">WhatsApp: {order.whatsapp}</p>
                           </div>
 
                           <div>
                             <p className="m-0 text-muted">Rincian:</p>
-                            <p className="m-0 text-ink line-clamp-2">{order.summary}</p>
+                            <p className="m-0 text-ink break-words">{order.summary}</p>
                           </div>
                         </div>
 
                         {/* Status update actions */}
                         <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-line/60">
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs text-muted font-sans">Ubah Status:</span>
+                          <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 w-full xl:w-auto">
+                            <span className="col-span-2 sm:col-auto text-xs text-muted font-sans">Ubah Status:</span>
                             {(['Menunggu', 'Dikonfirmasi', 'Selesai', 'Dibatalkan'] as const).map((st) => (
                               <button
                                 key={st}
                                 type="button"
                                 onClick={() => updateOrderStatus(order.id, st)}
-                                className={`px-2.5 py-1 text-[11px] font-sans tracking-wider border transition-colors ${
+                                className={`min-h-9 px-2.5 py-1 text-[11px] font-sans tracking-wide border transition-colors ${
                                   order.status === st
                                     ? 'bg-charcoal text-white border-charcoal font-medium'
                                     : 'bg-white text-ink border-line hover:border-charcoal'
@@ -245,7 +247,7 @@ export const AdminDashboardModal: React.FC = () => {
                             href={waLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1.5 px-3 py-1 text-xs text-charcoal hover:text-caramel-deep border border-line bg-white transition-colors"
+                            className="inline-flex min-h-9 items-center gap-1.5 px-3 py-1 text-xs text-charcoal hover:text-caramel-deep border border-line bg-white transition-colors"
                             style={{ borderRadius: '2px' }}
                           >
                             <MessageCircle size={13} className="stroke-[1.25]" />
@@ -317,10 +319,10 @@ export const AdminDashboardModal: React.FC = () => {
                 />
               </div>
 
-              <div className="pt-2 flex items-center gap-4">
+              <div className="pt-2 flex flex-wrap items-center gap-4">
                 <button
                   type="submit"
-                  className="px-6 py-2.5 bg-indigo text-white hover:opacity-90 text-xs uppercase tracking-[0.16em] font-sans transition-opacity font-medium"
+                  className="w-full sm:w-auto min-h-11 px-6 py-2.5 bg-indigo text-white hover:opacity-90 text-xs uppercase tracking-[0.16em] font-sans transition-opacity font-medium"
                   style={{ borderRadius: '2px' }}
                 >
                   Simpan Perubahan Setelan

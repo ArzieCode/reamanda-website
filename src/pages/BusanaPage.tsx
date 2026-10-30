@@ -73,10 +73,10 @@ export const BusanaPage: React.FC = () => {
           <div className="absolute inset-0 bg-overlay" />
         </div>
 
-        <div className="site-container relative z-10 text-white space-y-4">
+        <div className="site-container relative z-10 text-white space-y-4 editorial-enter">
           <img src="/rheamanda-fashion-logo.png" alt="Logo Busana Rheamanda" className="block w-20 h-20 object-contain brightness-0 invert" />
           <span className="label-editorial text-white/80 block">
-            {BRAND.name} Busana Muslimah · Koleksi 2025
+            01 / 03 · {BRAND.name} Busana Muslimah
           </span>
           <h1 className="font-display text-white max-w-3xl font-light">
             Siluet Teduh Bernilai Luhur

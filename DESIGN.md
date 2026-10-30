@@ -9,33 +9,33 @@
 
 ---
 
-## 1. Colour Tokens (Light Only — Strictly Approved Palette)
+## 1. Colour Tokens (Light Only — Working Palette)
 
-All colours **must** be used via CSS custom properties. No other hex or rgb value may appear in any component:
+Current implemented values live in `src/styles/tokens.css`. Treat this as a proposed direction for client review, not an approved brand guide. Use CSS custom properties in components:
 
 | Token | Value | Usage |
 |---|---|---|
-| `--white` | `#FFFFFF` | Solid header, active tab strips, card backgrounds |
-| `--surface` | `#F6F4F0` | Default page background, cards, secondary panels |
-| `--surface-2` | `#ECE7DF` | Editorial placeholders, image backs, tonal bands |
-| `--sand` | `#E7E1D1` | Warm neutral background |
-| `--line` | `#E6E2DC` | 1px hairline dividers, structural borders |
-| `--ink` | `#4D4946` | Body text (1.0625rem / 1.7) |
-| `--charcoal` | `#4F4D4A` | Headings, active tabs, Busana section accent |
-| `--muted` | `#6F6B67` | Secondary text, captions, metadata |
-| `--caramel` | `#987245` | Brand warm gold |
-| `--caramel-deep`| `#7E5D34` | Small caramel text on light, Katering section accent |
-| `--indigo` | `#162C74` | Kost section accent, admin bar |
-| `--sale` | `#EA33B7` | **ONLY** for SALE badges & Sale menu pill, nowhere else |
-| `--status-available` | `#7C9070` | Property: Tersedia |
-| `--status-deposit` | `#C79A4B` | Property: Sudah DP |
-| `--status-occupied`| `#A8645A` | Property: Sudah Ditempati |
-| `--overlay` | `rgba(79,77,74,0.45)` | Photo text overlay |
-| `--overlay-indigo` | `rgba(22,44,116,0.45)` | Reserved overlay token |
+| `--white` | `#FFFEFB` | Header, cards, secondary panels |
+| `--surface` | `#F5F0E8` | Warm page background |
+| `--surface-2` | `#EBE4D8` | Fashion visual ground, image backs |
+| `--sand` | `#DFD4C4` | Catering visual ground |
+| `--line` | `#D6CBBA` | Hairline dividers, structural borders |
+| `--ink` | `#2A241E` | Body text |
+| `--charcoal` | `#1B1713` | Headings, active tabs, Busana section accent |
+| `--muted` | `#5C554C` | Secondary text and metadata |
+| `--caramel` | `#A67C42` | Warm decorative accent |
+| `--caramel-deep`| `#7D5A28` | Accent text on light, Katering section accent |
+| `--indigo` | `#2C353F` | Slate accent for Kost section and admin bar |
+| `--sale` | `#7A3B45` | Sale badges and menu pill |
+| `--status-available` | `#6A7A66` | Legacy property status: Tersedia |
+| `--status-deposit` | `#B08A48` | Legacy property status: Sudah DP |
+| `--status-occupied`| `#8A5C54` | Legacy property status: Sudah Ditempati |
+| `--overlay` | `rgba(27,23,19,0.5)` | Photo text overlay |
+| `--overlay-indigo` | `rgba(44,53,63,0.52)` | Slate photo overlay |
 
 ### Section Accents & Backgrounds
 - **Busana (Fashion):** Accent `--charcoal`, Background `--white` / `--surface`
-- **Kost Eksklusif Wanita (D’Rhea Syariah Guest House):** Accent `--indigo`, Background `--surface` / `--white`
+- **Kost Eksklusif Wanita (D’Rhea Syariah Guest House):** Slate accent `--indigo`, Background `--surface` / `--white`; display its light logo on slate
 - **Katering (Perjamuan & Events):** Accent `--caramel-deep`, Background `--surface` / `--white`
 
 ---

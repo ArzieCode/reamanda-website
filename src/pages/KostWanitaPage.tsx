@@ -5,26 +5,26 @@ import { BRAND } from '../config/brand';
 
 export const KostWanitaPage: React.FC = () => (
   <div className="w-full bg-surface">
-    <section className="site-container section-padding grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-      <div className="space-y-6">
-        <span className="label-editorial text-indigo block">Lini Hunian {BRAND.name}</span>
-        <h1 className="font-display text-charcoal">Kost Eksklusif Wanita</h1>
+    <section className="site-container grid grid-cols-1 lg:grid-cols-2 border-b border-line">
+      <div className="space-y-6 py-20 lg:py-28 lg:pr-16 editorial-enter">
+        <span className="label-editorial text-indigo block">02 / 03 · Lini Hunian {BRAND.name}</span>
+        <h1 className="font-display text-charcoal">Ruang untuk merasa di rumah.</h1>
         <p className="text-ink text-base sm:text-lg leading-relaxed max-w-lg">
           D’Rhea Syariah Guest House adalah nama tempat untuk lini kost eksklusif wanita {BRAND.name}.
           Informasi resmi kamar, fasilitas, dan tarif akan ditambahkan setelah dikonfirmasi pengelola.
         </p>
         <a
           href="#informasi-kost"
-          className="inline-flex items-center gap-2 px-6 py-3.5 bg-charcoal text-white text-xs uppercase tracking-[0.16em] font-sans hover:bg-indigo transition-colors"
+          className="inline-flex min-h-11 items-center gap-2 border-b border-indigo text-indigo text-xs uppercase tracking-[0.16em] font-sans hover:opacity-70 transition-opacity"
         >
           Informasi Kost <ArrowDown size={15} />
         </a>
       </div>
-      <div className="flex items-center justify-center">
+      <div className="bg-indigo min-h-[330px] lg:min-h-[550px] flex items-center justify-center p-8 sm:p-14 editorial-enter editorial-delay">
         <img
           src="/d-rhea-syariah-logo.png"
           alt="Logo D’Rhea Syariah Guest House"
-          className="w-full max-w-[560px] h-auto object-contain"
+          className="w-full max-w-[440px] h-auto object-contain"
         />
       </div>
     </section>
