@@ -244,7 +244,7 @@ export const BusanaPage: React.FC = () => {
             />
           </h1>
 
-          <p className="text-white/90 text-sm sm:text-base max-w-lg font-sans font-light leading-relaxed">
+          <p className="text-white text-sm sm:text-base max-w-lg font-sans font-light leading-relaxed">
             <EditableText
               contentKey="busana.hero.subtitle"
               defaultText="Eksplorasi tenun songket kontemporer dan voal premium yang dirancang untuk kenyamanan ibadah, silaturahmi, serta aktivitas harian wanita Indonesia."

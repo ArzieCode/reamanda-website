@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowDown, ArrowUpRight, Plus, Quote, HelpCircle } from 'lucide-react';
+import { ArrowDown, ArrowUpRight, Plus, Quote } from 'lucide-react';
 import { SmartImage } from '../components/ui/SmartImage';
 import { QuickViewModal } from '../components/busana/QuickViewModal';
 import { EditableText } from '../components/cms/EditableText';
@@ -21,7 +21,7 @@ const businessLines = [
     number: '01',
     name: 'Busana Muslimah',
     title: 'Busana Rheamanda',
-    description: 'Koleksi busana muslimah untuk keseharian dan momen istimewa. Temukan pilihan yang terasa dekat dengan gaya Anda.',
+    description: 'Busana muslimah untuk setiap momen.',
     logo: '/rheamanda-fashion-logo.png',
     alt: 'Logo Busana Rheamanda',
     path: '/busana',
@@ -32,7 +32,7 @@ const businessLines = [
     number: '02',
     name: 'Kost Eksklusif Wanita',
     title: 'D’Rhea Syariah Guest House',
-    description: 'Kenali lini hunian khusus wanita Rheamanda. Informasi kamar dan fasilitas akan dilengkapi setelah dikonfirmasi pengelola.',
+    description: 'Hunian nyaman khusus wanita.',
     logo: '/d-rhea-syariah-logo.png',
     alt: 'Logo D’Rhea Syariah Guest House',
     path: '/kost-wanita',
@@ -43,7 +43,7 @@ const businessLines = [
     number: '03',
     name: 'Katering',
     title: 'Katering Rheamanda',
-    description: 'Lihat pilihan paket dan menu hidangan untuk acara Anda, lalu konsultasikan kebutuhan perjamuan bersama kami.',
+    description: 'Hidangan untuk momen istimewa.',
     logo: '/rheamanda-mark.png',
     alt: 'Logo Katering Rheamanda',
     path: '/katering',
@@ -147,55 +147,53 @@ export const HomePage: React.FC = () => {
 
   return (
   <div className="w-full bg-surface">
-    <section className="site-container grid lg:grid-cols-[1.2fr_0.8fr] min-h-[620px] lg:min-h-[680px] border-b border-line">
-      <div className="flex flex-col justify-center py-20 lg:py-28 lg:pr-16 editorial-enter">
-        <span className="label-editorial text-caramel-deep"><EditableText contentKey="home.editorial.hero.tag" defaultText="Rheamanda · Tiga lini usaha" /></span>
-        <h1 className="font-display mt-8 mb-8 max-w-[820px] text-charcoal">
+    <section className="site-container grid lg:grid-cols-[1.1fr_0.9fr] min-h-[500px] lg:min-h-[580px] border-b border-line">
+      <div className="flex flex-col justify-center py-16 sm:py-20 lg:py-24 lg:pr-16 editorial-enter">
+        <span className="label-editorial text-caramel-deep"><EditableText contentKey="home.editorial.hero.tag" defaultText="Selamat datang di Rheamanda" /></span>
+        <h1 className="font-display mt-6 mb-6 max-w-[820px] text-charcoal">
           Satu rumah.<br /><em className="font-light"><EditableText contentKey="home.editorial.hero.title" defaultText="Tiga cerita." /></em>
         </h1>
-        <p className="text-base sm:text-lg text-ink leading-relaxed max-w-lg">
-          <EditableText contentKey="home.editorial.hero.subtitle" defaultText={`${BRAND.name} mempertemukan busana muslimah, hunian khusus wanita, dan katering dalam satu tempat. Pilih cerita yang ingin Anda jelajahi.`} multiline />
+        <p className="text-base sm:text-lg text-ink leading-relaxed max-w-md">
+          <EditableText contentKey="home.editorial.hero.subtitle" defaultText="Busana, hunian, dan katering. Temukan yang tepat untuk Anda." multiline />
         </p>
-        <a href="#lini-usaha" className="mt-10 inline-flex w-fit items-center gap-3 border-b border-charcoal pb-2 text-xs font-medium uppercase tracking-[0.16em] text-charcoal hover:text-caramel-deep hover:border-caramel-deep transition-colors">
-          Temukan lini kami <ArrowDown size={16} aria-hidden="true" />
+        <a href="#lini-usaha" className="mt-8 inline-flex w-fit min-h-12 items-center gap-3 bg-charcoal px-6 text-sm font-medium tracking-wide text-white hover:bg-caramel-deep transition-colors">
+          Mulai jelajahi <ArrowDown size={16} aria-hidden="true" />
         </a>
       </div>
-      <div className="relative min-h-[330px] lg:min-h-0 bg-charcoal text-white overflow-hidden flex flex-col justify-between p-8 sm:p-12 lg:p-14 editorial-enter editorial-delay">
-        <span className="label-editorial text-white/70">Busana · Hunian · Perjamuan</span>
-        <div className="space-y-8 max-w-sm">
-          <div className="h-px w-16 bg-caramel" />
+      <div className="relative min-h-[290px] lg:min-h-0 bg-charcoal text-white overflow-hidden flex flex-col justify-between p-8 sm:p-12 lg:p-14 editorial-enter editorial-delay">
+        <span className="label-editorial text-white/70">Busana · Hunian · Katering</span>
+        <div className="relative max-w-sm">
+          <div className="h-px w-16 bg-caramel mb-6" />
           <p className="font-serif text-4xl sm:text-5xl lg:text-6xl leading-[1.05] text-white m-0">
-            Setiap pilihan punya tempatnya sendiri.
+            Pilih cerita Anda.
           </p>
-          <p className="text-sm text-white/75 m-0"><EditableText contentKey="home.editorial.statement" defaultText="Elegan, tulus, dan abadi." /></p>
+          <p className="text-base text-white/85 mt-5 mb-0"><EditableText contentKey="home.editorial.statement" defaultText="Dibuat untuk momen yang berarti." /></p>
         </div>
-        <span className="label-editorial text-white/50 self-end">Rheamanda</span>
+        <span className="label-editorial text-white/50 self-end">Rheamanda / 01—03</span>
       </div>
     </section>
 
     <section id="lini-usaha" className="site-container section-padding scroll-mt-20">
-      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12 lg:mb-16">
+      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-9 lg:mb-12">
         <div>
           <span className="label-editorial text-caramel-deep">Jelajahi Rheamanda</span>
-          <h2 className="font-section-title mt-3"><EditableText contentKey="home.lines.title" defaultText="Tiga lini, satu rumah." /></h2>
+          <h2 className="font-section-title mt-3"><EditableText contentKey="home.lines.title" defaultText="Apa yang Anda cari?" /></h2>
         </div>
-        <p className="text-sm text-muted md:text-right max-w-xs m-0">Setiap lini memiliki identitas dan halaman tersendiri.</p>
       </div>
-      <div className="border-t border-line">
+      <div className="grid gap-5 md:grid-cols-3">
         {businessLines.map((line) => (
-          <article key={line.path} className="grid lg:grid-cols-[80px_minmax(0,1fr)_minmax(300px,0.8fr)] gap-5 lg:gap-10 py-10 lg:py-14 border-b border-line items-center">
-            <span className="label-editorial text-muted self-start lg:pt-4">{line.number} / 03</span>
-            <div className="lg:py-8">
-              <span className="label-editorial text-caramel-deep">{line.name}</span>
-              <h3 className="font-serif text-4xl sm:text-5xl lg:text-6xl leading-[1.06] mt-4 mb-5"><EditableText contentKey={`home.tile${Number(line.number)}.title`} defaultText={line.title} /></h3>
-              <p className="text-ink text-sm sm:text-base leading-relaxed max-w-md"><EditableText contentKey={`home.tile${Number(line.number)}.desc`} defaultText={line.description} multiline /></p>
-              <Link to={line.path} className="mt-7 inline-flex min-h-11 items-center gap-3 border-b border-charcoal text-xs uppercase tracking-[0.16em] font-medium text-charcoal hover:text-caramel-deep hover:border-caramel-deep transition-colors">
+          <article key={line.path} className="group min-w-0 bg-white border border-line hover:border-charcoal transition-colors flex flex-col">
+            <Link to={line.path} aria-label={line.action} className={`home-line-visual ${line.toneClass} h-48 sm:h-56 flex items-center justify-center p-9 overflow-hidden`}>
+              <img src={line.logo} alt={line.alt} className="w-full h-full max-w-[230px] max-h-[160px] object-contain" />
+            </Link>
+            <div className="p-5 sm:p-7 flex flex-1 flex-col">
+              <span className="label-editorial text-caramel-deep">{line.number} / 03 · {line.name}</span>
+              <h3 className="font-serif text-3xl leading-[1.08] mt-4 mb-3"><EditableText contentKey={`home.tile${Number(line.number)}.title`} defaultText={line.title} /></h3>
+              <p className="text-ink text-base leading-relaxed mb-5"><EditableText contentKey={`home.tile${Number(line.number)}.desc`} defaultText={line.description} multiline /></p>
+              <Link to={line.path} className="mt-auto inline-flex min-h-11 w-fit items-center gap-2 border-b border-charcoal text-sm tracking-wide font-medium text-charcoal hover:text-caramel-deep hover:border-caramel-deep transition-colors">
                 {line.action} <ArrowUpRight size={17} aria-hidden="true" />
               </Link>
             </div>
-            <Link to={line.path} aria-label={line.action} className={`home-line-visual ${line.toneClass} min-h-[270px] sm:min-h-[340px] flex items-center justify-center p-12 overflow-hidden`}>
-              <img src={line.logo} alt={line.alt} className="w-full h-full max-w-[280px] max-h-[220px] object-contain" />
-            </Link>
           </article>
         ))}
       </div>
@@ -206,13 +204,13 @@ export const HomePage: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12">
           <div>
             <span className="label-editorial text-caramel-deep">Busana terpilih</span>
-            <h2 className="font-section-title mt-3">Koleksi pilihan.</h2>
+            <h2 className="font-section-title mt-3">Pilihan untuk Anda.</h2>
           </div>
-          <Link to="/busana" className="inline-flex min-h-11 w-fit items-center gap-3 border-b border-charcoal text-xs uppercase tracking-[0.16em] font-medium text-charcoal hover:text-caramel-deep hover:border-caramel-deep transition-colors">
-            Lihat semua busana ({products.filter((product) => product.isPublished).length}) <ArrowUpRight size={17} aria-hidden="true" />
+          <Link to="/busana" className="inline-flex min-h-11 w-fit items-center gap-3 border-b border-charcoal text-sm tracking-wide font-medium text-charcoal hover:text-caramel-deep hover:border-caramel-deep transition-colors">
+            Lihat koleksi <ArrowUpRight size={17} aria-hidden="true" />
           </Link>
         </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+        <div className="grid grid-cols-1 min-[400px]:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
           {featuredProducts.map((product) => {
             const price = product.isSale && product.salePrice ? product.salePrice : product.price;
             const stock = productService.getProductTotalStock(product);
@@ -220,13 +218,13 @@ export const HomePage: React.FC = () => {
               <button key={product.id} type="button" onClick={() => setSelectedProduct(product)} className="group text-left bg-surface border border-line p-3 hover:border-charcoal transition-colors" aria-label={`Lihat ${product.name}`}>
                 <div className="relative aspect-[3/4] overflow-hidden mb-4">
                   <SmartImage src={product.images[0]} alt={product.name} aspectRatio="3:4" className="w-full h-full" />
-                  {product.isSale && <span className="absolute top-2 left-2 bg-sale text-white px-2 py-1 text-[10px] tracking-widest">SALE</span>}
-                  {stock <= 5 && <span className="absolute top-2 right-2 bg-charcoal text-white px-2 py-1 text-[10px] tracking-widest">{stock === 0 ? 'HABIS' : `SISA ${stock}`}</span>}
+                  {product.isSale && <span className="absolute top-2 left-2 bg-sale text-white px-2 py-1 text-xs font-medium tracking-wide">SALE</span>}
+                  {stock <= 5 && <span className="absolute top-2 right-2 bg-charcoal text-white px-2 py-1 text-xs font-medium tracking-wide">{stock === 0 ? 'HABIS' : `SISA ${stock}`}</span>}
                 </div>
                 <span className="label-editorial text-muted block mb-2">{product.category} · {product.collection}</span>
-                <span className="font-serif text-charcoal text-lg leading-tight block group-hover:text-caramel-deep">{product.name}</span>
-                <span className="text-sm text-ink mt-2 block">Rp {price.toLocaleString('id-ID')}</span>
-                {product.isSale && product.salePrice && <span className="text-xs text-muted line-through">Rp {product.price.toLocaleString('id-ID')}</span>}
+                <span className="font-serif text-charcoal text-2xl leading-tight block group-hover:text-caramel-deep">{product.name}</span>
+                <span className="text-base font-medium text-ink mt-2 block">Rp {price.toLocaleString('id-ID')}</span>
+                {product.isSale && product.salePrice && <span className="text-sm text-muted line-through">Rp {product.price.toLocaleString('id-ID')}</span>}
               </button>
             );
           })}
@@ -241,7 +239,7 @@ export const HomePage: React.FC = () => {
             <div>
               <span className="label-editorial text-caramel-deep block mb-2">Ulasan Tamu & Pelanggan</span>
               <h2 className="font-section-title mt-3">
-                <EditableText contentKey="home.testi.title" defaultText="Kisah Kepuasan Bersama Kami" as="span" />
+                <EditableText contentKey="home.testi.title" defaultText="Cerita pelanggan" as="span" />
               </h2>
             </div>
             {canEdit && (
@@ -258,6 +256,7 @@ export const HomePage: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {testimonials
               .filter((t) => (canEdit ? true : t.isVisible))
+              .slice(0, canEdit ? undefined : 3)
               .map((t) => (
                 <div
                   key={t.id}
@@ -274,14 +273,14 @@ export const HomePage: React.FC = () => {
 
                   <div>
                     <Quote className="text-caramel/40 mb-3" size={28} />
-                    <p className="text-sm font-sans text-ink leading-relaxed italic mb-6">
-                      "{t.content}"
+                    <p className="text-base font-sans text-ink leading-relaxed italic mb-6">
+                      “{t.content}”
                     </p>
                   </div>
 
                   <div className="border-t border-line/60 pt-4">
                     <div className="font-serif text-charcoal text-base">{t.title}</div>
-                    {t.subtitle && <div className="text-xs text-muted font-sans">{t.subtitle}</div>}
+                    {t.subtitle && <div className="text-sm text-muted font-sans">{t.subtitle}</div>}
                   </div>
                 </div>
               ))}
@@ -303,7 +302,7 @@ export const HomePage: React.FC = () => {
           <div className="text-center mb-12">
             <span className="label-editorial text-caramel-deep block mb-2">Tanya Jawab</span>
             <h2 className="font-section-title mt-3">
-              <EditableText contentKey="home.faq.title" defaultText="Pertanyaan yang Sering Diajukan" as="span" />
+              <EditableText contentKey="home.faq.title" defaultText="Sering ditanyakan" as="span" />
             </h2>
             <div className="w-12 h-[1px] bg-charcoal mx-auto mt-4" />
           </div>
@@ -311,10 +310,11 @@ export const HomePage: React.FC = () => {
           <div className="space-y-4">
             {faqs
               .filter((f) => (canEdit ? true : f.isVisible))
+              .slice(0, canEdit ? undefined : 5)
               .map((f) => (
                 <div
                   key={f.id}
-                  className={`border p-5 relative bg-white rounded-[2px] transition-colors ${
+                  className={`border relative bg-white rounded-[2px] transition-colors ${
                     !f.isVisible ? 'opacity-50 border-dashed border-line' : 'border-line hover:border-charcoal'
                   }`}
                 >
@@ -325,13 +325,13 @@ export const HomePage: React.FC = () => {
                     isVisible={f.isVisible}
                   />
 
-                  <div className="flex items-start gap-3 pr-16 sm:pr-20">
-                    <HelpCircle size={18} className="text-caramel-deep shrink-0 mt-0.5" />
-                    <div>
-                      <h3 className="font-serif text-charcoal text-lg mb-2">{f.title}</h3>
-                      <p className="text-sm font-sans text-muted leading-relaxed">{f.content}</p>
-                    </div>
-                  </div>
+                  <details className="group/faq">
+                    <summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 pr-16 sm:pr-32 [&::-webkit-details-marker]:hidden">
+                      <span className="font-serif text-charcoal text-xl leading-tight">{f.title}</span>
+                      <Plus size={17} className="shrink-0 text-caramel-deep transition-transform group-open/faq:rotate-45" aria-hidden="true" />
+                    </summary>
+                    <p className="px-5 pb-5 pr-16 sm:pr-20 text-base font-sans text-muted leading-relaxed m-0">{f.content}</p>
+                  </details>
                 </div>
               ))}
 
@@ -346,20 +346,23 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-    <section className="bg-white border-t border-line py-20 lg:py-24">
+    <section className="bg-charcoal py-16 lg:py-20">
       <div className="site-container flex flex-col md:flex-row md:items-center md:justify-between gap-8">
         <div>
-          <span className="label-editorial text-caramel-deep">Tentang kami</span>
-          <h2 className="font-section-title mt-3"><EditableText contentKey="home.about.headline" defaultText="Kenali rumah di balik tiga lini." /></h2>
-          <p className="mt-5 max-w-2xl text-sm sm:text-base text-ink leading-relaxed">
-            <EditableText contentKey="home.about.paragraph1" defaultText={`${BRAND.name} menghadirkan pilihan busana muslimah untuk keseharian dan momen istimewa.`} multiline />
+          <span className="label-editorial text-caramel">Lebih dekat</span>
+          <h2 className="font-section-title mt-3 !text-white"><EditableText contentKey="home.about.headline" defaultText="Kenali Rheamanda lebih dekat." /></h2>
+          <p className="mt-4 max-w-xl text-sm sm:text-base text-white leading-relaxed">
+            <EditableText contentKey="home.about.paragraph1" defaultText={`${BRAND.name} hadir untuk hal-hal yang berarti bagi Anda.`} multiline />
           </p>
-          <p className="mt-3 max-w-2xl text-sm text-muted leading-relaxed">
-            <EditableText contentKey="home.about.paragraph2" defaultText="D’Rhea Syariah Guest House melengkapi lini hunian khusus wanita, sementara katering kami hadir untuk kebutuhan perjamuan Anda." multiline />
-          </p>
+          <details className="mt-3 text-sm text-white/75">
+            <summary className="w-fit cursor-pointer underline underline-offset-4 text-caramel hover:text-white">Tentang tiga lini</summary>
+            <p className="mt-3 max-w-xl leading-relaxed text-white">
+              <EditableText contentKey="home.about.paragraph2" defaultText="Busana muslimah, hunian khusus wanita, dan katering untuk perjamuan Anda." multiline />
+            </p>
+          </details>
         </div>
-        <Link to="/tentang-kami" className="inline-flex min-h-11 w-fit items-center gap-3 border-b border-charcoal text-xs uppercase tracking-[0.16em] font-medium text-charcoal hover:text-caramel-deep hover:border-caramel-deep transition-colors">
-          Tentang Rheamanda <ArrowUpRight size={17} aria-hidden="true" />
+        <Link to="/tentang-kami" className="inline-flex min-h-12 w-fit shrink-0 items-center gap-3 bg-white px-6 text-xs uppercase tracking-[0.12em] font-medium text-charcoal hover:bg-caramel transition-colors">
+          Cerita kami <ArrowUpRight size={17} aria-hidden="true" />
         </Link>
       </div>
     </section>

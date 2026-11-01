@@ -64,7 +64,7 @@ export const KateringPage: React.FC = () => {
           <h1 className="font-display text-white max-w-3xl font-light">
             Cita Rasa Nusantara dalam Suasana Khidmat
           </h1>
-          <p className="text-white/90 text-sm sm:text-base max-w-lg font-sans font-light leading-relaxed">
+          <p className="text-white text-sm sm:text-base max-w-lg font-sans font-light leading-relaxed">
             Menyajikan keagungan bumbu rempah autentik Minang dan Nusantara untuk perhelatan pernikahan, jamuan resmi korporasi, tumpeng syukuran, dan hantaran keluarga.
           </p>
           <div className="pt-2 flex flex-wrap gap-4">

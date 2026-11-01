@@ -13,33 +13,35 @@ export const BrandTabStrip: React.FC = () => {
 
   const tabs = [
     { label: 'Busana', path: '/busana', isActive: isBusana },
-    { label: 'Kost Eksklusif Wanita', path: '/kost-wanita', isActive: isKost },
+    { label: 'Kost Eksklusif Wanita', shortLabel: 'Kost Wanita', path: '/kost-wanita', isActive: isKost },
     { label: 'Katering', path: '/katering', isActive: isKatering },
   ];
 
   return (
-    <div className="w-full bg-white border-b border-line h-10 select-none">
-      <div className="site-container h-full flex items-center gap-3 sm:gap-5">
+    <div className="w-full bg-white border-b border-line h-12 select-none">
+      <div className="site-container !px-3 sm:!px-8 lg:!px-12 h-full flex items-center gap-1 sm:gap-5">
         <Link
           to="/"
-          className={`shrink-0 inline-flex items-center gap-1 text-[10px] sm:text-xs font-sans uppercase tracking-wide hover:text-caramel-deep ${isHome ? 'text-charcoal font-medium' : 'text-ink underline underline-offset-4'}`}
+          className={`shrink-0 inline-flex min-h-10 items-center gap-1 text-sm font-sans font-medium hover:text-caramel-deep ${isHome ? 'text-charcoal' : 'text-ink underline underline-offset-4'}`}
         >
-          {!isHome && <ArrowLeft size={13} />}
-          {isHome ? 'Beranda Rheamanda' : 'Kembali ke Rheamanda'}
+          {!isHome && <ArrowLeft size={16} />}
+          <span className="sm:hidden">{isHome ? 'Beranda' : 'Kembali'}</span>
+          <span className="hidden sm:inline">{isHome ? 'Beranda Rheamanda' : 'Kembali ke Rheamanda'}</span>
         </Link>
-        <nav className="flex items-center gap-0.5 sm:gap-1 overflow-x-auto no-scrollbar h-full py-1">
+        <nav aria-label="Lini usaha" className="flex min-w-0 flex-1 items-center gap-0.5 sm:gap-1 overflow-x-auto no-scrollbar h-full py-1">
           {tabs.map((tab) => (
             <NavLink
               key={tab.label}
               to={tab.path}
-              className={`h-8 px-2 sm:px-4 flex items-center justify-center text-[10px] sm:text-xs uppercase tracking-[0.05em] sm:tracking-[0.18em] transition-colors whitespace-nowrap font-sans ${
+              className={`min-h-10 px-1.5 sm:px-4 flex items-center justify-center text-sm tracking-normal transition-colors whitespace-nowrap font-sans font-medium ${
                 tab.isActive
-                  ? 'bg-charcoal text-white font-normal'
+                  ? 'bg-charcoal text-white'
                   : 'bg-white text-ink hover:text-charcoal'
               }`}
               style={{ borderRadius: '2px' }}
             >
-              {tab.label}
+              <span className="sm:hidden">{tab.shortLabel ?? tab.label}</span>
+              <span className="hidden sm:inline">{tab.label}</span>
             </NavLink>
           ))}
         </nav>

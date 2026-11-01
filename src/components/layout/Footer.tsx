@@ -57,7 +57,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdminModal }) => {
             <span className="font-serif text-white tracking-[0.02em] text-2xl inline-flex items-center gap-2.5">
               {BRAND.wordmark}
             </span>
-            <p className="text-white/80 text-sm leading-relaxed max-w-sm font-sans font-light">
+            <p className="text-white/85 text-base leading-relaxed max-w-sm font-sans">
               Menghadirkan busana muslimah, kost eksklusif wanita, dan sajian katering untuk momen istimewa.
             </p>
             <div className="pt-2">
@@ -65,7 +65,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdminModal }) => {
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.16em] font-sans text-white hover:text-white bg-white/10 hover:bg-white/20 border border-white/20 px-3.5 py-2 transition-colors"
+                className="inline-flex min-h-11 items-center gap-2 text-sm font-medium font-sans text-white bg-white/10 hover:bg-white/20 border border-white/20 px-3.5 py-2 transition-colors"
                 style={{ borderRadius: '2px' }}
               >
                 <MessageCircle size={14} className="stroke-[1.25]" />
@@ -80,7 +80,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdminModal }) => {
               Busana Muslimah
             </span>
             <div className="w-6 h-[1px] bg-caramel opacity-50 mb-3" />
-            <ul className="space-y-2 text-sm text-white/80 font-sans font-light">
+            <ul className="space-y-2 text-base text-white/85 font-sans">
               <li>
                 <Link to="/busana#terbaru" className="hover:text-white transition-colors">
                   Produk Terbaru 2025
@@ -118,7 +118,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdminModal }) => {
               Kost Wanita & Perjamuan
             </span>
             <div className="w-6 h-[1px] bg-caramel opacity-50 mb-3" />
-            <ul className="space-y-2 text-sm text-white/80 font-sans font-light">
+            <ul className="space-y-2 text-base text-white/85 font-sans">
               <li>
                 <Link to="/kost-wanita" className="hover:text-white transition-colors">
                   Kost Eksklusif Wanita
@@ -148,12 +148,12 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdminModal }) => {
               Warta Editorial
             </span>
             <div className="w-6 h-[1px] bg-caramel opacity-50 mb-3" />
-            <p className="text-white/80 text-xs font-sans leading-relaxed">
+            <p className="text-white/85 text-sm font-sans leading-relaxed">
               Dapatkan kurasi koleksi busana teranyar, informasi akomodasi akhir pekan, dan menu istimewa perjamuan langsung ke kotak masuk Anda.
             </p>
 
             {isSubscribed ? (
-              <div className="p-3 bg-white/10 border border-caramel/40 text-xs font-sans text-white flex items-center gap-2">
+              <div className="p-3 bg-white/10 border border-caramel/40 text-sm font-sans text-white flex items-center gap-2">
                 <Check size={14} className="stroke-[1.5] text-caramel" />
                 <span>Terima kasih telah bergabung dengan warta {BRAND.name}.</span>
               </div>
@@ -165,7 +165,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdminModal }) => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Alamat surel Anda"
-                    className="w-full bg-white/10 text-white placeholder-white/50 text-xs px-3 py-2.5 border border-white/20 focus:border-caramel focus:outline-none"
+                    className="w-full bg-white/10 text-white placeholder-white/70 text-base px-3 py-2.5 border border-white/20 focus:border-caramel focus:outline-none"
                     style={{ borderRadius: '2px 0 0 2px' }}
                     required
                   />
@@ -179,19 +179,19 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdminModal }) => {
                   </button>
                 </div>
                 {errorMessage && (
-                  <p className="text-[11px] text-white/90 font-sans">{errorMessage}</p>
+                  <p className="text-sm text-white/90 font-sans">{errorMessage}</p>
                 )}
               </form>
             )}
 
-            <div className="pt-2 text-[11px] text-white/60 font-sans">
+            <div className="pt-2 text-sm text-white/75 font-sans">
               <p className="m-0">Privasi Anda senantiasa kami jaga dengan penuh amanah.</p>
             </div>
           </div>
         </div>
 
         {/* Bottom Sub-bar with Caramel Hairline Accent */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/70 font-sans">
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-white/80 font-sans">
           <p className="m-0">
             © {currentYear} {BRAND.name}. Seluruh hak cipta dilindungi undang-undang. Jakarta, Indonesia.
           </p>

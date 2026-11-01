@@ -66,7 +66,7 @@ export const PropertiPage: React.FC = () => {
           <h1 className="font-display text-white max-w-3xl font-light">
             Ruang Teduh Berarsitektur Santun
           </h1>
-          <p className="text-white/90 text-sm sm:text-base max-w-lg font-sans font-light leading-relaxed">
+          <p className="text-white text-sm sm:text-base max-w-lg font-sans font-light leading-relaxed">
             Menghadirkan peristirahatan boutique hotel berkonsep privat, hunian arsitektural keluarga di kawasan prestisius, serta properti komersial bernilai investasi tinggi.
           </p>
           <div className="pt-2">

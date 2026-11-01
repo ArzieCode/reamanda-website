@@ -6,7 +6,11 @@
 
 @layer base {
   :root {
-    --chrome-height: 152px;
+    --chrome-height: 148px;
+  }
+
+  @media (min-width: 1024px) {
+    :root { --chrome-height: 160px; }
   }
 
   html {
@@ -30,13 +34,13 @@
 
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Cormorant Garamond', Georgia, serif;
-    font-weight: 300;
+    font-weight: 400;
     color: var(--charcoal);
   }
 
   .font-display {
     font-family: 'Cormorant Garamond', Georgia, serif;
-    font-weight: 300;
+    font-weight: 400;
     font-size: clamp(3rem, 8vw, 7rem);
     line-height: 1.02;
     letter-spacing: -0.01em;
@@ -44,17 +48,17 @@
 
   .font-section-title {
     font-family: 'Cormorant Garamond', Georgia, serif;
-    font-weight: 300;
+    font-weight: 400;
     font-size: clamp(2.25rem, 4.5vw, 3.75rem);
     line-height: 1.08;
   }
 
   .label-editorial {
     font-family: 'Jost', system-ui, sans-serif;
-    font-size: 12px;
-    font-weight: 400;
+    font-size: 14px;
+    font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.08em;
   }
 
   p {
@@ -67,8 +71,8 @@
 
   input, select, textarea {
     font-family: 'Jost', system-ui, sans-serif;
-    font-size: 14px;
-    font-weight: 300;
+    font-size: 16px;
+    font-weight: 400;
     color: var(--ink);
     background-color: var(--white);
     border: 1px solid var(--line);
@@ -87,6 +91,10 @@
 }
 
 @layer utilities {
+  .font-serif.font-light {
+    font-weight: 400;
+  }
+
   .site-container {
     width: 100%;
     max-width: 1280px;
@@ -149,6 +157,48 @@
   .home-line-visual:hover img,
   .home-line-visual:focus-visible img {
     transform: scale(1.04);
+  }
+
+  .dashboard-kpis > div {
+    min-width: 0;
+  }
+
+  .sales-dashboard .text-xs {
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .sales-dashboard [class~="text-[11px]"] {
+    font-size: 13px;
+  }
+
+  .sales-dashboard [class~="text-[10px]"] {
+    font-size: 12px;
+  }
+
+  .dashboard-kpis > div > div:nth-child(2) {
+    overflow-wrap: anywhere;
+  }
+
+  .dashboard-kpis > div > div:last-child {
+    flex-wrap: wrap;
+    gap: 2px 8px;
+  }
+
+  @media (max-width: 639px) {
+    .dashboard-kpis > div {
+      padding: 14px;
+    }
+
+    .dashboard-kpis > div > div:nth-child(2) {
+      font-size: 1.375rem;
+      line-height: 1.2;
+    }
+
+    .dashboard-kpis .label-editorial {
+      font-size: 14px;
+      letter-spacing: 0.04em;
+    }
   }
 
   @keyframes editorialEnter {

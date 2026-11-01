@@ -22,8 +22,6 @@ import {
   ShoppingBag,
   Users,
   CreditCard,
-  AlertCircle,
-  Clock,
   ArrowRight,
   Sparkles,
 } from 'lucide-react';
@@ -40,7 +38,6 @@ import {
   Pie,
   Cell,
   CartesianGrid,
-  Legend,
 } from 'recharts';
 
 interface SalesDashboardViewProps {
@@ -48,7 +45,7 @@ interface SalesDashboardViewProps {
 }
 
 export const SalesDashboardView: React.FC<SalesDashboardViewProps> = ({ onNavigateTab }) => {
-  const { isOwner, isAdmin } = useAuth();
+  const { isOwner } = useAuth();
   const { orders, products, properties } = useAdmin();
 
   const [period, setPeriod] = useState<AnalyticsPeriod>('7d');
@@ -117,18 +114,18 @@ export const SalesDashboardView: React.FC<SalesDashboardViewProps> = ({ onNaviga
   const recentOrders = orders.slice(0, 8);
 
   return (
-    <div className="space-y-6">
+    <div className="sales-dashboard min-w-0 space-y-5 sm:space-y-6">
       {/* Top Header & Period Selector */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-line">
         <div>
-          <h2 className="font-serif text-charcoal text-2xl font-light m-0">Ringkasan Penjualan</h2>
+          <h2 className="font-serif text-charcoal text-3xl font-light m-0">Ringkasan Penjualan</h2>
           <p className="text-xs text-muted font-sans m-0 mt-0.5">
-            {isOwner ? 'Metrik finansial komprehensif seluruh lini usaha.' : 'Dasbor ringkasan aktivitas pesanan & volume.'}
+            {isOwner ? 'Perkembangan usaha dalam sekali pandang.' : 'Aktivitas pesanan dalam sekali pandang.'}
           </p>
         </div>
 
         {/* Period Selector Tabs */}
-        <div className="inline-flex p-1 bg-surface border border-line rounded-[2px] text-xs font-sans self-start sm:self-auto">
+        <div className="grid grid-cols-4 w-full sm:w-auto p-1 bg-surface border border-line rounded-md text-xs font-sans">
           {[
             { id: '7d', label: '7 Hari' },
             { id: '30d', label: '30 Hari' },
@@ -139,7 +136,8 @@ export const SalesDashboardView: React.FC<SalesDashboardViewProps> = ({ onNaviga
               key={p.id}
               type="button"
               onClick={() => setPeriod(p.id as AnalyticsPeriod)}
-              className={`px-3 py-1.5 uppercase tracking-wider font-sans rounded-[2px] transition-colors ${
+              aria-pressed={period === p.id}
+              className={`min-h-10 px-1 sm:px-3 py-1.5 text-sm whitespace-nowrap font-sans font-medium rounded transition-colors ${
                 period === p.id
                   ? 'bg-charcoal text-white font-medium shadow-sm'
                   : 'text-muted hover:text-charcoal'
@@ -160,7 +158,7 @@ export const SalesDashboardView: React.FC<SalesDashboardViewProps> = ({ onNaviga
       </div>
 
       {/* Row of 4 KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="dashboard-kpis grid grid-cols-2 xl:grid-cols-4 gap-2.5 sm:gap-4">
         {/* KPI 1: Total Penjualan */}
         <div className="p-5 bg-white border border-line rounded-[2px] space-y-2">
           <div className="flex items-center justify-between">
@@ -169,7 +167,7 @@ export const SalesDashboardView: React.FC<SalesDashboardViewProps> = ({ onNaviga
             </span>
             <ShoppingBag size={16} className="text-muted" />
           </div>
-          <div className="font-serif text-charcoal text-2xl sm:text-3xl font-light">
+          <div className="font-sans text-charcoal text-2xl sm:text-3xl font-medium">
             {isOwner ? formatRupiahFull(metrics.totalRevenue.current) : `${metrics.orderCount.current} Pesanan`}
           </div>
           <div className="flex items-center justify-between pt-1 text-xs font-sans">
@@ -184,7 +182,7 @@ export const SalesDashboardView: React.FC<SalesDashboardViewProps> = ({ onNaviga
             <span className="label-editorial text-muted">Jumlah Pesanan</span>
             <CreditCard size={16} className="text-muted" />
           </div>
-          <div className="font-serif text-charcoal text-2xl sm:text-3xl font-light">
+          <div className="font-sans text-charcoal text-2xl sm:text-3xl font-medium">
             {metrics.orderCount.current}
           </div>
           <div className="flex items-center justify-between pt-1 text-xs font-sans">
@@ -199,7 +197,7 @@ export const SalesDashboardView: React.FC<SalesDashboardViewProps> = ({ onNaviga
             <span className="label-editorial text-muted">Rata-rata Nilai</span>
             <ShoppingBag size={16} className="text-muted" />
           </div>
-          <div className="font-serif text-charcoal text-2xl sm:text-3xl font-light">
+          <div className="font-sans text-charcoal text-2xl sm:text-3xl font-medium">
             {isOwner ? formatRupiahFull(metrics.averageOrderValue.current) : `${metrics.topProducts.length} Produk`}
           </div>
           <div className="flex items-center justify-between pt-1 text-xs font-sans">
@@ -214,7 +212,7 @@ export const SalesDashboardView: React.FC<SalesDashboardViewProps> = ({ onNaviga
             <span className="label-editorial text-muted">Pelanggan Baru</span>
             <Users size={16} className="text-muted" />
           </div>
-          <div className="font-serif text-charcoal text-2xl sm:text-3xl font-light">
+          <div className="font-sans text-charcoal text-2xl sm:text-3xl font-medium">
             {metrics.newCustomersCount.current}
           </div>
           <div className="flex items-center justify-between pt-1 text-xs font-sans">
@@ -225,15 +223,13 @@ export const SalesDashboardView: React.FC<SalesDashboardViewProps> = ({ onNaviga
       </div>
 
       {/* Chart 1: Penjualan per Hari (Bar for 7d, Line for longer) */}
-      <div className="p-6 bg-white border border-line rounded-[2px] space-y-4">
-        <div className="flex items-center justify-between">
+      <div className="min-w-0 p-4 sm:p-6 bg-white border border-line rounded-md space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
           <div>
-            <h3 className="font-serif text-charcoal text-lg font-light m-0">Penjualan per Hari</h3>
-            <span className="text-xs text-muted font-sans">
-              Periode saat ini (garis tegas charcoal) dibandingkan periode sebelumnya (garis putus-putus)
-            </span>
+            <h3 className="font-serif text-charcoal text-xl font-light m-0">Tren Penjualan</h3>
+            <span className="text-xs text-muted font-sans">Bandingkan dengan periode sebelumnya</span>
           </div>
-          <div className="flex items-center gap-4 text-xs font-sans text-muted">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] font-sans text-muted">
             <span className="flex items-center gap-1.5">
               <span className="w-3 h-3 bg-charcoal inline-block rounded-xs" /> Periode Ini
             </span>
@@ -243,26 +239,26 @@ export const SalesDashboardView: React.FC<SalesDashboardViewProps> = ({ onNaviga
           </div>
         </div>
 
-        <div className="h-72 w-full">
+        <div className="h-60 sm:h-72 w-full min-w-0" role="img" aria-label="Grafik tren penjualan periode ini dan periode sebelumnya">
           <ResponsiveContainer width="100%" height="100%">
             {period === '7d' ? (
-              <BarChart data={metrics.dailyTrend} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+              <BarChart data={metrics.dailyTrend} margin={{ top: 10, right: 4, left: -24, bottom: 0 }} barGap={2} barCategoryGap="20%">
                 <CartesianGrid stroke="#D6CBBA" strokeWidth={1} vertical={false} />
-                <XAxis dataKey="dateKey" tick={{ fill: '#5C554C', fontSize: 13, fontFamily: 'Jost' }} axisLine={{ stroke: '#D6CBBA' }} tickLine={false} />
-                <YAxis tickFormatter={(val) => formatRupiahCompact(val)} tick={{ fill: '#5C554C', fontSize: 13, fontFamily: 'Jost' }} axisLine={{ stroke: '#D6CBBA' }} tickLine={false} width={70} />
+                <XAxis dataKey="dateKey" tick={{ fill: '#5C554C', fontSize: 12, fontFamily: 'Jost' }} axisLine={{ stroke: '#D6CBBA' }} tickLine={false} minTickGap={12} />
+                <YAxis tickFormatter={(val) => formatRupiahCompact(val)} tick={{ fill: '#5C554C', fontSize: 12, fontFamily: 'Jost' }} axisLine={false} tickLine={false} width={66} tickCount={4} />
                 <Tooltip
                   formatter={(val: any) => [formatRupiahFull(Number(val) || 0), 'Penjualan']}
                   labelFormatter={(lbl) => `Tanggal: ${lbl}`}
                   contentStyle={{ backgroundColor: '#FFFEFB', border: '1px solid #D6CBBA', borderRadius: '2px', fontSize: '13px', fontFamily: 'Jost' }}
                 />
-                <Bar dataKey="currentRevenue" name="Penjualan Saat Ini" fill="#1B1713" animationDuration={600} radius={[2, 2, 0, 0]} />
-                <Bar dataKey="previousRevenue" name="Periode Lalu" fill="#DFD4C4" animationDuration={600} radius={[2, 2, 0, 0]} />
+                <Bar dataKey="currentRevenue" name="Periode Ini" fill="#1B1713" maxBarSize={28} animationDuration={600} radius={[3, 3, 0, 0]} />
+                <Bar dataKey="previousRevenue" name="Periode Lalu" fill="#DFD4C4" maxBarSize={28} animationDuration={600} radius={[3, 3, 0, 0]} />
               </BarChart>
             ) : (
-              <LineChart data={metrics.dailyTrend} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+              <LineChart data={metrics.dailyTrend} margin={{ top: 10, right: 4, left: -24, bottom: 0 }}>
                 <CartesianGrid stroke="#D6CBBA" strokeWidth={1} vertical={false} />
-                <XAxis dataKey="dateKey" tick={{ fill: '#5C554C', fontSize: 13, fontFamily: 'Jost' }} axisLine={{ stroke: '#D6CBBA' }} tickLine={false} />
-                <YAxis tickFormatter={(val) => formatRupiahCompact(val)} tick={{ fill: '#5C554C', fontSize: 13, fontFamily: 'Jost' }} axisLine={{ stroke: '#D6CBBA' }} tickLine={false} width={70} />
+                <XAxis dataKey="dateKey" tick={{ fill: '#5C554C', fontSize: 12, fontFamily: 'Jost' }} axisLine={{ stroke: '#D6CBBA' }} tickLine={false} interval="preserveStartEnd" minTickGap={24} />
+                <YAxis tickFormatter={(val) => formatRupiahCompact(val)} tick={{ fill: '#5C554C', fontSize: 12, fontFamily: 'Jost' }} axisLine={false} tickLine={false} width={66} tickCount={4} />
                 <Tooltip
                   formatter={(val: any) => [formatRupiahFull(Number(val) || 0), 'Penjualan']}
                   contentStyle={{ backgroundColor: '#FFFEFB', border: '1px solid #D6CBBA', borderRadius: '2px', fontSize: '13px', fontFamily: 'Jost' }}
@@ -276,11 +272,10 @@ export const SalesDashboardView: React.FC<SalesDashboardViewProps> = ({ onNaviga
       </div>
 
       {/* Row 2: Chart 2 (Produk Terlaris) & Chart 3 (Penjualan per Kategori) */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
         {/* Chart 2: Produk Terlaris Horizontal Bars */}
-        <div className="p-6 bg-white border border-line rounded-[2px] space-y-4">
-          <h3 className="font-serif text-charcoal text-lg font-light m-0">Produk Terlaris (Top 5)</h3>
-          <span className="text-xs text-muted font-sans block">Jumlah unit terjual pada periode ini</span>
+        <div className="min-w-0 p-4 sm:p-6 bg-white border border-line rounded-md space-y-4">
+          <h3 className="font-serif text-charcoal text-xl font-light m-0">Produk Terlaris</h3>
 
           <div className="space-y-3 pt-2">
             {metrics.topProducts.length === 0 ? (
@@ -293,11 +288,11 @@ export const SalesDashboardView: React.FC<SalesDashboardViewProps> = ({ onNaviga
                 const widthPct = Math.round((p.unitsSold / maxUnits) * 100);
                 return (
                   <div key={p.id} className="space-y-1 text-xs font-sans">
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium text-charcoal truncate max-w-[240px]">
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="font-medium text-charcoal truncate min-w-0" title={p.name}>
                         {idx + 1}. {p.name}
                       </span>
-                      <span className="text-muted">{p.unitsSold} unit terjual</span>
+                      <span className="text-muted shrink-0">{p.unitsSold} terjual</span>
                     </div>
                     <div className="w-full bg-surface-2 h-3 rounded-[2px] overflow-hidden">
                       <div
@@ -313,18 +308,17 @@ export const SalesDashboardView: React.FC<SalesDashboardViewProps> = ({ onNaviga
         </div>
 
         {/* Chart 3: Penjualan per Kategori Donut */}
-        <div className="p-6 bg-white border border-line rounded-[2px] space-y-4">
-          <h3 className="font-serif text-charcoal text-lg font-light m-0">Penjualan per Kategori</h3>
-          <span className="text-xs text-muted font-sans block">Komposisi nilai transaksi produk</span>
+        <div className="min-w-0 p-4 sm:p-6 bg-white border border-line rounded-md space-y-4">
+          <h3 className="font-serif text-charcoal text-xl font-light m-0">Penjualan per Kategori</h3>
 
-          <div className="h-64 flex flex-col sm:flex-row items-center justify-center">
+          <div className="min-w-0 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-5">
             {metrics.categorySales.length === 0 ? (
               <div className="p-8 text-center text-muted font-sans text-xs bg-surface/30">
                 Belum ada data kategori.
               </div>
             ) : (
               <>
-                <div className="w-48 h-48">
+                <div className="w-44 h-44 sm:w-48 sm:h-48 shrink-0">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie
@@ -348,14 +342,14 @@ export const SalesDashboardView: React.FC<SalesDashboardViewProps> = ({ onNaviga
                   </ResponsiveContainer>
                 </div>
 
-                <div className="flex-1 pl-4 space-y-1.5 text-xs font-sans">
+                <div className="w-full min-w-0 sm:flex-1 space-y-2 text-xs font-sans">
                   {metrics.categorySales.map((c) => (
-                    <div key={c.category} className="flex items-center justify-between">
-                      <span className="flex items-center gap-2 text-ink">
+                    <div key={c.category} className="flex items-center justify-between gap-3">
+                      <span className="flex items-center gap-2 min-w-0 text-ink">
                         <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: c.color }} />
-                        <span className="truncate max-w-[140px]">{c.category}</span>
+                        <span className="truncate" title={c.category}>{c.category}</span>
                       </span>
-                      <span className="font-medium text-charcoal">{c.percentage}%</span>
+                      <span className="font-medium text-charcoal shrink-0">{c.percentage}%</span>
                     </div>
                   ))}
                 </div>
@@ -366,13 +360,13 @@ export const SalesDashboardView: React.FC<SalesDashboardViewProps> = ({ onNaviga
       </div>
 
       {/* Row 3: Chart 4 (Status & Perlu Tindakan) & Chart 5 (Penjualan per Lini) */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
         {/* Status Pesanan & Perlu Tindakan */}
-        <div className="p-6 bg-white border border-line rounded-[2px] space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="font-serif text-charcoal text-lg font-light m-0">Perlu Tindakan Operasional</h3>
+        <div className="min-w-0 p-4 sm:p-6 bg-white border border-line rounded-md space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h3 className="font-serif text-charcoal text-xl font-light m-0">Perlu Tindakan</h3>
             <span className="text-[11px] font-sans text-muted">
-              {metrics.actionRequiredList.length} Hal Mendesak
+              {metrics.actionRequiredList.length} item
             </span>
           </div>
 
@@ -417,11 +411,8 @@ export const SalesDashboardView: React.FC<SalesDashboardViewProps> = ({ onNaviga
         </div>
 
         {/* Chart 5: Penjualan per Lini Usaha */}
-        <div className="p-6 bg-white border border-line rounded-[2px] space-y-4">
-          <h3 className="font-serif text-charcoal text-lg font-light m-0">Perbandingan Tiga Lini Usaha</h3>
-          <span className="text-xs text-muted font-sans block">
-            Busana Muslimah vs Katering vs Properti (berdasarkan total penawaran tertinggi)
-          </span>
+        <div className="min-w-0 p-4 sm:p-6 bg-white border border-line rounded-md space-y-4">
+          <h3 className="font-serif text-charcoal text-xl font-light m-0">Tiga Lini Usaha</h3>
 
           <div className="space-y-4 pt-2">
             {metrics.businessLines.map((line) => {
@@ -429,9 +420,9 @@ export const SalesDashboardView: React.FC<SalesDashboardViewProps> = ({ onNaviga
               const widthPct = Math.round((line.value / maxVal) * 100);
               return (
                 <div key={line.line} className="space-y-1 text-xs font-sans">
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium text-charcoal">{line.label}</span>
-                    <span className="font-serif text-charcoal text-sm">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-medium text-charcoal min-w-0 truncate">{line.label}</span>
+                    <span className="font-sans font-medium text-charcoal text-sm shrink-0">
                       {formatRupiahCompact(line.value)}
                     </span>
                   </div>
@@ -460,11 +451,10 @@ export const SalesDashboardView: React.FC<SalesDashboardViewProps> = ({ onNaviga
       </div>
 
       {/* Recent Orders Table (Last 8) */}
-      <div className="p-6 bg-white border border-line rounded-[2px] space-y-4">
-        <div className="flex items-center justify-between">
+      <div className="min-w-0 p-4 sm:p-6 bg-white border border-line rounded-md space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h3 className="font-serif text-charcoal text-lg font-light m-0">Pesanan Terbaru</h3>
-            <span className="text-xs text-muted font-sans">8 transaksi terakhir yang masuk ke dalam sistem</span>
           </div>
           {onNavigateTab && (
             <button
@@ -477,8 +467,8 @@ export const SalesDashboardView: React.FC<SalesDashboardViewProps> = ({ onNaviga
           )}
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-xs font-sans">
+        <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+          <table className="w-full min-w-[760px] text-left border-collapse text-xs font-sans">
             <thead>
               <tr className="bg-surface border-b border-line text-[11px] uppercase tracking-wider text-muted">
                 <th className="py-2.5 px-3">Kode</th>
@@ -498,7 +488,7 @@ export const SalesDashboardView: React.FC<SalesDashboardViewProps> = ({ onNaviga
                   </td>
                   <td className="py-3 px-3 text-ink">{o.customerName}</td>
                   <td className="py-3 px-3 text-muted">{o.shippingAddress?.city || '-'}</td>
-                  <td className="py-3 px-3 font-serif text-charcoal text-sm">{formatRupiahCompact(o.total)}</td>
+                  <td className="py-3 px-3 font-sans font-medium text-charcoal text-sm">{formatRupiahCompact(o.total)}</td>
                   <td className="py-3 px-3">
                     <span className={`px-2 py-0.5 text-[10px] uppercase tracking-wider rounded-[2px] ${getStatusBadge(o.status)}`}>
                       {o.status}

@@ -103,12 +103,12 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
           </div>
 
           {/* Centre: Navigation */}
-          <nav className="flex shrink-0 items-center gap-4">
+          <nav className="flex shrink-0 items-center gap-3">
             {navItems.map((item) => (
               <Link
                 key={item.label}
                 to={item.href}
-                className="text-xs uppercase tracking-[0.14em] font-sans text-ink hover:text-caramel-deep hover:underline underline-offset-4 decoration-1 transition-colors flex items-center gap-1.5 whitespace-nowrap"
+                className="text-sm font-medium font-sans text-ink hover:text-caramel-deep hover:underline underline-offset-4 decoration-1 transition-colors flex items-center gap-1.5 whitespace-nowrap"
               >
                 {item.label}
                 {item.isSale && (
@@ -272,10 +272,10 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
           <Link
             to={brandPath}
             aria-label={brandName}
-            className="inline-flex items-center gap-1.5 font-serif text-charcoal tracking-[0.02em] whitespace-nowrap text-[18px] sm:text-[20px]"
+            className="inline-flex min-w-0 items-center gap-1.5 font-serif text-charcoal tracking-[0.02em] text-[18px] sm:text-[20px]"
           >
             {brandLogo && <img src={brandLogo} alt="" className="h-8 max-w-8 object-contain" />}
-            <span className="text-[13px] sm:text-[18px] truncate max-w-[170px] sm:max-w-none">{brandName}</span>
+            <span className="text-base sm:text-xl truncate max-w-[145px] sm:max-w-none">{brandName}</span>
           </Link>
 
           {/* Right: Icons (Search, Cart, User) */}
@@ -337,7 +337,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
               <Link
                 to="/busana"
                 onClick={() => setMobileMenuOpen(false)}
-                className={`py-1.5 text-center text-xs uppercase tracking-wider font-sans border border-line ${
+                className={`min-h-11 px-1 flex items-center justify-center text-center text-sm font-medium font-sans border border-line ${
                   isBusana ? 'bg-charcoal text-white' : 'bg-surface text-ink'
                 }`}
               >
@@ -346,7 +346,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
               <Link
                 to="/kost-wanita"
                 onClick={() => setMobileMenuOpen(false)}
-                className={`py-1.5 text-center text-xs uppercase tracking-wider font-sans border border-line ${
+                className={`min-h-11 px-1 flex items-center justify-center text-center text-sm font-medium font-sans border border-line ${
                   isKost ? 'bg-charcoal text-white' : 'bg-surface text-ink'
                 }`}
               >
@@ -355,7 +355,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
               <Link
                 to="/katering"
                 onClick={() => setMobileMenuOpen(false)}
-                className={`py-1.5 text-center text-xs uppercase tracking-wider font-sans border border-line ${
+                className={`min-h-11 px-1 flex items-center justify-center text-center text-sm font-medium font-sans border border-line ${
                   isKatering ? 'bg-charcoal text-white' : 'bg-surface text-ink'
                 }`}
               >
