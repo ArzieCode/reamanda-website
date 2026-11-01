@@ -5,9 +5,10 @@ import { useOverlay } from '../../context/OverlayContext';
 import { Modal } from '../ui/Modal';
 import { SmartImage } from '../ui/SmartImage';
 import { Plus, Minus, ShoppingBag, Check } from 'lucide-react';
+import { productService } from '../../services/products';
 
 interface QuickViewModalProps {
-  product: BusanaProduct | null;
+  product: any | null;
   onClose: () => void;
 }
 
@@ -15,10 +16,12 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose
   const { addItem } = useCart();
   const { showToast } = useOverlay();
 
-  const [selectedSize, setSelectedSize] = useState<string>(product?.sizes[0] || 'M');
-  const [selectedColor, setSelectedColor] = useState<string>(product?.colors[0] || 'Standar');
+  const [selectedSize, setSelectedSize] = useState<string>(product?.sizes?.[0] || 'M');
+  const [selectedColor, setSelectedColor] = useState<string>(product?.colors?.[0] || 'Standar');
   const [quantity, setQuantity] = useState<number>(1);
-  const [activeImageSlot, setActiveImageSlot] = useState<string>(product?.imageSlot1 || '');
+  const [activeImageSlot, setActiveImageSlot] = useState<string>(
+    product?.imageSlot1 || (product?.images && product.images[0]) || ''
+  );
   const [added, setAdded] = useState(false);
 
   if (!product) return null;
@@ -100,6 +103,30 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose
                   Sale
                 </span>
               )}
+              {(() => {
+                const stock = productService.getProductTotalStock(product as any);
+                if (stock === 0) {
+                  return (
+                    <span
+                      className="bg-charcoal text-white px-2 py-0.5 text-[9px] uppercase tracking-wider font-sans font-medium"
+                      style={{ borderRadius: '9999px' }}
+                    >
+                      Stok Habis
+                    </span>
+                  );
+                }
+                if (stock <= 5) {
+                  return (
+                    <span
+                      className="bg-status-occupied text-white px-2 py-0.5 text-[9px] uppercase tracking-wider font-sans font-medium"
+                      style={{ borderRadius: '9999px' }}
+                    >
+                      Sisa {stock}
+                    </span>
+                  );
+                }
+                return null;
+              })()}
             </div>
 
             <h3 className="font-serif text-charcoal text-2xl font-normal leading-tight mb-3">
@@ -127,7 +154,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose
                 Pilihan Ukuran
               </label>
               <div className="flex flex-wrap gap-2">
-                {product.sizes.map((size) => (
+                {product.sizes?.map((size: string) => (
                   <button
                     key={size}
                     type="button"
@@ -151,7 +178,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose
                 Pilihan Warna
               </label>
               <div className="flex flex-wrap gap-2">
-                {product.colors.map((color) => (
+                {product.colors?.map((color: string) => (
                   <button
                     key={color}
                     type="button"
@@ -172,47 +199,58 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose
 
           {/* Quantity and Add to Cart */}
           <div className="pt-4 border-t border-line flex items-center gap-3">
-            <div className="flex items-center border border-line" style={{ borderRadius: '2px' }}>
-              <button
-                type="button"
-                onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                className="w-10 h-10 flex items-center justify-center text-charcoal hover:bg-surface"
-                aria-label="Kurangi jumlah"
-              >
-                <Minus size={14} className="stroke-[1.25]" />
-              </button>
-              <span className="w-8 text-center text-xs font-sans text-charcoal">
-                {quantity}
-              </span>
-              <button
-                type="button"
-                onClick={() => setQuantity((q) => q + 1)}
-                className="w-10 h-10 flex items-center justify-center text-charcoal hover:bg-surface"
-                aria-label="Tambah jumlah"
-              >
-                <Plus size={14} className="stroke-[1.25]" />
-              </button>
-            </div>
+            {productService.getProductTotalStock(product as any) > 0 && (
+              <div className="flex items-center border border-line" style={{ borderRadius: '2px' }}>
+                <button
+                  type="button"
+                  onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                  className="w-10 h-10 flex items-center justify-center text-charcoal hover:bg-surface"
+                  aria-label="Kurangi jumlah"
+                >
+                  <Minus size={14} className="stroke-[1.25]" />
+                </button>
+                <span className="w-8 text-center text-xs font-sans text-charcoal">
+                  {quantity}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setQuantity((q) => q + 1)}
+                  className="w-10 h-10 flex items-center justify-center text-charcoal hover:bg-surface"
+                  aria-label="Tambah jumlah"
+                >
+                  <Plus size={14} className="stroke-[1.25]" />
+                </button>
+              </div>
+            )}
 
-            <button
-              type="button"
-              onClick={handleAddToCart}
-              disabled={added}
-              className="flex-1 h-10 bg-charcoal text-white hover:bg-caramel-deep text-xs uppercase tracking-[0.18em] font-sans transition-colors flex items-center justify-center gap-2"
-              style={{ borderRadius: '2px' }}
-            >
-              {added ? (
-                <>
-                  <Check size={14} className="stroke-[1.5]" />
-                  <span>Ditambahkan ke Keranjang</span>
-                </>
-              ) : (
-                <>
-                  <ShoppingBag size={14} className="stroke-[1.25]" />
-                  <span>Tambah ke Keranjang</span>
-                </>
-              )}
-            </button>
+            {productService.getProductTotalStock(product as any) === 0 ? (
+              <button
+                type="button"
+                disabled
+                className="flex-1 h-10 bg-line text-muted cursor-not-allowed text-xs uppercase tracking-[0.18em] font-sans flex items-center justify-center gap-2 rounded-[2px]"
+              >
+                <span>Stok Habis</span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handleAddToCart}
+                disabled={added}
+                className="flex-1 h-10 bg-charcoal text-white hover:bg-caramel-deep text-xs uppercase tracking-[0.18em] font-sans transition-colors flex items-center justify-center gap-2 rounded-[2px]"
+              >
+                {added ? (
+                  <>
+                    <Check size={14} className="stroke-[1.5]" />
+                    <span>Ditambahkan ke Keranjang</span>
+                  </>
+                ) : (
+                  <>
+                    <ShoppingBag size={14} className="stroke-[1.25]" />
+                    <span>Tambah ke Keranjang</span>
+                  </>
+                )}
+              </button>
+            )}
           </div>
         </div>
       </div>

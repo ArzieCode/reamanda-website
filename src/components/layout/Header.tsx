@@ -1,23 +1,44 @@
+// ============================================================
+// Component — Header Navigation & Customer Account Dropdown
+// ============================================================
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { useAdmin } from '../../context/AdminContext';
+import { useAuth } from '../../context/AuthContext';
 import { BRAND } from '../../config/brand';
 import { Drawer } from '../ui/Drawer';
-import { Search, ShoppingBag, ShieldCheck, Menu } from 'lucide-react';
+import { CustomerAuthModal } from '../account/CustomerAuthModal';
+import { CustomerAccountDrawer } from '../account/CustomerAccountDrawer';
+import {
+  Search,
+  ShoppingBag,
+  ShieldCheck,
+  Menu,
+  User,
+  LogOut,
+  ChevronDown,
+  ShoppingBag as OrderIcon,
+} from 'lucide-react';
 
 interface HeaderProps {
   onOpenSearch: () => void;
   onOpenAdminModal: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onOpenSearch, onOpenAdminModal }) => {
+export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authModalInitialTab, setAuthModalInitialTab] = useState<'login' | 'register'>('login');
+  const [accountDrawerOpen, setAccountDrawerOpen] = useState(false);
+  const [accountDrawerTab, setAccountDrawerTab] = useState<'profile' | 'orders'>('profile');
+
   const { totalItems, openCart } = useCart();
-  const { isAdmin, openDashboard } = useAdmin();
+  const { isStaff, currentUser, logout } = useAuth();
+  const { isVisitorPreview } = useAdmin();
   const location = useLocation();
 
-  // Determine section navigation items based on current business line
   const isKost = location.pathname.startsWith('/kost-wanita');
   const isKatering = location.pathname.startsWith('/katering');
   const isBusana = location.pathname.startsWith('/busana');
@@ -26,9 +47,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, onOpenAdminModal }
   const brandLogo = isKost ? '/d-rhea-syariah-mark.png' : isKatering ? '/rheamanda-mark.png' : isBusana ? '/rheamanda-fashion-logo.png' : null;
 
   const navItems = isKost
-    ? [
-        { label: 'Informasi Kost', href: '/kost-wanita#informasi-kost' },
-      ]
+    ? [{ label: 'Informasi Kost', href: '/kost-wanita#informasi-kost' }]
     : isKatering
     ? [
         { label: 'Paket Perjamuan', href: '/katering#paket' },
@@ -48,37 +67,23 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, onOpenAdminModal }
         { label: 'Katering', href: '/katering' },
       ];
 
-  const drawerFooter = (
-    <div>
-      {isAdmin ? (
-        <button
-          type="button"
-          onClick={() => {
-            setMobileMenuOpen(false);
-            openDashboard();
-          }}
-          className="w-full py-3 bg-indigo text-white text-xs uppercase tracking-widest flex items-center justify-center gap-2 font-sans font-medium"
-          style={{ borderRadius: '2px' }}
-        >
-          <ShieldCheck size={16} />
-          <span>Buka Dasbor Admin</span>
-        </button>
-      ) : (
-        <button
-          type="button"
-          onClick={() => {
-            setMobileMenuOpen(false);
-            onOpenAdminModal();
-          }}
-          className="w-full py-3 border border-line text-ink hover:text-charcoal text-xs uppercase tracking-widest flex items-center justify-center gap-2 font-sans font-medium"
-          style={{ borderRadius: '2px' }}
-        >
-          <ShieldCheck size={16} />
-          <span>Masuk Administrator</span>
-        </button>
-      )}
-    </div>
-  );
+  const handleOpenLogin = () => {
+    setAuthModalInitialTab('login');
+    setAuthModalOpen(true);
+    setAccountDropdownOpen(false);
+  };
+
+  const handleOpenRegister = () => {
+    setAuthModalInitialTab('register');
+    setAuthModalOpen(true);
+    setAccountDropdownOpen(false);
+  };
+
+  const handleOpenAccount = (tab: 'profile' | 'orders') => {
+    setAccountDrawerTab(tab);
+    setAccountDrawerOpen(true);
+    setAccountDropdownOpen(false);
+  };
 
   return (
     <>
@@ -108,8 +113,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, onOpenAdminModal }
                 {item.label}
                 {item.isSale && (
                   <span
-                    className="bg-sale text-white px-2 py-0.5 text-[10px] tracking-[0.14em] font-sans font-medium"
-                    style={{ borderRadius: '9999px' }}
+                    className="bg-sale text-white px-2 py-0.5 text-[10px] tracking-[0.14em] font-sans font-medium rounded-full"
                   >
                     SALE
                   </span>
@@ -138,34 +142,117 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, onOpenAdminModal }
               <ShoppingBag size={18} className="stroke-[1.25]" />
               {totalItems > 0 && (
                 <span
-                  className="bg-charcoal text-white text-[10px] w-4 h-4 flex items-center justify-center font-sans font-normal"
-                  style={{ borderRadius: '2px' }}
+                  className="bg-charcoal text-white text-[10px] w-4 h-4 flex items-center justify-center font-sans font-normal rounded-xs"
                 >
                   {totalItems}
                 </span>
               )}
             </button>}
 
-            {isAdmin ? (
+            {/* Profile Dropdown Entry Point */}
+            <div className="relative">
               <button
                 type="button"
-                onClick={openDashboard}
-                className="p-1 text-indigo hover:opacity-80 transition-colors flex items-center gap-1 text-[11px] font-sans uppercase tracking-wider"
-                title="Buka Dasbor Admin"
+                onClick={() => setAccountDropdownOpen((prev) => !prev)}
+                className="p-1 text-charcoal hover:text-caramel-deep transition-colors flex items-center gap-1 text-xs font-sans"
+                aria-label="Menu Akun Pengguna"
               >
-                <ShieldCheck size={18} className="stroke-[1.25]" />
-                <span className="hidden xl:inline">Admin</span>
+                <User size={18} className="stroke-[1.25]" />
+                {currentUser && (
+                  <span className="hidden xl:inline max-w-[100px] truncate font-medium">
+                    {currentUser.name.split(' ')[0]}
+                  </span>
+                )}
+                <ChevronDown size={12} className="stroke-[1.5] text-muted" />
               </button>
-            ) : (
-              <button
-                type="button"
-                onClick={onOpenAdminModal}
-                className="p-1 text-muted hover:text-charcoal transition-colors"
-                title="Masuk sebagai Administrator"
-              >
-                <ShieldCheck size={17} className="stroke-[1.25]" />
-              </button>
-            )}
+
+              {accountDropdownOpen && (
+                <div
+                  className="absolute right-0 mt-2 w-48 bg-white border border-line rounded-[2px] shadow-lg py-1.5 text-xs font-sans z-header animate-modal-panel"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {currentUser ? (
+                    <>
+                      <div className="px-3 py-2 border-b border-line/60">
+                        <span className="text-[10px] uppercase tracking-wider text-muted block">Akun Pengguna</span>
+                        <div className="font-medium text-charcoal truncate">{currentUser.name}</div>
+                        <span className="text-[10px] text-muted capitalize">{currentUser.role}</span>
+                      </div>
+
+                      {isStaff && !isVisitorPreview && (
+                        <Link
+                          to="/admin"
+                          onClick={() => setAccountDropdownOpen(false)}
+                          className="w-full px-3 py-2 text-left hover:bg-surface text-ink flex items-center gap-2"
+                        >
+                          <ShieldCheck size={14} className="text-indigo" />
+                          <span>Portal Administrator</span>
+                        </Link>
+                      )}
+
+                      <button
+                        type="button"
+                        onClick={() => handleOpenAccount('profile')}
+                        className="w-full px-3 py-2 text-left hover:bg-surface text-ink flex items-center gap-2"
+                      >
+                        <User size={14} />
+                        <span>Akun Saya</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => handleOpenAccount('orders')}
+                        className="w-full px-3 py-2 text-left hover:bg-surface text-ink flex items-center gap-2"
+                      >
+                        <OrderIcon size={14} />
+                        <span>Riwayat Pesanan</span>
+                      </button>
+
+                      <div className="border-t border-line/60 my-1" />
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          logout();
+                          setAccountDropdownOpen(false);
+                        }}
+                        className="w-full px-3 py-2 text-left hover:bg-surface text-status-occupied flex items-center gap-2"
+                      >
+                        <LogOut size={14} />
+                        <span>Keluar Akun</span>
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        onClick={handleOpenLogin}
+                        className="w-full px-3 py-2 text-left hover:bg-surface text-charcoal font-medium flex items-center gap-2"
+                      >
+                        <User size={14} />
+                        <span>Masuk Akun</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleOpenRegister}
+                        className="w-full px-3 py-2 text-left hover:bg-surface text-ink flex items-center gap-2"
+                      >
+                        <span>Daftar Akun Baru</span>
+                      </button>
+                      <div className="border-t border-line/60 my-1" />
+                      <Link
+                        to="/admin"
+                        onClick={() => setAccountDropdownOpen(false)}
+                        className="w-full px-3 py-2 text-left hover:bg-surface text-muted text-[11px] flex items-center gap-2"
+                      >
+                        <ShieldCheck size={13} />
+                        <span>Portal Staf / Admin</span>
+                      </Link>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -191,8 +278,8 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, onOpenAdminModal }
             <span className="text-[13px] sm:text-[18px] truncate max-w-[170px] sm:max-w-none">{brandName}</span>
           </Link>
 
-          {/* Right: Icons */}
-          <div className="flex items-center gap-3">
+          {/* Right: Icons (Search, Cart, User) */}
+          <div className="flex items-center gap-2 sm:gap-3">
             <button
               type="button"
               onClick={onOpenSearch}
@@ -211,18 +298,29 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, onOpenAdminModal }
               <ShoppingBag size={18} className="stroke-[1.25]" />
               {totalItems > 0 && (
                 <span
-                  className="absolute -top-1 -right-1 bg-charcoal text-white text-[9px] w-3.5 h-3.5 flex items-center justify-center font-sans"
-                  style={{ borderRadius: '2px' }}
+                  className="absolute -top-1 -right-1 bg-charcoal text-white text-[9px] w-3.5 h-3.5 flex items-center justify-center font-sans rounded-xs"
                 >
                   {totalItems}
                 </span>
               )}
             </button>}
+
+            <button
+              type="button"
+              onClick={() => {
+                if (currentUser) handleOpenAccount('profile');
+                else handleOpenLogin();
+              }}
+              className="p-1 text-charcoal hover:text-caramel-deep transition-colors"
+              aria-label="Akun"
+            >
+              <User size={18} className="stroke-[1.25]" />
+            </button>
           </div>
         </div>
       </header>
 
-      {/* Mobile Menu Drawer using reusable Drawer component */}
+      {/* Mobile Menu Drawer */}
       <Drawer
         id="mobile-menu-drawer"
         isOpen={mobileMenuOpen}
@@ -230,10 +328,9 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, onOpenAdminModal }
         title={brandName}
         side="left"
         maxWidth="w-full sm:max-w-[360px]"
-        footer={drawerFooter}
       >
         <div className="space-y-6">
-          {/* Business line switcher in drawer */}
+          {/* Lini Bisnis */}
           <div>
             <span className="label-editorial text-muted block mb-2">Lini Bisnis</span>
             <div className="grid grid-cols-3 gap-1">
@@ -268,7 +365,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, onOpenAdminModal }
           </div>
 
           {/* Navigation Links */}
-          <nav className="flex flex-col gap-3">
+          <nav className="flex flex-col gap-2">
             <span className="label-editorial text-muted block">Navigasi Bagian</span>
             {navItems.map((item) => (
               <Link
@@ -279,18 +376,82 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch, onOpenAdminModal }
               >
                 <span>{item.label}</span>
                 {item.isSale && (
-                  <span
-                    className="bg-sale text-white px-2 py-0.5 text-[9px] tracking-[0.14em] font-sans font-medium"
-                    style={{ borderRadius: '9999px' }}
-                  >
+                  <span className="bg-sale text-white px-2 py-0.5 text-[9px] tracking-[0.14em] font-sans font-medium rounded-full">
                     SALE
                   </span>
                 )}
               </Link>
             ))}
           </nav>
+
+          {/* Account links in mobile drawer */}
+          <div className="pt-4 border-t border-line space-y-2">
+            {currentUser ? (
+              <>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setAccountDrawerOpen(true);
+                  }}
+                  className="w-full py-2.5 px-3 bg-surface border border-line text-left text-xs uppercase tracking-wider font-sans flex items-center gap-2 rounded-[2px]"
+                >
+                  <User size={15} />
+                  <span>Akun Saya ({currentUser.name})</span>
+                </button>
+                {isStaff && !isVisitorPreview && (
+                  <Link
+                    to="/admin"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-full py-2.5 px-3 bg-indigo text-white text-xs uppercase tracking-wider font-sans flex items-center justify-center gap-2 rounded-[2px]"
+                  >
+                    <ShieldCheck size={15} />
+                    <span>Portal Administrator</span>
+                  </Link>
+                )}
+              </>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    handleOpenLogin();
+                  }}
+                  className="w-full py-2.5 px-3 bg-charcoal text-white text-xs uppercase tracking-wider font-sans flex items-center justify-center gap-2 rounded-[2px]"
+                >
+                  <User size={15} />
+                  <span>Masuk / Daftar Akun</span>
+                </button>
+                <Link
+                  to="/admin"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full py-2.5 px-3 border border-line text-muted text-xs uppercase tracking-wider font-sans flex items-center justify-center gap-2 rounded-[2px]"
+                >
+                  <ShieldCheck size={15} />
+                  <span>Portal Staf / Admin</span>
+                </Link>
+              </>
+            )}
+          </div>
         </div>
       </Drawer>
+
+      {/* Customer Auth Modal */}
+      <CustomerAuthModal
+        key={`${authModalInitialTab}-${authModalOpen}`}
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        initialTab={authModalInitialTab}
+      />
+
+      {/* Customer Account Drawer */}
+      <CustomerAccountDrawer
+        key={`${accountDrawerTab}-${accountDrawerOpen}`}
+        isOpen={accountDrawerOpen}
+        onClose={() => setAccountDrawerOpen(false)}
+        initialTab={accountDrawerTab}
+      />
     </>
   );
 };

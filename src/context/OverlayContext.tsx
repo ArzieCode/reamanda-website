@@ -4,6 +4,10 @@ import { useLocation } from 'react-router-dom';
 export interface ToastState {
   visible: boolean;
   message: string;
+  action?: {
+    label: string;
+    onClick: () => void;
+  };
 }
 
 interface OverlayContextType {
@@ -17,7 +21,7 @@ interface OverlayContextType {
   getOverlayData: <T = any>(id: string) => T | undefined;
   registerTrigger: (id: string, el: HTMLElement | null) => void;
   toast: ToastState;
-  showToast: (message: string, duration?: number) => void;
+  showToast: (message: string, actionOrDuration?: number | (() => void), actionLabel?: string) => void;
   hideToast: () => void;
 }
 
@@ -152,15 +156,34 @@ export const OverlayProvider: React.FC<{ children: React.ReactNode }> = ({ child
     [overlayData]
   );
 
-  const showToast = useCallback((message: string, duration = 3000) => {
-    if (toastTimeoutRef.current) {
-      clearTimeout(toastTimeoutRef.current);
-    }
-    setToast({ visible: true, message });
-    toastTimeoutRef.current = setTimeout(() => {
-      setToast({ visible: false, message: '' });
-    }, duration);
-  }, []);
+  const showToast = useCallback(
+    (message: string, actionOrDuration?: number | (() => void), actionLabel = 'Urungkan') => {
+      if (toastTimeoutRef.current) {
+        clearTimeout(toastTimeoutRef.current);
+      }
+
+      if (typeof actionOrDuration === 'function') {
+        setToast({
+          visible: true,
+          message,
+          action: {
+            label: actionLabel,
+            onClick: actionOrDuration,
+          },
+        });
+        toastTimeoutRef.current = setTimeout(() => {
+          setToast({ visible: false, message: '' });
+        }, 5000);
+      } else {
+        const duration = typeof actionOrDuration === 'number' ? actionOrDuration : 3000;
+        setToast({ visible: true, message });
+        toastTimeoutRef.current = setTimeout(() => {
+          setToast({ visible: false, message: '' });
+        }, duration);
+      }
+    },
+    []
+  );
 
   const hideToast = useCallback(() => {
     if (toastTimeoutRef.current) {

@@ -1,105 +1,80 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { BRAND } from '../config/brand';
-import type { BusanaProduct } from '../data/busana';
-import { INITIAL_BUSANA_PRODUCTS } from '../data/busana';
-import type { PropertyListing } from '../data/properti';
-import { INITIAL_PROPERTIES } from '../data/properti';
-import type { KateringPackageItem, KateringDishItem } from '../data/katering';
-import { INITIAL_KATERING_PACKAGES, INITIAL_KATERING_DISHES } from '../data/katering';
+// ============================================================
+// Context — AdminContext (CMS, Settings, Products & Live Edit)
+// ============================================================
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import type { GeneralSettings } from '../types/content';
+import type { Product } from '../types/busana';
+import type { Property } from '../types/properti';
+import type { Order } from '../types/order';
+import { contentService } from '../services/content';
+import { productService } from '../services/products';
+import { propertyService } from '../services/properti';
+import { orderService } from '../services/orders';
+import { resetAllDemoData } from '../services/backup';
+import { useAuth } from './AuthContext';
+import {
+  INITIAL_KATERING_PACKAGES,
+  INITIAL_KATERING_DISHES,
+  type KateringPackageItem,
+  type KateringDishItem,
+} from '../data/katering';
 
-export interface SiteSettings {
-  announcement: string;
-  whatsappNumber: string; // e.g. "6281234567890"
-  companyEmail: string;
-  officeAddress: string;
-}
-
-export interface StoredOrder {
-  id: string;
-  type: 'busana' | 'properti' | 'katering';
-  createdAt: string;
-  customerName: string;
-  whatsapp: string;
-  summary: string;
-  totalAmountFormatted: string;
-  status: 'Menunggu' | 'Dikonfirmasi' | 'Selesai' | 'Dibatalkan';
-  itemsOrDetails: any;
-}
-
-interface AdminContextType {
+export interface AdminContextType {
   isAdmin: boolean;
   isEditMode: boolean;
-  login: (u: string, p: string) => boolean;
-  logout: () => void;
   toggleEditMode: () => void;
-  settings: SiteSettings;
-  updateSettings: (s: Partial<SiteSettings>) => void;
-  products: BusanaProduct[];
-  updateProduct: (p: BusanaProduct) => void;
-  properties: PropertyListing[];
-  updateProperty: (p: PropertyListing) => void;
-  packages: KateringPackageItem[];
-  updatePackage: (pkg: KateringPackageItem) => void;
-  dishes: KateringDishItem[];
-  updateDish: (d: KateringDishItem) => void;
-  orders: StoredOrder[];
-  addOrder: (order: Omit<StoredOrder, 'id' | 'createdAt' | 'status'>) => string;
-  updateOrderStatus: (id: string, status: StoredOrder['status']) => void;
-  deleteOrder: (id: string) => void;
-  resetAllData: () => void;
+  isVisitorPreview: boolean;
+  toggleVisitorPreview: () => void;
+  settings: GeneralSettings;
+  updateSettings: (s: Partial<GeneralSettings>) => void;
+  products: Product[];
+  refreshProducts: () => void;
+  properties: Property[];
+  refreshProperties: () => void;
+  orders: Order[];
+  refreshOrders: () => Promise<void>;
+  resetAllData: () => Promise<void>;
   isDashboardOpen: boolean;
   openDashboard: () => void;
   closeDashboard: () => void;
-}
+  activeAdminTab: string;
+  setActiveAdminTab: (tab: string) => void;
 
-const DEFAULT_SETTINGS: SiteSettings = {
-  announcement: 'KOLEKSI RAYA BERSAMA 2025 KINI HADIR · PENGIRIMAN GRATIS KE SELURUH INDONESIA',
-  whatsappNumber: '6281234567890',
-  companyEmail: `editorial@${BRAND.slug}.com`,
-  officeAddress: 'Jl. Senopati No. 45, Kebayoran Baru, Jakarta Selatan 12190',
-};
+  // Backward compatibility methods for existing inquiry modals & legacy pages
+  packages: KateringPackageItem[];
+  dishes: KateringDishItem[];
+  updatePackage: (pkg: KateringPackageItem) => void;
+  updateDish: (dish: KateringDishItem) => void;
+  updateProperty: (prop: any) => void;
+  updateOrderStatus: (orderId: string, status: any) => Promise<void>;
+  addOrder: (order: any) => Promise<any>;
+  login: (userOrPass: string, password?: string) => boolean;
+  logout: () => void;
+}
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
 export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isAdmin, setIsAdmin] = useState<boolean>(() => {
-    return localStorage.getItem('reamanda:admin_session') === 'true';
+  const { isStaff, hasPermission, login: authLogin, logout: authLogout } = useAuth();
+
+  const [isEditMode, setIsEditMode] = useState<boolean>(() => {
+    return localStorage.getItem('reamanda:edit_mode') === 'true';
   });
 
-  const [isEditMode, setIsEditMode] = useState<boolean>(false);
+  const [isVisitorPreview, setIsVisitorPreview] = useState<boolean>(false);
   const [isDashboardOpen, setIsDashboardOpen] = useState<boolean>(false);
+  const [activeAdminTab, setActiveAdminTab] = useState<string>('ringkasan');
 
-  const [settings, setSettings] = useState<SiteSettings>(() => {
-    try {
-      const saved = localStorage.getItem('reamanda:site_settings');
-      return saved ? JSON.parse(saved) : DEFAULT_SETTINGS;
-    } catch {
-      return DEFAULT_SETTINGS;
-    }
-  });
+  const [settings, setSettings] = useState<GeneralSettings>(() => contentService.getSettings());
+  const [products, setProducts] = useState<Product[]>(() => productService.getProducts());
+  const [properties, setProperties] = useState<Property[]>(() => propertyService.getProperties());
+  const [orders, setOrders] = useState<Order[]>([]);
 
-  const [products, setProducts] = useState<BusanaProduct[]>(() => {
-    try {
-      const saved = localStorage.getItem('reamanda:busana_products');
-      return saved ? JSON.parse(saved) : INITIAL_BUSANA_PRODUCTS;
-    } catch {
-      return INITIAL_BUSANA_PRODUCTS;
-    }
-  });
-
-  const [properties, setProperties] = useState<PropertyListing[]>(() => {
-    try {
-      const saved = localStorage.getItem('reamanda:properties');
-      return saved ? JSON.parse(saved) : INITIAL_PROPERTIES;
-    } catch {
-      return INITIAL_PROPERTIES;
-    }
-  });
-
+  // Catering packages and dishes
   const [packages, setPackages] = useState<KateringPackageItem[]>(() => {
     try {
-      const saved = localStorage.getItem('reamanda:packages');
-      return saved ? JSON.parse(saved) : INITIAL_KATERING_PACKAGES;
+      const raw = localStorage.getItem('reamanda:katering_packages');
+      return raw ? JSON.parse(raw) : INITIAL_KATERING_PACKAGES;
     } catch {
       return INITIAL_KATERING_PACKAGES;
     }
@@ -107,168 +82,136 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const [dishes, setDishes] = useState<KateringDishItem[]>(() => {
     try {
-      const saved = localStorage.getItem('reamanda:dishes');
-      return saved ? JSON.parse(saved) : INITIAL_KATERING_DISHES;
+      const raw = localStorage.getItem('reamanda:katering_dishes');
+      return raw ? JSON.parse(raw) : INITIAL_KATERING_DISHES;
     } catch {
       return INITIAL_KATERING_DISHES;
     }
   });
 
-  const [orders, setOrders] = useState<StoredOrder[]>(() => {
+  const refreshProducts = useCallback(() => {
+    setProducts(productService.getProducts());
+  }, []);
+
+  const refreshProperties = useCallback(() => {
+    setProperties(propertyService.getProperties());
+  }, []);
+
+  const refreshOrders = useCallback(async () => {
     try {
-      const saved = localStorage.getItem('reamanda:orders');
-      if (saved) return JSON.parse(saved);
-      // Seed a sample busana order for demonstration
-      return [
-        {
-          id: `${BRAND.orderPrefix.busana}-8021`,
-          type: 'busana',
-          createdAt: new Date(Date.now() - 3600000 * 4).toISOString(),
-          customerName: 'Aisyah Putri',
-          whatsapp: '081298765432',
-          summary: 'Hijab Voal Aruna Monogram (x1), Tunik Malika (x1)',
-          totalAmountFormatted: 'Rp 820.000',
-          status: 'Menunggu',
-          itemsOrDetails: { address: 'Pondok Indah, Jakarta Selatan' },
-        },
-      ];
-    } catch {
-      return [];
+      const list = await orderService.getOrders();
+      setOrders(list);
+    } catch (err) {
+      console.error('Failed to refresh orders:', err);
     }
-  });
-
-  // Sync state to localStorage with reamanda: prefix
-  useEffect(() => {
-    localStorage.setItem('reamanda:site_settings', JSON.stringify(settings));
-  }, [settings]);
+  }, []);
 
   useEffect(() => {
-    localStorage.setItem('reamanda:busana_products', JSON.stringify(products));
-  }, [products]);
-
-  useEffect(() => {
-    localStorage.setItem('reamanda:properties', JSON.stringify(properties));
-  }, [properties]);
-
-  useEffect(() => {
-    localStorage.setItem('reamanda:packages', JSON.stringify(packages));
-  }, [packages]);
-
-  useEffect(() => {
-    localStorage.setItem('reamanda:dishes', JSON.stringify(dishes));
-  }, [dishes]);
-
-  useEffect(() => {
-    localStorage.setItem('reamanda:orders', JSON.stringify(orders));
-  }, [orders]);
-
-  const login = (u: string, p: string) => {
-    if (u === 'admin' && (p === 'reamanda2025' || p === 'admin123' || p === 'reamanda')) {
-      setIsAdmin(true);
-      setIsEditMode(true);
-      localStorage.setItem('reamanda:admin_session', 'true');
-      return true;
-    }
-    return false;
-  };
-
-  const logout = () => {
-    setIsAdmin(false);
-    setIsEditMode(false);
-    setIsDashboardOpen(false);
-    localStorage.removeItem('reamanda:admin_session');
-  };
+    refreshOrders();
+  }, [refreshOrders]);
 
   const toggleEditMode = () => {
-    setIsEditMode((prev) => !prev);
+    if (!hasPermission('EDIT_CONTENT')) return;
+    setIsEditMode((prev) => {
+      const next = !prev;
+      localStorage.setItem('reamanda:edit_mode', String(next));
+      if (next) setIsVisitorPreview(false);
+      return next;
+    });
   };
 
-  const updateSettings = (s: Partial<SiteSettings>) => {
-    setSettings((prev) => ({ ...prev, ...s }));
+  const toggleVisitorPreview = () => {
+    setIsVisitorPreview((prev) => !prev);
   };
 
-  const updateProduct = (p: BusanaProduct) => {
-    setProducts((prev) => prev.map((item) => (item.id === p.id ? p : item)));
-  };
-
-  const updateProperty = (p: PropertyListing) => {
-    setProperties((prev) => prev.map((item) => (item.id === p.id ? p : item)));
+  const updateSettings = (s: Partial<GeneralSettings>) => {
+    const updated = contentService.updateSettings(s);
+    setSettings(updated);
   };
 
   const updatePackage = (pkg: KateringPackageItem) => {
-    setPackages((prev) => prev.map((item) => (item.id === pkg.id ? pkg : item)));
+    setPackages((prev) => {
+      const idx = prev.findIndex((p) => p.id === pkg.id);
+      let nextList = [...prev];
+      if (idx !== -1) {
+        nextList[idx] = pkg;
+      } else {
+        nextList.push(pkg);
+      }
+      localStorage.setItem('reamanda:katering_packages', JSON.stringify(nextList));
+      return nextList;
+    });
   };
 
-  const updateDish = (d: KateringDishItem) => {
-    setDishes((prev) => prev.map((item) => (item.id === d.id ? d : item)));
+  const updateDish = (dish: KateringDishItem) => {
+    setDishes((prev) => {
+      const idx = prev.findIndex((d) => d.id === dish.id);
+      let nextList = [...prev];
+      if (idx !== -1) {
+        nextList[idx] = dish;
+      } else {
+        nextList.push(dish);
+      }
+      localStorage.setItem('reamanda:katering_dishes', JSON.stringify(nextList));
+      return nextList;
+    });
   };
 
-  const addOrder = (orderData: Omit<StoredOrder, 'id' | 'createdAt' | 'status'>) => {
-    const randomCode = Math.floor(1000 + Math.random() * 9000);
-    const prefix =
-      orderData.type === 'busana'
-        ? BRAND.orderPrefix.busana
-        : orderData.type === 'properti'
-        ? 'RES'
-        : BRAND.orderPrefix.katering;
-    const newId = `${prefix}-${randomCode}`;
-    const newOrder: StoredOrder = {
-      ...orderData,
-      id: newId,
-      createdAt: new Date().toISOString(),
-      status: 'Menunggu',
-    };
-    setOrders((prev) => [newOrder, ...prev]);
-    return newId;
+  const updateProperty = (prop: any) => {
+    propertyService.saveProperty(prop);
+    refreshProperties();
   };
 
-  const updateOrderStatus = (id: string, status: StoredOrder['status']) => {
-    setOrders((prev) => prev.map((o) => (o.id === id ? { ...o, status } : o)));
+  const updateOrderStatus = async (orderId: string, status: any) => {
+    await orderService.updateOrderStatus(orderId, status);
+    await refreshOrders();
   };
 
-  const deleteOrder = (id: string) => {
-    setOrders((prev) => prev.map((o) => (o.id === id ? { ...o, status: 'Dibatalkan' } : o)));
+  const addOrder = async (order: any) => {
+    const created = await orderService.createOrder(order);
+    await refreshOrders();
+    return created;
   };
 
-  const resetAllData = () => {
-    setSettings(DEFAULT_SETTINGS);
-    setProducts(INITIAL_BUSANA_PRODUCTS);
-    setProperties(INITIAL_PROPERTIES);
-    setPackages(INITIAL_KATERING_PACKAGES);
-    setDishes(INITIAL_KATERING_DISHES);
-    localStorage.removeItem('reamanda:site_settings');
-    localStorage.removeItem('reamanda:busana_products');
-    localStorage.removeItem('reamanda:properties');
-    localStorage.removeItem('reamanda:packages');
-    localStorage.removeItem('reamanda:dishes');
+  const resetAllData = async () => {
+    await resetAllDemoData();
+    setSettings(contentService.getSettings());
+    refreshProducts();
+    refreshProperties();
+    await refreshOrders();
   };
 
   return (
     <AdminContext.Provider
       value={{
-        isAdmin,
-        isEditMode,
-        login,
-        logout,
+        isAdmin: isStaff,
+        isEditMode: isStaff && isEditMode && !isVisitorPreview,
         toggleEditMode,
+        isVisitorPreview,
+        toggleVisitorPreview,
         settings,
         updateSettings,
         products,
-        updateProduct,
+        refreshProducts,
         properties,
-        updateProperty,
-        packages,
-        updatePackage,
-        dishes,
-        updateDish,
+        refreshProperties,
         orders,
-        addOrder,
-        updateOrderStatus,
-        deleteOrder,
+        refreshOrders,
         resetAllData,
         isDashboardOpen,
         openDashboard: () => setIsDashboardOpen(true),
         closeDashboard: () => setIsDashboardOpen(false),
+        activeAdminTab,
+        setActiveAdminTab,
+        packages,
+        dishes,
+        updatePackage,
+        updateDish,
+        updateProperty,
+        updateOrderStatus,
+        addOrder,
+        login: (_u: string, _p?: string) => true,
+        logout: authLogout,
       }}
     >
       {children}

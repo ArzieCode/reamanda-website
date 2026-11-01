@@ -154,7 +154,7 @@ export const PropertiPage: React.FC = () => {
 
         {/* 4. Listing Grid (6 properties with 3 images each & badges) */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProperties.map((prop) => (
+          {filteredProperties.map((prop: any) => (
             <div
               key={prop.id}
               className="bg-white border border-line p-5 flex flex-col justify-between hover:border-indigo transition-colors relative group"
@@ -234,7 +234,7 @@ export const PropertiPage: React.FC = () => {
 
                 {/* Specs / Highlights */}
                 <div className="flex flex-wrap gap-1.5 mb-6">
-                  {prop.highlights.slice(0, 2).map((hl, i) => (
+                  {prop.highlights?.slice(0, 2).map((hl: any, i: number) => (
                     <span
                       key={i}
                       className="px-2 py-0.5 bg-surface text-ink text-[11px] font-sans border border-line"

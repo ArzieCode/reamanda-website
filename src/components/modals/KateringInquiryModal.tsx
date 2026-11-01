@@ -75,13 +75,16 @@ export const KateringInquiryModal: React.FC<KateringInquiryModalProps> = ({
       return;
     }
 
-    const pkg = packages.find((p) => p.id === selectedPkgId);
+    const pkg = packages.find((p: any) => p.id === selectedPkgId);
     const packageName = pkg ? pkg.name : 'Pilihan Kustom Menu';
     const summary = `${packageName} (${paxCount}, Tanggal: ${eventDate || 'Menyesuaikan'}, Lokasi: ${location})`;
+    const generatedId = `kat-${Date.now()}`;
 
-    const newId = addOrder({
+    addOrder({
+      id: generatedId,
       type: 'katering',
       customerName: name.trim(),
+      customerPhone: whatsapp.trim(),
       whatsapp: whatsapp.trim(),
       summary,
       totalAmountFormatted: pkg ? pkg.startingPrice : 'Estimasi Kustom',
@@ -95,13 +98,13 @@ export const KateringInquiryModal: React.FC<KateringInquiryModalProps> = ({
       },
     });
 
-    setConfirmedId(newId);
+    setConfirmedId(generatedId);
     showToast('Permintaan katering berhasil dikirim.');
   };
 
   const getWhatsappMessage = () => {
     if (!confirmedId) return '';
-    const pkg = packages.find((p) => p.id === selectedPkgId);
+    const pkg = packages.find((p: any) => p.id === selectedPkgId);
     const text = `Halo ${BRAND.name} Katering & Perjamuan, saya mengajukan permintaan katering:
 ID Permintaan: ${confirmedId}
 Nama: ${name}
@@ -241,7 +244,7 @@ Mohon informasi penawaran resmi, ketersediaan jadwal, dan prosedur test food. Te
                   onChange={(e) => setSelectedPkgId(e.target.value)}
                   className="w-full px-3 py-2.5 border border-line text-sm text-ink focus:border-caramel-deep focus:outline-none bg-white rounded-[2px]"
                 >
-                  {packages.map((pkg) => (
+                  {packages.map((pkg: any) => (
                     <option key={pkg.id} value={pkg.id}>
                       {pkg.name} ({pkg.startingPrice})
                     </option>
