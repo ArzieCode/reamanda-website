@@ -102,7 +102,7 @@ export const KateringPage: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {packages.map((pkg) => (
+          {packages.map((pkg: any) => (
             <div
               key={pkg.id}
               className="bg-white border border-line p-6 flex flex-col justify-between hover:border-caramel-deep transition-colors relative group"
@@ -147,7 +147,7 @@ export const KateringPage: React.FC = () => {
                     Sorotan Menu Termasuk:
                   </span>
                   <ul className="space-y-1.5 text-xs font-sans text-ink">
-                    {pkg.menuHighlights.slice(0, 4).map((h, i) => (
+                    {pkg.menuHighlights.slice(0, 4).map((h: any, i: number) => (
                       <li key={i} className="flex items-start gap-2">
                         <Check size={13} className="text-caramel-deep shrink-0 mt-0.5" />
                         <span>{h}</span>
@@ -214,7 +214,7 @@ export const KateringPage: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {dishes.map((dish) => (
+            {dishes.map((dish: any) => (
               <div
                 key={dish.id}
                 className="bg-surface border border-line p-4 flex flex-col justify-between hover:border-caramel-deep transition-colors relative group"

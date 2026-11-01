@@ -20,14 +20,28 @@ export const Toast: React.FC = () => {
           {toast.message}
         </span>
       </div>
-      <button
-        type="button"
-        onClick={hideToast}
-        className="text-white/70 hover:text-white p-1 shrink-0"
-        aria-label="Tutup notifikasi"
-      >
-        <X size={16} className="stroke-[1.5]" />
-      </button>
+      <div className="flex items-center gap-3">
+        {toast.action && (
+          <button
+            type="button"
+            onClick={() => {
+              toast.action?.onClick();
+              hideToast();
+            }}
+            className="text-xs font-sans text-caramel hover:text-white underline uppercase tracking-wider font-medium"
+          >
+            {toast.action.label}
+          </button>
+        )}
+        <button
+          type="button"
+          onClick={hideToast}
+          className="text-white/70 hover:text-white p-1 shrink-0"
+          aria-label="Tutup notifikasi"
+        >
+          <X size={16} className="stroke-[1.5]" />
+        </button>
+      </div>
     </div>
   );
 };

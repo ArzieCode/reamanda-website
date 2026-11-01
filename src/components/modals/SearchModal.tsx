@@ -40,11 +40,11 @@ export const SearchModal: React.FC<SearchModalProps> = ({
   const filteredKatering = q
     ? [
         ...packages
-          .filter((pkg) => pkg.name.toLowerCase().includes(q) || pkg.description.toLowerCase().includes(q))
-          .map((p) => ({ ...p, isPkg: true })),
+          .filter((pkg: any) => pkg.name.toLowerCase().includes(q) || pkg.description.toLowerCase().includes(q))
+          .map((p: any) => ({ ...p, isPkg: true })),
         ...dishes
-          .filter((d) => d.name.toLowerCase().includes(q) || d.category.toLowerCase().includes(q))
-          .map((d) => ({ ...d, isPkg: false })),
+          .filter((d: any) => d.name.toLowerCase().includes(q) || d.category.toLowerCase().includes(q))
+          .map((d: any) => ({ ...d, isPkg: false })),
       ]
     : [];
 
@@ -154,14 +154,14 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                         <div
                           key={p.id}
                           onClick={() => {
-                            if (onSelectProduct) onSelectProduct(p);
+                            if (onSelectProduct) onSelectProduct(p as any);
                             else handleNavigate('/busana');
                           }}
                           className="flex items-center gap-3 p-2 bg-surface hover:bg-surface-2 border border-line cursor-pointer transition-colors"
                           style={{ borderRadius: '2px' }}
                         >
                           <div className="w-12 h-16 shrink-0">
-                            <SmartImage slot={p.imageSlot1} alt={p.name} aspectRatio="3:4" />
+                            <SmartImage slot={(p as any).imageSlot1 || 'hero'} alt={p.name} aspectRatio="3:4" />
                           </div>
                           <div className="min-w-0 flex-1">
                             <h5 className="font-serif text-sm text-charcoal truncate">{p.name}</h5>

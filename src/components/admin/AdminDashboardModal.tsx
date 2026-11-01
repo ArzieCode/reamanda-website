@@ -165,10 +165,14 @@ export const AdminDashboardModal: React.FC = () => {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {filteredOrders.map((order) => {
-                    const waLink = `https://wa.me/${order.whatsapp.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+                  {filteredOrders.map((order: any) => {
+                    const phone = order.customerPhone || order.whatsapp || '';
+                    const waLink = `https://wa.me/${phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
                       `Halo Ibu/Bpk ${order.customerName}, kami dari ${BRAND.name} ingin menindaklanjuti pesanan Anda: ${order.id}.`
                     )}`;
+                    const orderDate = order.date || order.createdAt || new Date().toISOString();
+                    const formattedTotal = typeof order.total === 'number' ? `Rp ${order.total.toLocaleString('id-ID')}` : (order.totalAmountFormatted || '-');
+                    const orderSummary = order.summary || order.items?.map((i: any) => `${i.productName || 'Produk'} (x${i.quantity || 1})`).join(', ') || '-';
 
                     return (
                       <div
@@ -182,7 +186,7 @@ export const AdminDashboardModal: React.FC = () => {
                               {order.id}
                             </span>
                             <span className="text-[11px] uppercase tracking-wider font-sans text-muted">
-                              {new Date(order.createdAt).toLocaleDateString('id-ID', {
+                              {new Date(orderDate).toLocaleDateString('id-ID', {
                                 day: 'numeric',
                                 month: 'short',
                                 year: 'numeric',
@@ -202,7 +206,7 @@ export const AdminDashboardModal: React.FC = () => {
 
                           <div className="text-right">
                             <span className="font-serif text-charcoal text-base">
-                              {order.totalAmountFormatted}
+                              {formattedTotal}
                             </span>
                           </div>
                         </div>
@@ -211,12 +215,12 @@ export const AdminDashboardModal: React.FC = () => {
                           <div>
                             <p className="m-0 text-muted">Pemesan:</p>
                             <p className="m-0 font-medium text-charcoal">{order.customerName}</p>
-                            <p className="m-0 text-ink">WhatsApp: {order.whatsapp}</p>
+                            <p className="m-0 text-ink">WhatsApp: {phone}</p>
                           </div>
 
                           <div>
                             <p className="m-0 text-muted">Rincian:</p>
-                            <p className="m-0 text-ink line-clamp-2">{order.summary}</p>
+                            <p className="m-0 text-ink line-clamp-2">{orderSummary}</p>
                           </div>
                         </div>
 

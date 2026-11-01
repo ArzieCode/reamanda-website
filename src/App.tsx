@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
+import { AuthProvider } from './context/AuthContext';
 import { AdminProvider } from './context/AdminContext';
 import { CartProvider } from './context/CartContext';
 import { OverlayProvider } from './context/OverlayContext';
@@ -12,6 +13,7 @@ import { BusanaPage } from './pages/BusanaPage';
 import { KostWanitaPage } from './pages/KostWanitaPage';
 import { KateringPage } from './pages/KateringPage';
 import { AdminPage } from './pages/AdminPage';
+import { InvoicePrintPage } from './pages/InvoicePrintPage';
 import { TentangKamiPage } from './pages/TentangKamiPage';
 import { KontakPage } from './pages/KontakPage';
 import { NotFoundPage } from './pages/NotFoundPage';
@@ -34,28 +36,34 @@ function ScrollToTop() {
 
 export default function App() {
   return (
-    <AdminProvider>
-      <CartProvider>
-        <BrowserRouter>
-          <OverlayProvider>
-            <ScrollToTop />
-            <Toast />
-            <Routes>
-              <Route path="/" element={<Layout />}>
-                <Route index element={<HomePage />} />
-                <Route path="busana" element={<BusanaPage />} />
-                <Route path="kost-wanita" element={<KostWanitaPage />} />
-                <Route path="properti" element={<Navigate to="/kost-wanita" replace />} />
-                <Route path="katering" element={<KateringPage />} />
-                <Route path="admin" element={<AdminPage />} />
-                <Route path="tentang-kami" element={<TentangKamiPage />} />
-                <Route path="kontak" element={<KontakPage />} />
-                <Route path="*" element={<NotFoundPage />} />
-              </Route>
-            </Routes>
-          </OverlayProvider>
-        </BrowserRouter>
-      </CartProvider>
-    </AdminProvider>
+    <AuthProvider>
+      <AdminProvider>
+        <CartProvider>
+          <BrowserRouter>
+            <OverlayProvider>
+              <ScrollToTop />
+              <Toast />
+              <Routes>
+                {/* Standalone invoice route for clean paper printing */}
+                <Route path="admin/pesanan/:id/invoice" element={<InvoicePrintPage />} />
+
+                <Route path="/" element={<Layout />}>
+                  <Route index element={<HomePage />} />
+                  <Route path="busana" element={<BusanaPage />} />
+                  <Route path="kost-wanita" element={<KostWanitaPage />} />
+                  <Route path="properti" element={<Navigate to="/kost-wanita" replace />} />
+                  <Route path="katering" element={<KateringPage />} />
+                  <Route path="admin" element={<AdminPage />} />
+                  <Route path="tentang-kami" element={<TentangKamiPage />} />
+                  <Route path="kontak" element={<KontakPage />} />
+                  <Route path="*" element={<NotFoundPage />} />
+                </Route>
+              </Routes>
+            </OverlayProvider>
+          </BrowserRouter>
+        </CartProvider>
+      </AdminProvider>
+    </AuthProvider>
   );
 }
+

@@ -64,9 +64,12 @@ export const PropertyInquiryModal: React.FC<PropertyInquiryModalProps> = ({
       ? `Reservasi ${property.name} (${checkIn || 'TBD'} s/d ${checkOut || 'TBD'}, ${guests})`
       : `Survei/Penawaran ${property.name} (Tgl: ${surveyDate || 'Segera'}, Tawaran: ${offerAmount || property.priceFormatted})`;
 
-    const newId = addOrder({
+    const generatedId = `prop-${Date.now()}`;
+    addOrder({
+      id: generatedId,
       type: 'properti',
       customerName: name.trim(),
+      customerPhone: whatsapp.trim(),
       whatsapp: whatsapp.trim(),
       summary,
       totalAmountFormatted: isRental ? property.priceFormatted : (offerAmount || property.priceFormatted),
@@ -84,7 +87,7 @@ export const PropertyInquiryModal: React.FC<PropertyInquiryModalProps> = ({
       },
     });
 
-    setConfirmedId(newId);
+    setConfirmedId(generatedId);
     showToast('Permintaan reservasi/survei properti berhasil dikirim.');
   };
 

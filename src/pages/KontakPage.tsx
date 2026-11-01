@@ -67,22 +67,22 @@ export const KontakPage: React.FC = () => {
                     Galeri & Kantor Pusat
                   </h3>
                   <p className="text-xs text-ink leading-relaxed font-sans">
-                    {settings.officeAddress}
+                    {settings.address || settings.officeAddress}
                   </p>
                 </div>
 
                 <div className="pt-2 border-t border-line text-xs font-sans space-y-2">
                   <div className="flex items-center gap-2 text-muted">
                     <Clock size={14} />
-                    <span>Senin – Sabtu: 09.00 – 18.00 WIB</span>
+                    <span>{settings.businessHours || 'Senin – Sabtu: 09.00 – 18.00 WIB'}</span>
                   </div>
                   <div className="flex items-center gap-2 text-muted">
                     <Mail size={14} />
-                    <span>{settings.companyEmail}</span>
+                    <span>{settings.email || settings.companyEmail}</span>
                   </div>
                   <div className="flex items-center gap-2 text-muted">
                     <Phone size={14} />
-                    <span>(021) 720-2009</span>
+                    <span>{settings.phone || '(021) 720-2009'}</span>
                   </div>
                 </div>
               </div>
