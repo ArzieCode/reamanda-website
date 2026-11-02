@@ -146,6 +146,7 @@ export const PropertyManagementView: React.FC = () => {
   const formatRupiah = (val: number) => `Rp ${val.toLocaleString('id-ID')}`;
 
   const getStatusColor = (st: PropertyStatus) => {
+    if (st === 'belum_dikonfirmasi') return 'text-muted border-line bg-surface';
     if (st === 'tersedia') return 'text-status-available border-status-available/30 bg-status-available/10';
     if (st === 'dp') return 'text-status-deposit border-status-deposit/30 bg-status-deposit/10';
     return 'text-status-occupied border-status-occupied/30 bg-status-occupied/10';
@@ -188,7 +189,7 @@ export const PropertyManagementView: React.FC = () => {
 
                 <div className="absolute top-2 left-2 flex items-center gap-1.5">
                   <span className={`px-2 py-0.5 text-[10px] uppercase font-sans tracking-widest rounded-[2px] border ${getStatusColor(p.status)}`}>
-                    {p.status === 'tersedia' ? 'Tersedia' : p.status === 'dp' ? 'Sudah DP' : 'Ditempati'}
+                    {p.status === 'belum_dikonfirmasi' ? 'Belum dikonfirmasi' : p.status === 'tersedia' ? 'Tersedia' : p.status === 'dp' ? 'Sudah DP' : 'Ditempati'}
                   </span>
                   {!p.isPublished && (
                     <span className="px-2 py-0.5 text-[10px] uppercase font-sans tracking-widest bg-charcoal text-white rounded-[2px]">
@@ -240,6 +241,7 @@ export const PropertyManagementView: React.FC = () => {
                   onChange={(e) => handleQuickStatusChange(p.id, e.target.value as PropertyStatus)}
                   className="px-2 py-1 text-[11px] border border-line bg-white rounded-[2px] text-ink"
                 >
+                  <option value="belum_dikonfirmasi">Belum dikonfirmasi</option>
                   <option value="tersedia">Tersedia</option>
                   <option value="dp">Sudah DP</option>
                   <option value="ditempati">Sudah Ditempati</option>
@@ -379,6 +381,7 @@ export const PropertyManagementView: React.FC = () => {
                 onChange={(e) => setStatus(e.target.value as PropertyStatus)}
                 className="w-full px-2.5 py-2 border border-line rounded-[2px] text-xs bg-white text-ink"
               >
+                <option value="belum_dikonfirmasi">Belum dikonfirmasi</option>
                 <option value="tersedia">Tersedia</option>
                 <option value="dp">Sudah DP</option>
                 <option value="ditempati">Sudah Ditempati</option>

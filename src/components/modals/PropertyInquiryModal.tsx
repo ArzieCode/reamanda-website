@@ -120,6 +120,7 @@ Mohon konfirmasi jadwal temu dengan tim representatif ${BRAND.name}. Terima kasi
   };
 
   const whatsappLink = `https://wa.me/${settings.whatsappNumber}?text=${getWhatsappMessage()}`;
+  const hasConfirmedWhatsapp = Boolean(settings.whatsappNumber && settings.whatsappNumber !== '6281234567890');
 
   return (
     <Modal
@@ -170,7 +171,7 @@ Mohon konfirmasi jadwal temu dengan tim representatif ${BRAND.name}. Terima kasi
           </div>
 
           <div className="pt-2 max-w-md mx-auto flex flex-col sm:flex-row gap-3">
-            <a
+            {hasConfirmedWhatsapp && <a
               href={whatsappLink}
               target="_blank"
               rel="noopener noreferrer"
@@ -178,7 +179,7 @@ Mohon konfirmasi jadwal temu dengan tim representatif ${BRAND.name}. Terima kasi
             >
               <MessageCircle size={16} className="stroke-[1.25]" />
               <span>Konfirmasi via WhatsApp</span>
-            </a>
+            </a>}
             <button
               type="button"
               onClick={onClose}

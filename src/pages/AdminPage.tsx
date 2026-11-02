@@ -16,6 +16,7 @@ import { StaffManagementView } from '../components/admin/StaffManagementView';
 import { SettingsView } from '../components/admin/SettingsView';
 import { ActivityLogView } from '../components/admin/ActivityLogView';
 import { ContentManagementView } from '../components/admin/ContentManagementView';
+import { CateringGalleryManagementView } from '../components/admin/CateringGalleryManagementView';
 import {
   LayoutDashboard,
   ShoppingBag,
@@ -63,8 +64,8 @@ export const AdminPage: React.FC = () => {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   // Login form state
-  const [loginEmail, setLoginEmail] = useState('owner@reamanda.com');
-  const [loginPass, setLoginPass] = useState('Owner123!');
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPass, setLoginPass] = useState('');
   const [loginError, setLoginError] = useState<string | null>(null);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
@@ -211,6 +212,9 @@ export const AdminPage: React.FC = () => {
       : []),
     { id: 'properti', label: 'Properti & Penawaran', icon: Home },
     { id: 'katering', label: 'Katering', icon: UtensilsCrossed },
+    ...(hasPermission('EDIT_CONTENT')
+      ? [{ id: 'galeri-katering', label: 'Galeri Foto', icon: FileEdit }]
+      : []),
     ...(hasPermission('MANAGE_CUSTOMERS')
       ? [{ id: 'pelanggan', label: 'Pelanggan', icon: Users }]
       : []),
@@ -398,6 +402,9 @@ export const AdminPage: React.FC = () => {
             {activeAdminTab === 'properti' && <PropertyManagementView />}
 
             {activeAdminTab === 'katering' && <CateringManagementView />}
+            {activeAdminTab === 'galeri-katering' && hasPermission('EDIT_CONTENT') && (
+              <CateringGalleryManagementView />
+            )}
 
             {activeAdminTab === 'pelanggan' && hasPermission('MANAGE_CUSTOMERS') && (
               <CustomerManagementView />

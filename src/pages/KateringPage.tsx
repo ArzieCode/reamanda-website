@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import { SmartImage } from '../components/ui/SmartImage';
 import { useAdmin } from '../context/AdminContext';
-import type { KateringPackageItem, KateringDishItem } from '../data/katering';
+import { INITIAL_KATERING_PACKAGES, INITIAL_KATERING_DISHES, type KateringPackageItem, type KateringDishItem } from '../data/katering';
 import { KateringInquiryModal } from '../components/modals/KateringInquiryModal';
 import { Modal } from '../components/ui/Modal';
 import { BRAND } from '../config/brand';
 import { ArrowRight, Check, Edit2 } from 'lucide-react';
+import { CLIENT_PHOTOS } from '../data/client-photos';
+import { ClientPhotoGallery } from '../components/ui/ClientPhotoGallery';
+import { CateringPostCard } from '../components/ui/CateringPostCard';
+import { clientGalleryService } from '../services/client-gallery';
+import { contentService } from '../services/content';
 
 export const KateringPage: React.FC = () => {
   const { packages, dishes, settings, isEditMode, updatePackage, updateDish } = useAdmin();
@@ -17,6 +22,16 @@ export const KateringPage: React.FC = () => {
   // Edit states for admin
   const [editingPackage, setEditingPackage] = useState<KateringPackageItem | null>(null);
   const [editingDish, setEditingDish] = useState<KateringDishItem | null>(null);
+  const [mealPhotos] = useState(() => clientGalleryService.getPhotos('lunchBox'));
+  const [snackPhotos] = useState(() => clientGalleryService.getPhotos('snackBox'));
+  const [posts] = useState(() => contentService.getSections('catering_post').filter((post) => post.isVisible));
+  // Hide untouched mock packages and prices; preserve anything the admin edited.
+  const publishedPackages = packages.filter((pkg) =>
+    !INITIAL_KATERING_PACKAGES.some((sample) => sample.id === pkg.id && JSON.stringify(sample) === JSON.stringify(pkg))
+  );
+  const publishedDishes = dishes.filter((dish) =>
+    !INITIAL_KATERING_DISHES.some((sample) => sample.id === dish.id && JSON.stringify(sample) === JSON.stringify(dish))
+  );
 
   const handleEditPackageSave = (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,6 +56,7 @@ export const KateringPage: React.FC = () => {
   const directWaUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
     `Halo ${BRAND.name} Katering, saya ingin berkonsultasi mengenai paket katering perjamuan.`
   )}`;
+  const hasConfirmedWhatsapp = Boolean(settings.whatsappNumber && settings.whatsappNumber !== '6281234567890');
 
   return (
     <div className="w-full bg-surface">
@@ -49,6 +65,8 @@ export const KateringPage: React.FC = () => {
         <div className="absolute inset-0 z-0">
           <SmartImage
             slot="katering-hero"
+            src={CLIENT_PHOTOS.snackBox[0].src}
+            alt="Sajian dari folder foto catering yang dibagikan klien"
             aspectRatio="custom"
             className="w-full h-full object-cover"
             priority
@@ -57,15 +75,15 @@ export const KateringPage: React.FC = () => {
         </div>
 
         <div className="site-container relative z-10 text-white space-y-4 editorial-enter">
-          <img src="/rheamanda-mark.png" alt="Logo monogram R terbalik Katering Rheamanda" className="block w-20 h-20 object-contain brightness-0 invert" />
+          <img src="/catering-logo.png" alt="Logo Rheamanda Catering" className="block w-52 sm:w-64 h-auto object-contain brightness-0 invert drop-shadow-[0_2px_8px_rgba(0,0,0,0.65)]" />
           <span className="label-editorial text-white/90 block">
-            03 / 03 · {BRAND.name} Katering & Perjamuan
+            {BRAND.name} Catering & Produk Kuliner
           </span>
           <h1 className="font-display text-white max-w-3xl font-light">
-            Cita Rasa Nusantara dalam Suasana Khidmat
+            Lezat, Sehat, Penuh Makna
           </h1>
           <p className="text-white text-sm sm:text-base max-w-lg font-sans font-light leading-relaxed">
-            Menyajikan keagungan bumbu rempah autentik Minang dan Nusantara untuk perhelatan pernikahan, jamuan resmi korporasi, tumpeng syukuran, dan hantaran keluarga.
+            Rheamanda Catering menghadirkan meal box, snack box, kudapan manis dan gurih, sajian segar, serta kebutuhan acara dengan pilihan yang dapat disesuaikan. Hubungi pengelola untuk katalog dan penawaran terkini.
           </p>
           <div className="pt-2 flex flex-wrap gap-4">
             <a
@@ -73,37 +91,86 @@ export const KateringPage: React.FC = () => {
               className="px-6 py-3 bg-white text-caramel-deep hover:bg-white/90 text-xs uppercase tracking-[0.18em] font-sans transition-colors inline-flex items-center gap-2 font-medium"
               style={{ borderRadius: '2px' }}
             >
-              <span>Pilihan Paket Perjamuan</span>
+              <span>Jelajahi Layanan</span>
               <ArrowRight size={14} className="stroke-[1.25]" />
             </a>
             <a
-              href="#menu"
+              href="#foto-katering"
               className="px-6 py-3 bg-transparent border border-white/60 text-white hover:bg-white hover:text-charcoal text-xs uppercase tracking-[0.18em] font-sans transition-colors inline-flex items-center gap-2"
               style={{ borderRadius: '2px' }}
             >
-              <span>Daftar Menu Hidangan</span>
+              <span>Galeri Sajian</span>
             </a>
           </div>
         </div>
       </section>
 
-      {/* 2. Three Main Packages (#paket) */}
+      <section id="foto-katering" className="section-padding bg-surface border-b border-line scroll-mt-20">
+        <div className="site-container">
+          <span className="label-editorial text-caramel-deep block mb-2">Dokumentasi dari Klien</span>
+          <h2 className="font-section-title text-charcoal mb-3">Foto Catering</h2>
+          <p className="text-sm text-muted max-w-2xl mb-10">
+            Foto dokumentasi dari klien: sebagian yang semula berada di folder Snack Box menampilkan nasi kotak,
+            sehingga dikelompokkan bersama meal box. Foto belum dikaitkan dengan paket, harga, atau menu tertentu.
+          </p>
+          {mealPhotos.length > 0 && <>
+            <h3 className="font-serif text-charcoal text-2xl mb-5">Meal Box & Nasi Kotak</h3>
+            <div className="mb-12"><ClientPhotoGallery photos={mealPhotos} title="Foto Meal Box" /></div>
+          </>}
+          {snackPhotos.length > 0 && <>
+            <h3 className="font-serif text-charcoal text-2xl mb-5">Snack, Buah & Sajian Pendamping</h3>
+            <ClientPhotoGallery photos={snackPhotos} title="Foto Snack dan Sajian Pendamping" />
+          </>}
+        </div>
+      </section>
+
+      {posts.length > 0 && (
+        <section id="postingan-katering" className="section-padding site-container">
+          <span className="label-editorial text-caramel-deep block mb-2">Kabar & Cerita</span>
+          <h2 className="font-section-title text-charcoal mb-10">Postingan Rheamanda Catering</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {posts.map((post) => <CateringPostCard key={post.id} post={post} />)}
+          </div>
+        </section>
+      )}
+
+      {/* Five service families taken from the current company profile. */}
       <section id="paket" className="section-padding site-container">
+        <span className="label-editorial text-caramel-deep block mb-2">Sesuai Profil Perusahaan</span>
+        <h2 className="font-section-title text-charcoal mb-4">Pilihan Sajian untuk Berbagai Momen</h2>
+        <p className="text-sm text-muted max-w-2xl mb-10">Isi, jumlah, dan harga dikonfirmasi langsung bersama pengelola.</p>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {[
+            ['Meal Box', 'Sajian lengkap dan praktis untuk rapat, perjalanan, dan acara.'],
+            ['Snack Box', 'Kudapan untuk meeting, seminar, dan coffee break.'],
+            ['Sweet & Savory', 'Pilihan kudapan manis dan gurih untuk jamuan.'],
+            ['Fresh & Balanced', 'Buah dan pilihan pelengkap untuk variasi sajian.'],
+            ['Event & Bulk Order', 'Sajian untuk kebutuhan acara dan pesanan dalam jumlah banyak.'],
+          ].map(([title, description]) => (
+            <div key={title} className="bg-white border border-line p-6 rounded-[2px]">
+              <h3 className="font-serif text-xl text-charcoal mb-2">{title}</h3>
+              <p className="text-sm text-muted leading-relaxed">{description}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {publishedPackages.length > 0 && <section id="penawaran" className="section-padding site-container">
         <div className="text-center max-w-2xl mx-auto mb-16">
           <span className="label-editorial text-caramel-deep block mb-1">
             Paket Perhelatan Pilihan
           </span>
           <h2 className="font-section-title text-charcoal">
-            Tiga Konsep Layanan Jamuan
+            Penawaran dari Pengelola
           </h2>
           <p className="text-muted text-sm mt-2">
-            Disiapkan oleh koki berpengalaman dengan standar higienis tinggi dan bahan baku segar bergaransi halal.
+            Konfirmasi isi paket, harga, dan ketersediaan sebelum memesan.
           </p>
           <div className="w-12 h-[1px] bg-caramel-deep mx-auto mt-4" />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {packages.map((pkg: any) => (
+          {publishedPackages.map((pkg: any) => (
             <div
               key={pkg.id}
               className="bg-white border border-line p-6 flex flex-col justify-between hover:border-caramel-deep transition-colors relative group"
@@ -184,10 +251,10 @@ export const KateringPage: React.FC = () => {
             </div>
           ))}
         </div>
-      </section>
+      </section>}
 
-      {/* 3. Dish Menu Grid (#menu) - 8 dishes with SmartImage, pax info, description */}
-      <section id="menu" className="bg-white border-y border-line section-padding">
+      {/* Explicitly edited menu entries only. */}
+      {publishedDishes.length > 0 && <section id="menu" className="bg-white border-y border-line section-padding">
         <div className="site-container">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
             <div>
@@ -215,7 +282,7 @@ export const KateringPage: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {dishes.map((dish: any) => (
+            {publishedDishes.map((dish: any) => (
               <div
                 key={dish.id}
                 className="bg-surface border border-line p-4 flex flex-col justify-between hover:border-caramel-deep transition-colors relative group"
@@ -276,7 +343,7 @@ export const KateringPage: React.FC = () => {
             ))}
           </div>
         </div>
-      </section>
+      </section>}
 
       {/* 4. Cara Pemesanan (#cara-pesan) */}
       <section id="cara-pesan" className="section-padding site-container">
@@ -285,7 +352,7 @@ export const KateringPage: React.FC = () => {
             Panduan Reservasi
           </span>
           <h2 className="font-section-title text-charcoal">
-            Empat Langkah Menuju Perjamuan Sempurna
+            Rencanakan Sajian Sesuai Kebutuhan
           </h2>
           <div className="w-12 h-[1px] bg-caramel-deep mx-auto mt-4" />
         </div>
@@ -293,33 +360,33 @@ export const KateringPage: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="bg-white border border-line p-6 space-y-3">
             <span className="font-serif text-3xl text-caramel-deep block font-light">01</span>
-            <h3 className="font-serif text-xl text-charcoal">Pilih Paket & Menu</h3>
+            <h3 className="font-serif text-xl text-charcoal">Tentukan Kebutuhan</h3>
             <p className="text-xs text-muted leading-relaxed font-sans">
-              Tentukan paket resepsi, jamuan bento korporat, atau tumpeng sesuai tanggal dan perkiraan tamu.
+              Tentukan jenis sajian, tanggal, dan perkiraan jumlah tamu atau kotak.
             </p>
           </div>
 
           <div className="bg-white border border-line p-6 space-y-3">
             <span className="font-serif text-3xl text-caramel-deep block font-light">02</span>
-            <h3 className="font-serif text-xl text-charcoal">Konsultasi & Test Food</h3>
+            <h3 className="font-serif text-xl text-charcoal">Minta Katalog</h3>
             <p className="text-xs text-muted leading-relaxed font-sans">
-              Tim perjamuan kami menyusun penawaran resmi dan menjadwalkan sesi cicip menu di galeri Senopati.
+              Rincian menu, jadwal, dan layanan untuk acara perlu dikonfirmasi langsung dengan pengelola.
             </p>
           </div>
 
           <div className="bg-white border border-line p-6 space-y-3">
             <span className="font-serif text-3xl text-caramel-deep block font-light">03</span>
-            <h3 className="font-serif text-xl text-charcoal">Konfirmasi & DP</h3>
+            <h3 className="font-serif text-xl text-charcoal">Konfirmasi Penawaran</h3>
             <p className="text-xs text-muted leading-relaxed font-sans">
-              Penguncian tanggal acara dengan deposit resmi dan penandatanganan lembar kerja teknis tata meja.
+              Konfirmasi komposisi, jumlah, biaya, dan mekanisme pemesanan dengan pengelola.
             </p>
           </div>
 
           <div className="bg-white border border-line p-6 space-y-3">
             <span className="font-serif text-3xl text-caramel-deep block font-light">04</span>
-            <h3 className="font-serif text-xl text-charcoal">Pelaksanaan Khidmat</h3>
+            <h3 className="font-serif text-xl text-charcoal">Atur Pengantaran</h3>
             <p className="text-xs text-muted leading-relaxed font-sans">
-              Tim pramusaji santun kami tiba 3 jam sebelum acara untuk penataan meja buffet dan layanan terbaik.
+              Diskusikan waktu serta lokasi pengantaran sesuai kebutuhan acara.
             </p>
           </div>
         </div>
@@ -333,9 +400,9 @@ export const KateringPage: React.FC = () => {
             Rencanakan Perjamuan Anda Bersama Kami
           </h2>
           <p className="text-sm text-ink font-sans leading-relaxed">
-            Hubungi konsultan katering {BRAND.name} untuk mendiskusikan kebutuhan anggaran, tema dekorasi meja, atau pilihan menu alergen khusus.
+            Informasi kontak resmi untuk konsultasi katering akan ditambahkan setelah dikonfirmasi oleh pengelola.
           </p>
-          <div className="pt-2">
+          {hasConfirmedWhatsapp && <div className="pt-2">
             <a
               href={directWaUrl}
               target="_blank"
@@ -346,7 +413,7 @@ export const KateringPage: React.FC = () => {
               <span>Hubungi Konsultan via WhatsApp</span>
               <ArrowRight size={14} className="stroke-[1.25]" />
             </a>
-          </div>
+          </div>}
         </div>
       </section>
 

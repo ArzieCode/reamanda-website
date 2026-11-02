@@ -11,12 +11,14 @@ import { ArrowLeft, ArrowRight, Star, Trash2, Plus, RotateCcw } from 'lucide-rea
 interface GalleryFieldProps {
   images: string[];
   maxImages?: number;
+  editable?: boolean;
   onChange: (images: string[]) => void;
 }
 
 export const GalleryField: React.FC<GalleryFieldProps> = ({
   images = [],
   maxImages = 8,
+  editable = false,
   onChange,
 }) => {
   const { isEditMode, isVisitorPreview } = useAdmin();
@@ -25,7 +27,7 @@ export const GalleryField: React.FC<GalleryFieldProps> = ({
 
   const [lastDeleted, setLastDeleted] = useState<{ url: string; index: number } | null>(null);
 
-  const canEdit = isEditMode && !isVisitorPreview && hasPermission('EDIT_CONTENT');
+  const canEdit = (isEditMode || editable) && !isVisitorPreview && hasPermission('EDIT_CONTENT');
 
   const handleMove = (index: number, direction: 'left' | 'right') => {
     const targetIndex = direction === 'left' ? index - 1 : index + 1;
@@ -92,11 +94,15 @@ export const GalleryField: React.FC<GalleryFieldProps> = ({
           <div key={`${imgUrl}-${idx}`} className="relative group border border-line bg-surface rounded-[2px] overflow-hidden">
             <ImageField
               value={imgUrl}
+              editable={editable}
               aspectRatio="1:1"
               onChange={(res) => {
-                const updated = [...images];
-                updated[idx] = res.url;
-                onChange(updated);
+                if (!res.url) onChange(images.filter((_, index) => index !== idx));
+                else {
+                  const updated = [...images];
+                  updated[idx] = res.url;
+                  onChange(updated);
+                }
               }}
             />
 
@@ -161,6 +167,7 @@ export const GalleryField: React.FC<GalleryFieldProps> = ({
           <div className="border-2 border-dashed border-line hover:border-caramel-deep aspect-square flex flex-col items-center justify-center p-3 text-center bg-surface/30 rounded-[2px] transition-colors">
             <ImageField
               value=""
+              editable={editable}
               aspectRatio="1:1"
               label="+ Tambah Foto"
               onChange={handleAddImage}

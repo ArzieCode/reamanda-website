@@ -1,9 +1,9 @@
-# Rea Manda — Platform Manajemen Situs & Bisnis Terpadu
+# Rheamanda Group — Situs & Portal Admin
 
-Sistem web terpadu untuk brand **Rea Manda** yang mencakup tiga lini usaha santun:
+Situs profil dan portal admin lokal untuk **Rheamanda Group** dengan tiga lini usaha:
 1. **Busana Muslimah** (E-Commerce, varian ukuran & warna, manajemen stok per varian).
 2. **Kost Eksklusif Wanita / D’Rhea Syariah Guest House** (ketersediaan kamar, penawaran lelang & reservasi kunjungan).
-3. **Katering & Perjamuan Adat** (katalog hidangan, paket perjamuan, serta form konsultasi menu).
+3. **Rheamanda Catering** (meal box, snack box, kudapan, sajian segar, dan kebutuhan acara).
 
 ---
 
@@ -40,6 +40,13 @@ Sistem telah dilengkapi dengan data demo lokal siap pakai. Akun-akun ini dapat l
 ---
 
 ## 🎨 Manajemen Konten Langsung (Live CMS)
+
+### Profil perusahaan terbaru dan batasan publikasi
+
+- Acuan visual/konten: `Rheamanda-Group Profile Company.pdf` (28 halaman). Monogram R terbalik untuk grup dan logo Rheamanda Catering untuk kuliner. Sampul memakai **Building Better Living**; halaman 7 masih memuat tagline lama dan perlu konfirmasi klien.
+- Galeri katering mengelompokkan foto nasi kotak yang awalnya tersimpan di folder Snack Box bersama meal box. Foto adalah dokumentasi, bukan klaim paket/menu atau harga tertentu.
+- **Admin → Galeri Foto**: tambah, ganti, urutkan, hapus, dan ubah keterangan foto akomodasi maupun katering. **Admin → Konten CMS → Postingan Katering**: buat, sunting, tampilkan/sembunyikan, dan hapus postingan dengan foto opsional.
+- **Batasan:** perubahan Admin saat ini hanya disimpan di `localStorage`/IndexedDB **pada browser yang sama**. Belum ada backend/CMS bersama atau publikasi antarperangkat. Operasional sungguhan memerlukan autentikasi server, penyimpanan berkas, sinkronisasi, dan migrasi data lokal; login demo bukan keamanan produksi.
 
 Ketika staf yang berwenang mengaktifkan tombol **"Mode Edit Langsung"** pada Admin Bar atas:
 - **Penyuntingan Teks Sejajar (Inline Text Editing)**: Setiap judul, paragraf, nilai statistik, dan teks tombol memiliki garis putus-putus `--caramel` saat diarahkan. Klik untuk menyunting, tekan Enter untuk menyimpan, Esc untuk membatalkan, dan tombol riwayat versi (menyimpan hingga 20 versi terakhir dengan fitur *"Kembalikan Versi"*).

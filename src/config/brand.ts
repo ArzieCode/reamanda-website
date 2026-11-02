@@ -1,10 +1,10 @@
 export const BRAND = {
   name: "Rheamanda",
-  wordmark: "Rheamanda",
+  wordmark: "Rheamanda Group",
   slug: "rheamanda",
-  tagline: "Elegan, Tulus, dan Abadi",
+  tagline: "Building Better Living",
   city: "",            // fill from admin, leave empty if unknown
-  foundedYear: null as number | null,   // fill from admin, hide the "Berdiri" stat if null
+  foundedYear: 2019 as number | null,
   founder: null as string | null,       // fill from admin, hide founder text if null
   orderPrefix: { busana: "RM", katering: "RM-CTR" },
 } as const;

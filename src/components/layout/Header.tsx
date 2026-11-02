@@ -43,15 +43,18 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
   const isKatering = location.pathname.startsWith('/katering');
   const isBusana = location.pathname.startsWith('/busana');
   const brandPath = isKost ? '/kost-wanita' : isKatering ? '/katering' : isBusana ? '/busana' : '/';
-  const brandName = isKost ? 'D’Rhea Syariah Guest House' : isKatering ? 'Katering Rheamanda' : isBusana ? 'Busana Rheamanda' : BRAND.wordmark;
-  const brandLogo = isKost ? '/d-rhea-syariah-mark.png' : isKatering ? '/rheamanda-mark.png' : isBusana ? '/rheamanda-fashion-logo.png' : null;
+  const brandName = isKost ? 'D’Rhea Syariah Guest House' : isKatering ? 'Rheamanda Catering' : isBusana ? 'Busana Rheamanda' : BRAND.wordmark;
+  const brandLogo = isKost ? '/d-rhea-syariah-mark.png' : isKatering ? '/catering-mark.png' : isBusana ? '/rheamanda-fashion-logo.png' : '/group-monogram.png';
 
   const navItems = isKost
-    ? [{ label: 'Informasi Kost', href: '/kost-wanita#informasi-kost' }]
+    ? [
+        { label: 'Galeri Foto', href: '/kost-wanita#foto-akomodasi' },
+        { label: 'Informasi Kost', href: '/kost-wanita#informasi-kost' },
+      ]
     : isKatering
     ? [
-        { label: 'Paket Perjamuan', href: '/katering#paket' },
-        { label: 'Daftar Menu Pilihan', href: '/katering#menu' },
+        { label: 'Layanan', href: '/katering#paket' },
+        { label: 'Galeri Sajian', href: '/katering#foto-katering' },
         { label: 'Cara Pemesanan', href: '/katering#cara-pesan' },
         { label: 'Kontak', href: '/katering#kontak' },
       ]

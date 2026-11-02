@@ -4,6 +4,7 @@
 import type { Property, PropertyStatus, Bid, VisitRequest } from '../types/properti';
 import { INITIAL_PROPERTIES } from './seed';
 import { logActivity } from './activity';
+import { migrateLegacyProperties } from './legacy-properties';
 
 const STORAGE_KEY_PROPERTIES = 'reamanda:properties_db';
 const STORAGE_KEY_BIDS = 'reamanda:bids_db';
@@ -14,6 +15,13 @@ export class PropertyService {
     try {
       const raw = localStorage.getItem(STORAGE_KEY_PROPERTIES);
       let list: Property[] = raw ? JSON.parse(raw) : INITIAL_PROPERTIES;
+      if (raw) {
+        const migrated = migrateLegacyProperties(list, INITIAL_PROPERTIES);
+        if (migrated !== list) {
+          localStorage.setItem(STORAGE_KEY_PROPERTIES, JSON.stringify(migrated));
+          list = migrated;
+        }
+      }
       if (statusFilter && statusFilter !== 'all') {
         list = list.filter((p) => p.status === statusFilter);
       }

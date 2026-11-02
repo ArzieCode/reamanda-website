@@ -37,10 +37,7 @@ export async function saveImageBlob(id: string, blob: Blob): Promise<string> {
     return url;
   } catch (err) {
     console.error('Failed to save image blob to IndexedDB:', err);
-    // Fallback: create temporary memory object URL
-    const url = URL.createObjectURL(blob);
-    memoryObjectUrlCache.set(id, url);
-    return url;
+    throw err; // A temporary object URL is not durable; let the upload UI report failure.
   }
 }
 

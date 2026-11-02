@@ -9,12 +9,15 @@ import { propertyService } from '../services/properti';
 import type { Property } from '../types/properti';
 import { Modal } from '../components/ui/Modal';
 import { useOverlay } from '../context/OverlayContext';
+import { clientGalleryService, polishedClientPhotoSrc } from '../services/client-gallery';
+import { ClientPhotoGallery } from '../components/ui/ClientPhotoGallery';
 
 export const KostWanitaPage: React.FC = () => {
   const { properties, isVisitorPreview } = useAdmin();
   const { isStaff } = useAuth();
   const { showToast } = useOverlay();
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+  const [clientPhotos] = useState(() => clientGalleryService.getPhotos('kost'));
   const [visitorName, setVisitorName] = useState('');
   const [visitorPhone, setVisitorPhone] = useState('');
   const [visitDate, setVisitDate] = useState('');
@@ -54,6 +57,8 @@ export const KostWanitaPage: React.FC = () => {
         return <span className="bg-status-deposit text-white px-2.5 py-0.5 text-[10px] uppercase font-sans tracking-wider rounded-full">Sudah DP</span>;
       case 'perawatan':
         return <span className="bg-muted text-white px-2.5 py-0.5 text-[10px] uppercase font-sans tracking-wider rounded-full">Dalam Perawatan</span>;
+      case 'belum_dikonfirmasi':
+        return <span className="bg-charcoal/80 text-white px-2.5 py-0.5 text-[10px] uppercase font-sans tracking-wider rounded-full">Ketersediaan dikonfirmasi</span>;
       default:
         return null;
     }
@@ -64,22 +69,35 @@ export const KostWanitaPage: React.FC = () => {
       {/* 1. Editorial hero with CMS copy */}
       <section className="site-container grid grid-cols-1 lg:grid-cols-2 border-b border-line">
         <div className="space-y-6 py-20 lg:py-28 lg:pr-16 editorial-enter">
-          <span className="label-editorial text-indigo block">02 / 03 · <EditableText contentKey="kost.tag" defaultText={`Lini Hunian ${BRAND.name}`} /></span>
+          <span className="label-editorial text-indigo block"><EditableText contentKey="kost.tag" defaultText="Properti & Akomodasi Syariah" /></span>
 
-          <h1 className="font-display text-charcoal">
-            <EditableText contentKey="kost.hero.title" defaultText="Ruang untuk merasa di rumah." as="span" />
+          <div className="inline-flex items-center gap-3" aria-label="Logo D’Rhea Syariah Guest House">
+            <img src="/d-rhea-syariah-mark.png" alt="" className="w-16 sm:w-20 h-auto object-contain" />
+            <span className="font-serif text-charcoal text-xl sm:text-2xl leading-tight">
+              D’Rhea Syariah <span className="block font-sans text-xs uppercase tracking-[0.18em] text-indigo mt-1">Guest House</span>
+            </span>
+          </div>
+
+          <h1 className="font-display text-charcoal lg:!text-[clamp(3.5rem,5vw,5.5rem)]">
+            <EditableText contentKey="kost.hero.title" defaultText="Hunian syariah khusus wanita." as="span" />
           </h1>
 
           <p className="text-ink text-base sm:text-lg leading-relaxed max-w-lg">
             <EditableText
               contentKey="kost.hero.desc"
-              defaultText={`D’Rhea Syariah Guest House adalah nama tempat untuk lini kost eksklusif wanita ${BRAND.name}. Informasi resmi kamar, fasilitas, dan tarif akan ditambahkan setelah dikonfirmasi pengelola.`}
+              defaultText="Akomodasi Rheamanda Group di Jl. Jatipadang Utara No. 63, Pasar Minggu, Jakarta Selatan. Bangunan 3 lantai dengan 14 kamar, mengutamakan kenyamanan, keamanan, dan privasi penghuni wanita."
               as="span"
               multiline
             />
           </p>
 
           <div className="flex flex-wrap items-center gap-6 pt-2">
+            <a
+              href="#foto-akomodasi"
+              className="inline-flex min-h-11 items-center gap-2 border-b border-indigo text-indigo text-xs uppercase tracking-[0.16em] font-sans hover:opacity-70 transition-opacity"
+            >
+              Galeri Foto <ArrowDown size={15} />
+            </a>
             <a
               href="#daftar-kamar"
               className="inline-flex min-h-11 items-center gap-2 border-b border-indigo text-indigo text-xs uppercase tracking-[0.16em] font-sans hover:opacity-70 transition-opacity"
@@ -95,12 +113,23 @@ export const KostWanitaPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-indigo min-h-[330px] lg:min-h-[550px] flex items-center justify-center p-8 sm:p-14 editorial-enter editorial-delay">
+        <div className="relative min-h-[330px] lg:min-h-[550px] overflow-hidden bg-indigo editorial-enter editorial-delay">
           <img
-            src="/d-rhea-syariah-logo.png"
-            alt="Logo D’Rhea Syariah Guest House"
-            className="w-full max-w-[440px] h-auto object-contain"
+            src="/client-photos/polished/kost/kost-23.webp"
+            alt="Kamar modern dengan jendela besar di akomodasi D’Rhea Syariah, dokumentasi klien"
+            className="absolute inset-0 w-full h-full object-cover object-center lg:object-[24%_center]"
           />
+        </div>
+      </section>
+
+      <section id="foto-akomodasi" className="section-padding bg-surface scroll-mt-20">
+        <div className="site-container">
+          <span className="label-editorial text-indigo block mb-2">Dokumentasi dari Klien</span>
+          <h2 className="font-section-title text-charcoal mb-3">Foto Akomodasi</h2>
+          <p className="text-sm text-muted max-w-2xl mb-10">
+            Pilihan foto dari folder akomodasi yang dibagikan klien. Foto belum dikaitkan dengan tipe kamar atau ketersediaan tertentu.
+          </p>
+          <ClientPhotoGallery photos={clientPhotos} title="Foto Akomodasi" />
         </div>
       </section>
 
@@ -108,10 +137,11 @@ export const KostWanitaPage: React.FC = () => {
       <section id="daftar-kamar" className="bg-white border-y border-line section-padding scroll-mt-20">
         <div className="site-container">
           <div className="text-center max-w-2xl mx-auto mb-14">
-            <span className="label-editorial text-indigo block mb-2">Tipe & Ketersediaan Kamar</span>
+            <span className="label-editorial text-indigo block mb-2">Pilihan Kamar</span>
             <h2 className="font-section-title text-charcoal">
-              <EditableText contentKey="kost.rooms.title" defaultText="Pilihan Kamar Kost & Guest House" as="span" />
+              <EditableText contentKey="kost.rooms.title" defaultText="Standard & Deluxe D’Rhea Syariah" as="span" />
             </h2>
+            <p className="text-sm text-muted mt-4">Tarif mengacu pada profil terbaru dari klien; foto kamar merupakan dokumentasi akomodasi, bukan penanda tipe kamar tertentu. Ketersediaan dan harga akhir dikonfirmasi oleh pengelola.</p>
             <div className="w-12 h-[1px] bg-charcoal mx-auto mt-4" />
           </div>
 
@@ -124,7 +154,7 @@ export const KostWanitaPage: React.FC = () => {
                 <div>
                   <div className="relative aspect-[16/10] overflow-hidden bg-surface-2">
                     <img
-                      src={prop.images[0] || 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=1200&auto=format&fit=crop'}
+                      src={polishedClientPhotoSrc(prop.images[0] || '') || 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=1200&auto=format&fit=crop'}
                       alt={prop.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
@@ -208,12 +238,12 @@ export const KostWanitaPage: React.FC = () => {
           <div className="space-y-4">
             <span className="label-editorial text-indigo block">D’Rhea Syariah Guest House</span>
             <h2 className="font-section-title text-charcoal">
-              <EditableText contentKey="kost.info.title" defaultText="Satu tempat, satu identitas" as="span" />
+              <EditableText contentKey="kost.info.title" defaultText="Kenyamanan dan keamanan penghuni" as="span" />
             </h2>
             <p className="text-ink text-base leading-relaxed">
               <EditableText
                 contentKey="kost.info.desc"
-                defaultText={`Nama D’Rhea Syariah Guest House pada logo merujuk pada tempat yang sama dengan Kost Eksklusif Wanita di website ini. Logo tersebut khusus untuk lini kost. Identitas utama website tetap ${BRAND.name}.`}
+                defaultText="Unit akomodasi Rheamanda dirancang untuk menciptakan lingkungan yang tertata, aman, dan kondusif bagi penghuni wanita. Setiap detail fasilitas mencerminkan nilai-nilai syariah yang menjadi fondasi usaha ini."
                 as="span"
                 multiline
               />
@@ -224,7 +254,13 @@ export const KostWanitaPage: React.FC = () => {
             <h3 className="font-serif text-charcoal text-2xl">
               <EditableText contentKey="kost.box.title" defaultText="Informasi kamar" as="span" />
             </h3>
-            <p className="text-sm text-ink leading-relaxed">Tarif, alamat, fasilitas, dan ketersediaan kamar di katalog perlu dikonfirmasi kepada pengelola sebelum melakukan pemesanan.</p>
+            <p className="text-sm text-ink leading-relaxed">Lokasi akomodasi: Jl. Jatipadang Utara No. 63, Pasar Minggu, Jakarta Selatan. Profil klien mencantumkan kamar Standard 3 × 3 m dan Deluxe 3 × 5 m, serta sewa harian mulai Rp300.000 per hari.</p>
+            <p className="text-sm text-ink leading-relaxed">Fasilitas kamar: Kamar mandi dalam, Smart TV, queen bed, tempat pakaian, meja & kursi, water heater, internet, dan Listrik token (ditanggung penyewa). Fasilitas bersama: area komunal, reception area, rooftop barbecue, dan pantry lantai 2.</p>
+            <div className="border-t border-line pt-5 text-sm text-ink">
+              <span className="label-editorial text-indigo block mb-2">Info & Reservasi D’Rhea Syariah</span>
+              <a className="block hover:text-indigo" href="tel:082208236988">0822 0823 6988</a>
+              <a className="block hover:text-indigo" href="tel:087882572717">0878 8257 2717</a>
+            </div>
             <p className="text-xs text-muted leading-relaxed border-t border-line pt-5">Permintaan kunjungan bukan konfirmasi kamar atau tarif.</p>
           </div>
         </div>

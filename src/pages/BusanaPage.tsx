@@ -234,20 +234,20 @@ export const BusanaPage: React.FC = () => {
         <div className="site-container relative z-10 text-white space-y-4 editorial-enter">
           <img src="/rheamanda-fashion-logo.png" alt="Logo Busana Rheamanda" className="block w-20 h-20 object-contain brightness-0 invert" />
           <span className="label-editorial text-white/80 block">
-            01 / 03 · {BRAND.name} Busana Muslimah
+            {BRAND.name} Fashion Muslim & Mukena
           </span>
 
           <h1 className="font-display text-white max-w-3xl font-light">
             <EditableText
               contentKey="busana.hero.title"
-              defaultText="Siluet Teduh Bernilai Luhur"
+              defaultText="Elegan dalam Gaya, Nyaman dalam Setiap Langkah"
             />
           </h1>
 
           <p className="text-white text-sm sm:text-base max-w-lg font-sans font-light leading-relaxed">
             <EditableText
               contentKey="busana.hero.subtitle"
-              defaultText="Eksplorasi tenun songket kontemporer dan voal premium yang dirancang untuk kenyamanan ibadah, silaturahmi, serta aktivitas harian wanita Indonesia."
+              defaultText="Rheamanda Fashion menghadirkan busana muslim modern dan mukena dengan desain elegan, bahan berkualitas, dan nyaman dikenakan untuk aktivitas harian hingga acara spesial."
               multiline
             />
           </p>

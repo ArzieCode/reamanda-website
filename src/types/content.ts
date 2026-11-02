@@ -44,7 +44,8 @@ export interface SectionEntity {
     | 'faq'
     | 'announcement'
     | 'footer_link'
-    | 'static_block';
+    | 'static_block'
+    | 'catering_post';
   title: string;
   subtitle?: string;
   content?: string;

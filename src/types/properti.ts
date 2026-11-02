@@ -2,7 +2,7 @@
 // Properti & Kost Eksklusif — TypeScript Types
 // ============================================================
 
-export type PropertyStatus = 'tersedia' | 'dp' | 'ditempati' | 'terisi' | 'perawatan';
+export type PropertyStatus = 'belum_dikonfirmasi' | 'tersedia' | 'dp' | 'ditempati' | 'terisi' | 'perawatan';
 export type PropertyType =
   | 'Kost Eksklusif'
   | 'Guest House'

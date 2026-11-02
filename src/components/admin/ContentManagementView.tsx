@@ -79,7 +79,7 @@ export const ContentManagementView: React.FC = () => {
       imageUrl: formImageUrl || undefined,
       link: formLink.trim() || undefined,
       sortOrder: editingItem ? editingItem.sortOrder : currentList.length + 1,
-      isVisible: true,
+      isVisible: editingItem ? editingItem.isVisible : true,
     });
 
     reload();
@@ -121,7 +121,7 @@ export const ContentManagementView: React.FC = () => {
         <div>
           <h2 className="font-serif text-charcoal text-2xl font-light m-0">Pengelolaan Konten Situs & Bagian</h2>
           <p className="text-xs text-muted font-sans m-0 mt-0.5">
-            Sunting testimoni, pertanyaan umum (FAQ), slide spanduk, dan blok informasi secara terpusat.
+            Sunting testimoni, FAQ, slide, dan postingan katering. Teks halaman lain dapat diedit lewat Edit Langsung.
           </p>
         </div>
 
@@ -177,6 +177,15 @@ export const ContentManagementView: React.FC = () => {
         >
           Slide Hero Utama
         </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('catering_post')}
+          className={`py-2 px-3 uppercase tracking-wider border-b-2 transition-colors ${
+            activeTab === 'catering_post' ? 'border-charcoal text-charcoal font-medium' : 'border-transparent text-muted'
+          }`}
+        >
+          Postingan Katering
+        </button>
       </div>
 
       {/* Content Grid */}
@@ -190,6 +199,7 @@ export const ContentManagementView: React.FC = () => {
           >
             {/* Toolbar */}
             <CardActionToolbar
+              editable
               isVisible={item.isVisible}
               onEdit={() => handleOpenEdit(item)}
               onDuplicate={() => handleDuplicate(item.id)}
@@ -218,7 +228,7 @@ export const ContentManagementView: React.FC = () => {
 
         {/* Add Card at the end */}
         <AddSectionCard
-          label={`+ Tambah ${activeTab === 'testimonial' ? 'Testimoni' : activeTab === 'faq' ? 'FAQ' : 'Slide'}`}
+          label={`+ Tambah ${activeTab === 'testimonial' ? 'Testimoni' : activeTab === 'faq' ? 'FAQ' : activeTab === 'catering_post' ? 'Postingan' : 'Slide'}`}
           onClick={handleOpenAdd}
         />
       </div>
@@ -235,7 +245,7 @@ export const ContentManagementView: React.FC = () => {
         <form onSubmit={handleSave} className="space-y-4 text-xs font-sans">
           <div>
             <label className="block uppercase text-muted mb-1">
-              {activeTab === 'testimonial' ? 'Nama Pelanggan' : activeTab === 'faq' ? 'Pertanyaan' : 'Judul Slide'}
+              {activeTab === 'testimonial' ? 'Nama Pelanggan' : activeTab === 'faq' ? 'Pertanyaan' : activeTab === 'catering_post' ? 'Judul Postingan' : 'Judul Slide'}
             </label>
             <input
               type="text"
@@ -248,7 +258,7 @@ export const ContentManagementView: React.FC = () => {
 
           <div>
             <label className="block uppercase text-muted mb-1">
-              {activeTab === 'testimonial' ? 'Kota / Gelar' : 'Sub-judul / Keterangan'}
+              {activeTab === 'testimonial' ? 'Kota / Gelar' : activeTab === 'catering_post' ? 'Subjudul (opsional)' : 'Sub-judul / Keterangan'}
             </label>
             <input
               type="text"
@@ -260,7 +270,7 @@ export const ContentManagementView: React.FC = () => {
 
           <div>
             <label className="block uppercase text-muted mb-1">
-              {activeTab === 'testimonial' ? 'Ulasan / Testimoni' : activeTab === 'faq' ? 'Jawaban Lengkap' : 'Deskripsi'}
+              {activeTab === 'testimonial' ? 'Ulasan / Testimoni' : activeTab === 'faq' ? 'Jawaban Lengkap' : activeTab === 'catering_post' ? 'Isi Postingan' : 'Deskripsi'}
             </label>
             <textarea
               rows={4}
@@ -270,10 +280,10 @@ export const ContentManagementView: React.FC = () => {
             />
           </div>
 
-          {activeTab === 'hero_slide' && (
+          {(activeTab === 'hero_slide' || activeTab === 'catering_post') && (
             <div>
-              <span className="block uppercase text-muted mb-1">Foto Spanduk (Slide)</span>
-              <ImageField value={formImageUrl} onChange={(res) => setFormImageUrl(res.url)} />
+              <span className="block uppercase text-muted mb-1">{activeTab === 'catering_post' ? 'Foto Postingan (opsional)' : 'Foto Spanduk (Slide)'}</span>
+              <ImageField editable value={formImageUrl} onChange={(res) => setFormImageUrl(res.url)} />
             </div>
           )}
 

@@ -21,6 +21,7 @@ interface CardActionToolbarProps {
   onDelete: () => void;
   isVisible?: boolean;
   className?: string;
+  editable?: boolean;
 }
 
 export const CardActionToolbar: React.FC<CardActionToolbarProps> = ({
@@ -30,12 +31,13 @@ export const CardActionToolbar: React.FC<CardActionToolbarProps> = ({
   onDelete,
   isVisible = true,
   className = '',
+  editable = false,
 }) => {
   const { isEditMode, isVisitorPreview } = useAdmin();
   const { hasPermission } = useAuth();
   const [touchMenuOpen, setTouchMenuOpen] = useState(false);
 
-  if (!isEditMode || isVisitorPreview || !hasPermission('EDIT_CONTENT')) {
+  if ((!isEditMode && !editable) || isVisitorPreview || !hasPermission('EDIT_CONTENT')) {
     return null;
   }
 

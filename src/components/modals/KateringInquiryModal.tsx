@@ -121,6 +121,7 @@ Mohon informasi penawaran resmi, ketersediaan jadwal, dan prosedur test food. Te
   };
 
   const whatsappLink = `https://wa.me/${settings.whatsappNumber}?text=${getWhatsappMessage()}`;
+  const hasConfirmedWhatsapp = Boolean(settings.whatsappNumber && settings.whatsappNumber !== '6281234567890');
 
   return (
     <Modal
@@ -167,7 +168,7 @@ Mohon informasi penawaran resmi, ketersediaan jadwal, dan prosedur test food. Te
           </div>
 
           <div className="pt-2 max-w-md mx-auto flex flex-col sm:flex-row gap-3">
-            <a
+            {hasConfirmedWhatsapp && <a
               href={whatsappLink}
               target="_blank"
               rel="noopener noreferrer"
@@ -175,7 +176,7 @@ Mohon informasi penawaran resmi, ketersediaan jadwal, dan prosedur test food. Te
             >
               <MessageCircle size={16} className="stroke-[1.25]" />
               <span>Hubungi via WhatsApp</span>
-            </a>
+            </a>}
             <button
               type="button"
               onClick={onClose}

@@ -8,13 +8,15 @@ interface FooterProps {
   onOpenAdminModal: () => void;
 }
 
+const currentYear = new Date().getFullYear();
+
 export const Footer: React.FC<FooterProps> = ({ onOpenAdminModal }) => {
   const { settings, isAdmin, openDashboard } = useAdmin();
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const currentYear = 2025;
+  const hasConfirmedWhatsapp = Boolean(settings.whatsappNumber && settings.whatsappNumber !== '6281234567890');
   const whatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
     `Halo ${BRAND.name}, saya ingin berkonsultasi mengenai koleksi busana, akomodasi, atau katering perjamuan.`
   )}`;
@@ -55,12 +57,12 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdminModal }) => {
           {/* Column 1: Brand & Founder Info */}
           <div className="space-y-4">
             <span className="font-serif text-white tracking-[0.02em] text-2xl inline-flex items-center gap-2.5">
-              {BRAND.wordmark}
+              <img src="/group-monogram.png" alt="" className="w-9 h-9 object-contain brightness-0 invert" /> {BRAND.wordmark}
             </span>
             <p className="text-white/85 text-base leading-relaxed max-w-sm font-sans">
-              Menghadirkan busana muslimah, kost eksklusif wanita, dan sajian katering untuk momen istimewa.
+              Building Better Living. Berawal dari akomodasi syariah pada 2019, berkembang ke fashion muslim dan produk kuliner.
             </p>
-            <div className="pt-2">
+            {hasConfirmedWhatsapp && <div className="pt-2">
               <a
                 href={whatsappUrl}
                 target="_blank"
@@ -71,7 +73,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdminModal }) => {
                 <MessageCircle size={14} className="stroke-[1.25]" />
                 Hubungi via WhatsApp
               </a>
-            </div>
+            </div>}
           </div>
 
           {/* Column 2: Busana Muslimah */}
@@ -198,7 +200,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdminModal }) => {
 
           <div className="flex items-center gap-6">
             <Link to="/tentang-kami" className="hover:text-white transition-colors">
-              Tentang Brand
+              Tentang Rheamanda Group
             </Link>
             <Link to="/kontak" className="hover:text-white transition-colors">
               Kontak

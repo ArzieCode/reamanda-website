@@ -28,6 +28,7 @@ export interface ImageFieldProps {
   onChange?: (val: { url: string; altText: string; focalPoint: { x: number; y: number } }) => void;
   onRemove?: () => void;
   label?: string;
+  editable?: boolean; // Allow editing from the back-office without enabling live page edits.
 }
 
 export const ImageField: React.FC<ImageFieldProps> = ({
@@ -39,6 +40,7 @@ export const ImageField: React.FC<ImageFieldProps> = ({
   onChange,
   onRemove,
   label,
+  editable = false,
 }) => {
   const { isEditMode, isVisitorPreview } = useAdmin();
   const { hasPermission } = useAuth();
@@ -62,7 +64,7 @@ export const ImageField: React.FC<ImageFieldProps> = ({
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const canEdit = isEditMode && !isVisitorPreview && hasPermission('EDIT_CONTENT');
+  const canEdit = (isEditMode || editable) && !isVisitorPreview && hasPermission('EDIT_CONTENT');
 
   // Resolve IndexedDB blobs if value is an id
   useEffect(() => {

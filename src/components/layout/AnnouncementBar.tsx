@@ -10,8 +10,8 @@ export const AnnouncementBar: React.FC = () => {
       <div className="site-container h-full flex items-center justify-center relative text-center">
         <div className="text-white text-sm font-medium tracking-[0.02em] font-sans truncate m-0">
           <EditableText
-            contentKey="announcement.text"
-            defaultText="KOLEKSI RAYA BERSAMA 2025 KINI HADIR · PENGIRIMAN GRATIS KE SELURUH INDONESIA"
+            contentKey="announcement.group.text"
+            defaultText="RHEAMANDA GROUP · TUMBUH BERSAMA, MELAYANI SEPENUH HATI"
           />
         </div>
       </div>
