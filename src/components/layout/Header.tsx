@@ -44,7 +44,8 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
   const isBusana = location.pathname.startsWith('/busana');
   const brandPath = isKost ? '/kost-wanita' : isKatering ? '/katering' : isBusana ? '/busana' : '/';
   const brandName = isKost ? 'D’Rhea Syariah Guest House' : isKatering ? 'Rheamanda Catering' : isBusana ? 'Busana Rheamanda' : BRAND.wordmark;
-  const brandLogo = isKost ? '/d-rhea-syariah-mark.png' : isKatering ? '/catering-mark.png' : isBusana ? '/rheamanda-fashion-logo.png' : '/group-monogram.png';
+  const compactBrandName = isKost ? 'D’Rhea' : isKatering ? 'Katering' : isBusana ? 'Busana' : BRAND.wordmark;
+  const brandLogo = isKost ? '/d-rhea-syariah-mark.png' : isKatering ? '/catering-mark.png' : isBusana ? '/rheamanda-fashion-logo.png' : '/group-monogram-gold.png';
 
   const navItems = isKost
     ? [
@@ -54,9 +55,9 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
     : isKatering
     ? [
         { label: 'Layanan', href: '/katering#paket' },
-        { label: 'Galeri Sajian', href: '/katering#foto-katering' },
+        { label: 'Nasi & Lunch Box', href: '/katering#nasi-box' },
+        { label: 'Snack Box', href: '/katering#snack-box' },
         { label: 'Cara Pemesanan', href: '/katering#cara-pesan' },
-        { label: 'Kontak', href: '/katering#kontak' },
       ]
     : isBusana ? [
         { label: 'Produk', href: '/busana#terbaru' },
@@ -65,9 +66,8 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
         { label: 'Koleksi', href: '/busana#koleksi' },
         { label: 'Sale', href: '/busana?filter=sale', isSale: true },
       ] : [
-        { label: 'Busana', href: '/busana' },
-        { label: 'Kost Wanita', href: '/kost-wanita' },
-        { label: 'Katering', href: '/katering' },
+        { label: 'Tentang Kami', href: '/tentang-kami' },
+        { label: 'Kontak', href: '/kontak' },
       ];
 
   const handleOpenLogin = () => {
@@ -278,7 +278,8 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
             className="inline-flex min-w-0 items-center gap-1.5 font-serif text-charcoal tracking-[0.02em] text-[18px] sm:text-[20px]"
           >
             {brandLogo && <img src={brandLogo} alt="" className="h-8 max-w-8 object-contain" />}
-            <span className="text-base sm:text-xl truncate max-w-[145px] sm:max-w-none">{brandName}</span>
+            <span className="min-[400px]:hidden text-base truncate">{compactBrandName}</span>
+            <span className="hidden min-[400px]:inline text-base sm:text-xl truncate sm:max-w-none">{brandName}</span>
           </Link>
 
           {/* Right: Icons (Search, Cart, User) */}

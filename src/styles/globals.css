@@ -6,11 +6,11 @@
 
 @layer base {
   :root {
-    --chrome-height: 148px;
+    --chrome-height: 60px;
   }
 
-  @media (min-width: 1024px) {
-    :root { --chrome-height: 160px; }
+  @media (min-width: 1280px) {
+    :root { --chrome-height: 72px; }
   }
 
   html {

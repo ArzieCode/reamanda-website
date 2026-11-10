@@ -1,19 +1,19 @@
 :root {
-  --white: #FFFEFB;
-  --surface: #F5F0E8;
-  --surface-2: #EBE4D8;
-  --sand: #DFD4C4;
-  --line: #D6CBBA;
-  --ink: #2A241E;
-  --charcoal: #1B1713;
-  --muted: #5C554C;
-  --caramel: #A67C42;
-  --caramel-deep: #7D5A28;
+  --white: #FFFEFA;
+  --surface: #F7F3EA;
+  --surface-2: #EEE7D9;
+  --sand: #E1D5BF;
+  --line: #D7C9AE;
+  --ink: #273027;
+  --charcoal: #2C3429;
+  --muted: #55594F;
+  --caramel: #AE8845;
+  --caramel-deep: #75551F;
   --indigo: #2C353F;
   --sale: #7A3B45;
   --status-available: #6A7A66;
   --status-deposit: #B08A48;
   --status-occupied: #8A5C54;
-  --overlay: rgba(27, 23, 19, 0.5);
+  --overlay: rgba(35, 45, 34, 0.58);
   --overlay-indigo: rgba(44, 53, 63, 0.52);
 }

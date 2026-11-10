@@ -16,6 +16,14 @@ const values = [
   { title: 'Kebermanfaatan', description: 'Menjadikan pertumbuhan bisnis sebagai jalan untuk memberi nilai bagi banyak pihak.' },
 ];
 
+const coreValues = [
+  { title: 'Innovation', description: 'Terus berkembang, kreatif, dan adaptif terhadap kebutuhan pelanggan.' },
+  { title: 'Barakah', description: 'Membangun usaha yang membawa kebaikan dan keberkahan bagi semua.' },
+  { title: 'Amanah', description: 'Menjalankan bisnis dengan kejujuran, kepercayaan, dan tanggung jawab.' },
+  { title: 'Quality', description: 'Mengutamakan kualitas produk dan pelayanan terbaik di setiap lini usaha.' },
+  { title: 'Service', description: 'Melayani dengan sepenuh hati, ramah, dan profesional.' },
+];
+
 const pillars = [
   { number: '01', title: 'Properti & Akomodasi Syariah', description: 'Hunian eksklusif syariah khusus wanita yang mengutamakan kenyamanan, keamanan, dan privasi. Berlokasi di Jl. Jatipadang Utara No. 63, Pasar Minggu, Jakarta Selatan; 14 kamar dalam bangunan 3 lantai. Unit akomodasi dirancang tertata, aman, dan kondusif bagi penghuni wanita.', path: '/kost-wanita', action: 'Lihat akomodasi' },
   { number: '02', title: 'Fashion Muslim & Mukena', description: 'Pilihan fashion muslim dan mukena yang mendukung kenyamanan beribadah dan aktivitas sehari-hari. Rheamanda Fashion menghadirkan busana muslim modern dengan desain elegan dan syar’i, bahan berkualitas, serta nyaman untuk kegiatan harian hingga acara spesial bagi keluarga.', path: '/busana', action: 'Lihat fashion' },
@@ -28,7 +36,7 @@ export const TentangKamiPage: React.FC = () => (
   <div className="w-full bg-surface">
     <section className="site-container py-20 lg:py-28 border-b border-line">
       <span className="label-editorial text-caramel-deep">Tentang Rheamanda Group · Berdiri sejak 2019</span>
-      <h1 className="font-display text-charcoal mt-6 max-w-4xl">Building Better<br /><em>Living.</em></h1>
+      <h1 className="font-display !text-[clamp(3.1rem,6vw,5.8rem)] text-charcoal mt-6 max-w-4xl">Growing with{' '}<br /><em>Purpose,</em>{' '}<span className="block !text-[clamp(2.55rem,4.4vw,4.6rem)] mt-2">Serving with Heart</span></h1>
       <p className="text-ink text-lg leading-relaxed max-w-2xl mt-8">Berawal dari hunian syariah, berkembang menjadi ekosistem layanan gaya hidup.</p>
     </section>
 
@@ -42,8 +50,18 @@ export const TentangKamiPage: React.FC = () => (
 
     <section className="bg-white border-b border-line section-padding">
       <div className="site-container grid md:grid-cols-2 gap-12 lg:gap-24">
-        <div><span className="label-editorial text-caramel-deep">Visi</span><h2 className="font-section-title mt-3">Dipercaya pelanggan.</h2><p className="text-ink leading-relaxed mt-5">Menjadi kelompok usaha yang tumbuh berkelanjutan dan dipercaya pelanggan melalui layanan akomodasi, fashion muslim, serta produk kuliner yang berkualitas dan bernilai.</p></div>
-        <div><span className="label-editorial text-caramel-deep">Misi</span><h2 className="font-section-title mt-3">Bertumbuh dengan nilai.</h2><ul className="mt-5 space-y-3 text-ink leading-relaxed list-disc pl-5"><li>Mengembangkan setiap lini usaha berdasarkan kebutuhan nyata dan perubahan pasar.</li><li>Mengutamakan kenyamanan, kualitas, keamanan, dan kepuasan pelanggan.</li><li>Membangun hubungan jangka panjang dengan pelanggan, mitra, dan komunitas.</li><li>Menjalankan usaha secara profesional, bertanggung jawab, dan berkelanjutan.</li><li>Membuka ruang kolaborasi serta peluang ekonomi bagi lingkungan sekitar.</li></ul></div>
+        <div><span className="label-editorial text-caramel-deep">Visi</span><h2 className="font-section-title mt-3">Terpercaya, unggul, inspiratif.</h2><p className="text-ink leading-relaxed mt-5">Menjadi grup usaha yang terpercaya, unggul, dan inspiratif dalam bidang hospitality, muslim wear, dan catering dengan mengedepankan kualitas, pelayanan, serta nilai-nilai islami untuk memberikan manfaat dan keberkahan bagi masyarakat.</p><p className="font-serif text-2xl text-caramel-deep mt-6 italic">Tumbuh dengan tujuan. Melayani dengan hati.</p></div>
+        <div><span className="label-editorial text-caramel-deep">Misi</span><h2 className="font-section-title mt-3">Komitmen di setiap lini.</h2><ul className="mt-5 space-y-4 text-ink leading-relaxed list-disc pl-5"><li>Memberikan pelayanan terbaik melalui bisnis hospitality yang profesional, mengutamakan kenyamanan, kualitas, dan kepuasan pelanggan.</li><li>Menghadirkan muslim wear yang nyaman, berkualitas, indah, sopan, dan selaras dengan nilai-nilai islami.</li><li>Menyediakan layanan catering dengan cita rasa berkualitas, kebersihan, kehalalan, dan pelayanan yang memuaskan.</li><li>Membangun bisnis dengan kejujuran, amanah, inovasi, dan pertumbuhan berkelanjutan yang memberi manfaat bagi pelanggan, karyawan, mitra, dan masyarakat.</li></ul></div>
+      </div>
+    </section>
+
+    <section className="bg-charcoal text-white section-padding border-b border-caramel/30">
+      <div className="site-container">
+        <span className="label-editorial text-[#DEC893]">DNA Perusahaan · Core Values</span>
+        <h2 className="font-section-title !text-white mt-3 mb-10">Nilai yang kami bawa.</h2>
+        <div className="grid sm:grid-cols-2 xl:grid-cols-5 gap-5">
+          {coreValues.map((item, index) => <article key={item.title} className="min-w-0 border-t border-[#DEC893]/50 pt-5"><span className="text-sm text-[#DEC893]">0{index + 1}</span><h3 className="font-serif text-3xl !text-white mt-3">{item.title}</h3><p className="text-white/85 text-base leading-relaxed mt-3">{item.description}</p></article>)}
+        </div>
       </div>
     </section>
 

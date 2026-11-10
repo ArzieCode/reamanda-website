@@ -43,8 +43,9 @@ Sistem telah dilengkapi dengan data demo lokal siap pakai. Akun-akun ini dapat l
 
 ### Profil perusahaan terbaru dan batasan publikasi
 
-- Acuan visual/konten: `Rheamanda-Group Profile Company.pdf` (28 halaman). Monogram R terbalik untuk grup dan logo Rheamanda Catering untuk kuliner. Sampul memakai **Building Better Living**; halaman 7 masih memuat tagline lama dan perlu konfirmasi klien.
-- Galeri katering mengelompokkan foto nasi kotak yang awalnya tersimpan di folder Snack Box bersama meal box. Foto adalah dokumentasi, bukan klaim paket/menu atau harga tertentu.
+- Acuan konten sebelumnya: `Rheamanda-Group Profile Company.pdf` (28 halaman). Revisi memakai `Rheamanda Group Ivory Gold (2).pdf` dan referensi warna Golden Harvest dari klien: dasar ivory, bidang hijau gelap, aksen emas. Sesuai persetujuan klien, tagline grup kini **Growing with Purpose, Serving with Heart**. Visi, misi, dan core values pada halaman Tentang Kami mengikuti PDF terbaru. Pengaturan lokal dengan tagline baku lama dimigrasi saat dibaca; teks yang sudah dikustom admin tetap dipertahankan.
+- Desktop memiliki navigasi samping untuk tiga lini usaha; tablet/ponsel tetap menggunakan tab atas dan menu. Halaman katering menempatkan pilihan Nasi & Lunch Box, Snack Box, dan Kebutuhan Acara sebelum galeri per kategori.
+- Galeri katering mengelompokkan foto nasi kotak yang awalnya tersimpan di folder Snack Box bersama meal box. Foto yang ada sudah mencakup dokumentasi makanan dari kedua folder Drive; tiga gambar promosi menu yang berulang dari folder Lunch Box tidak diperlakukan sebagai foto produk/harga Rheamanda. Foto adalah dokumentasi, bukan klaim paket/menu atau harga tertentu.
 - **Admin → Galeri Foto**: tambah, ganti, urutkan, hapus, dan ubah keterangan foto akomodasi maupun katering. **Admin → Konten CMS → Postingan Katering**: buat, sunting, tampilkan/sembunyikan, dan hapus postingan dengan foto opsional.
 - **Batasan:** perubahan Admin saat ini hanya disimpan di `localStorage`/IndexedDB **pada browser yang sama**. Belum ada backend/CMS bersama atau publikasi antarperangkat. Operasional sungguhan memerlukan autentikasi server, penyimpanan berkas, sinkronisasi, dan migrasi data lokal; login demo bukan keamanan produksi.
 

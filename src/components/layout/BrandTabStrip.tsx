@@ -18,7 +18,7 @@ export const BrandTabStrip: React.FC = () => {
   ];
 
   return (
-    <div className="w-full bg-white border-b border-line h-12 select-none">
+    <div className="w-full bg-white border-b border-line h-12 select-none min-[1280px]:hidden">
       <div className="site-container !px-3 sm:!px-8 lg:!px-12 h-full flex items-center gap-1 sm:gap-5">
         <Link
           to="/"

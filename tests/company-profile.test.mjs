@@ -14,8 +14,9 @@ test('company page covers the PDF chronology, mission, values, pillars, and addr
 
 test('site entry points lead with the group story and PDF-backed business lines', () => {
   const home = read('pages/HomePage.tsx');
-  assert.match(home, /Building Better/);
-  assert.match(home, /Living/);
+  assert.match(home, /Growing with/);
+  assert.match(home, /Purpose,/);
+  assert.match(home, /Serving with Heart/);
   assert.match(home, /Berawal dari hunian syariah/);
   assert.match(home, /Properti & Akomodasi Syariah/);
   assert.match(home, /Fashion Muslim & Mukena/);
@@ -32,6 +33,7 @@ test('contact page does not present an invented headquarters or phone', () => {
 test('announcement uses a fresh profile key so a cached legacy promotion cannot override the new copy', () => {
   const announcement = read('components/layout/AnnouncementBar.tsx');
   assert.match(announcement, /contentKey="announcement\.group\.text"/);
+  assert.match(announcement, /TUMBUH DENGAN TUJUAN · MELAYANI DENGAN HATI/);
   assert.doesNotMatch(announcement, /KOLEKSI RAYA BERSAMA 2025/);
 });
 
@@ -44,8 +46,23 @@ test('document title and description identify the company group', () => {
 test('group wordmark, tagline, and founding year follow the profile', () => {
   const brand = read('config/brand.ts');
   assert.match(brand, /wordmark: "Rheamanda Group"/);
-  assert.match(brand, /tagline: "Building Better Living"/);
+  assert.match(brand, /tagline: "Growing with Purpose, Serving with Heart"/);
   assert.match(brand, /foundedYear: 2019/);
+});
+
+test('new PDF vision, mission, core values, and tagline reach the public site', () => {
+  const about = read('pages/TentangKamiPage.tsx');
+  for (const phrase of ['Terpercaya, unggul, inspiratif', 'nilai-nilai islami', 'Innovation', 'Barakah', 'Quality', 'Service', 'kehalalan', 'Tumbuh dengan tujuan. Melayani dengan hati.']) {
+    assert.ok(about.includes(phrase), `Missing new profile wording: ${phrase}`);
+  }
+  const footer = read('components/layout/Footer.tsx');
+  assert.match(footer, /BRAND\.tagline/);
+  assert.doesNotMatch(footer, /Paket Pernikahan & Resepsi|Produk Terbaru 2025/);
+  const seed = read('services/seed.ts');
+  assert.match(seed, /tagline: 'Growing with Purpose, Serving with Heart'/);
+  const settings = read('services/content.ts');
+  assert.match(settings, /stored\.tagline === 'Building Better Living'/);
+  assert.match(settings, /\{ \.\.\.stored, tagline: INITIAL_GENERAL_SETTINGS\.tagline \}/);
 });
 
 test('catering does not show a WhatsApp contact button for an unconfirmed number', () => {

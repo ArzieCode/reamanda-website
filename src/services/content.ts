@@ -34,6 +34,9 @@ export class ContentService {
   public getContentValue(key: string, defaultValue = ''): string {
     const list = this.getContentList();
     const item = list.find((c) => c.key === key);
+    if (key === 'announcement.group.text' && item?.value === 'RHEAMANDA GROUP · TUMBUH BERSAMA, MELAYANI SEPENUH HATI') {
+      return defaultValue;
+    }
     return item ? item.value : defaultValue;
   }
 
@@ -107,7 +110,12 @@ export class ContentService {
   public getSettings(): GeneralSettings {
     try {
       const raw = localStorage.getItem(STORAGE_KEY_SETTINGS);
-      return raw ? JSON.parse(raw) : INITIAL_GENERAL_SETTINGS;
+      if (!raw) return INITIAL_GENERAL_SETTINGS;
+      const stored: GeneralSettings = JSON.parse(raw);
+      // Update only the old default; keep any tagline the admin set intentionally.
+      return stored.tagline === 'Building Better Living'
+        ? { ...stored, tagline: INITIAL_GENERAL_SETTINGS.tagline }
+        : stored;
     } catch {
       return INITIAL_GENERAL_SETTINGS;
     }

@@ -5,6 +5,7 @@ import { BrandTabStrip } from './BrandTabStrip';
 import { AnnouncementBar } from './AnnouncementBar';
 import { Header } from './Header';
 import { Footer } from './Footer';
+import { BusinessLineRail } from './BusinessLineRail';
 import { CartDrawer } from '../busana/CartDrawer';
 import { SearchModal } from '../modals/SearchModal';
 import { AdminLoginModal } from '../admin/AdminLoginModal';
@@ -14,6 +15,7 @@ export const Layout: React.FC = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [adminLoginOpen, setAdminLoginOpen] = useState(false);
   const isBusana = useLocation().pathname.startsWith('/busana');
+  const isAdmin = useLocation().pathname.startsWith('/admin');
 
   return (
     <div className="min-h-screen flex flex-col bg-surface text-ink font-sans">
@@ -33,9 +35,12 @@ export const Layout: React.FC = () => {
       />
 
       {/* Main Page Content */}
-      <main className="flex-1">
-        <Outlet />
-      </main>
+      <div className="flex flex-1 min-w-0 items-stretch">
+        {!isAdmin && <BusinessLineRail />}
+        <main className="flex-1 min-w-0">
+          <Outlet />
+        </main>
+      </div>
 
       {/* Footer */}
       <Footer onOpenAdminModal={() => setAdminLoginOpen(true)} />

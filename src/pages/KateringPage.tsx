@@ -6,11 +6,11 @@ import { KateringInquiryModal } from '../components/modals/KateringInquiryModal'
 import { Modal } from '../components/ui/Modal';
 import { BRAND } from '../config/brand';
 import { ArrowRight, Check, Edit2 } from 'lucide-react';
-import { CLIENT_PHOTOS } from '../data/client-photos';
 import { ClientPhotoGallery } from '../components/ui/ClientPhotoGallery';
 import { CateringPostCard } from '../components/ui/CateringPostCard';
 import { clientGalleryService } from '../services/client-gallery';
 import { contentService } from '../services/content';
+import { useImageSrc } from '../hooks/useImageSrc';
 
 export const KateringPage: React.FC = () => {
   const { packages, dishes, settings, isEditMode, updatePackage, updateDish } = useAdmin();
@@ -24,6 +24,8 @@ export const KateringPage: React.FC = () => {
   const [editingDish, setEditingDish] = useState<KateringDishItem | null>(null);
   const [mealPhotos] = useState(() => clientGalleryService.getPhotos('lunchBox'));
   const [snackPhotos] = useState(() => clientGalleryService.getPhotos('snackBox'));
+  const mealHeroSrc = useImageSrc(mealPhotos[0]?.src);
+  const snackHeroSrc = useImageSrc(snackPhotos[0]?.src);
   const [posts] = useState(() => contentService.getSections('catering_post').filter((post) => post.isVisible));
   // Hide untouched mock packages and prices; preserve anything the admin edited.
   const publishedPackages = packages.filter((pkg) =>
@@ -60,67 +62,81 @@ export const KateringPage: React.FC = () => {
 
   return (
     <div className="w-full bg-surface">
-      {/* 1. Katering Hero with Caramel-Deep Accent */}
-      <section className="relative w-full min-h-[460px] lg:min-h-[65vh] py-16 sm:py-20 bg-charcoal flex items-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <SmartImage
-            slot="katering-hero"
-            src={CLIENT_PHOTOS.snackBox[0].src}
-            alt="Sajian dari folder foto catering yang dibagikan klien"
-            aspectRatio="custom"
-            className="w-full h-full object-cover"
-            priority
-          />
-          <div className="absolute inset-0 bg-overlay" />
-        </div>
-
-        <div className="site-container relative z-10 text-white space-y-4 editorial-enter">
-          <img src="/catering-logo.png" alt="Logo Rheamanda Catering" className="block w-52 sm:w-64 h-auto object-contain brightness-0 invert drop-shadow-[0_2px_8px_rgba(0,0,0,0.65)]" />
-          <span className="label-editorial text-white/90 block">
-            {BRAND.name} Catering & Produk Kuliner
-          </span>
-          <h1 className="font-display text-white max-w-3xl font-light">
-            Lezat, Sehat, Penuh Makna
-          </h1>
-          <p className="text-white text-sm sm:text-base max-w-lg font-sans font-light leading-relaxed">
-            Rheamanda Catering menghadirkan meal box, snack box, kudapan manis dan gurih, sajian segar, serta kebutuhan acara dengan pilihan yang dapat disesuaikan. Hubungi pengelola untuk katalog dan penawaran terkini.
+      <section className="grid lg:grid-cols-[1.05fr_0.95fr] bg-charcoal text-white overflow-hidden">
+        <div className="flex flex-col justify-center px-6 sm:px-10 lg:px-14 xl:px-20 py-10 sm:py-20 lg:py-24 editorial-enter">
+          <img src="/catering-logo.png" alt="Logo Rheamanda Catering" className="w-36 sm:w-56 h-auto object-contain brightness-0 invert mb-5 sm:mb-8" />
+          <span className="label-editorial text-[#DEC893]">Rheamanda Catering · Sajian untuk setiap momen</span>
+          <h1 className="font-display !text-[clamp(3rem,5vw,5.25rem)] !text-white mt-5 sm:mt-7 mb-4 sm:mb-6 max-w-2xl">Sajian yang dekat dengan <em className="font-light text-[#E2CCA0]">momen Anda.</em></h1>
+          <p className="text-white text-base sm:text-lg leading-relaxed max-w-xl">
+            Nasi dan lunch box, snack box, serta kebutuhan acara yang dapat disesuaikan. Jelajahi dokumentasi sajian kami, lalu konsultasikan pilihan dan penawaran terkini dengan pengelola.
           </p>
-          <div className="pt-2 flex flex-wrap gap-4">
-            <a
-              href="#paket"
-              className="px-6 py-3 bg-white text-caramel-deep hover:bg-white/90 text-xs uppercase tracking-[0.18em] font-sans transition-colors inline-flex items-center gap-2 font-medium"
-              style={{ borderRadius: '2px' }}
-            >
-              <span>Jelajahi Layanan</span>
-              <ArrowRight size={14} className="stroke-[1.25]" />
+          <div className="mt-6 sm:mt-9 flex flex-wrap gap-3">
+            <a href="#paket" className="min-h-12 px-6 bg-[#E2CCA0] text-charcoal hover:bg-white text-sm font-medium inline-flex items-center gap-2 transition-colors">
+              Jelajahi layanan <ArrowRight size={16} aria-hidden="true" />
             </a>
-            <a
-              href="#foto-katering"
-              className="px-6 py-3 bg-transparent border border-white/60 text-white hover:bg-white hover:text-charcoal text-xs uppercase tracking-[0.18em] font-sans transition-colors inline-flex items-center gap-2"
-              style={{ borderRadius: '2px' }}
-            >
-              <span>Galeri Sajian</span>
+            <a href="#foto-katering" className="min-h-12 px-6 border border-white/60 text-white hover:bg-white hover:text-charcoal text-sm inline-flex items-center transition-colors">
+              Lihat galeri sajian
             </a>
           </div>
+          <div className="mt-8 sm:mt-14 pt-4 sm:pt-5 border-t border-white/25 text-sm text-white/70">Pilihan menu, jumlah, dan harga dikonfirmasi langsung bersama pengelola.</div>
+        </div>
+        <div className="relative min-h-[340px] sm:min-h-[480px] lg:min-h-[640px] bg-surface-2">
+          {mealHeroSrc ? (
+            <SmartImage src={mealHeroSrc} alt={mealPhotos[0].alt} aspectRatio="custom" className="absolute inset-0 h-full" priority />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center p-10 text-center font-serif text-4xl text-charcoal">Sajian Rheamanda Catering</div>
+          )}
+          <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-charcoal/70 to-transparent pointer-events-none" />
+          {mealHeroSrc && <span className="absolute bottom-6 left-6 sm:left-10 label-editorial text-white drop-shadow-md">Dokumentasi sajian Rheamanda</span>}
         </div>
       </section>
 
-      <section id="foto-katering" className="section-padding bg-surface border-b border-line scroll-mt-20">
+      <section id="paket" className="section-padding site-container scroll-mt-20">
+        <div className="max-w-3xl mb-10 sm:mb-14">
+          <span className="label-editorial text-caramel-deep block mb-3">Pilih sesuai kebutuhan</span>
+          <h2 className="font-section-title text-charcoal mb-4">Untuk pertemuan kecil hingga perayaan bersama.</h2>
+          <p className="text-base text-muted">Galeri menampilkan dokumentasi sajian, bukan daftar paket dengan komposisi atau harga tetap. Pilih kategori untuk melihat ragam tampilannya.</p>
+        </div>
+        <div className="grid md:grid-cols-3 gap-4 lg:gap-6">
+          {[
+            { number: '01', title: 'Nasi & Lunch Box', description: 'Sajian praktis untuk rapat, perjalanan, dan acara.', href: '#nasi-box', image: mealHeroSrc, alt: mealPhotos[0]?.alt },
+            { number: '02', title: 'Snack Box', description: 'Kudapan, buah, dan sajian pendamping untuk beragam kesempatan.', href: '#snack-box', image: snackHeroSrc, alt: snackPhotos[0]?.alt },
+            { number: '03', title: 'Kebutuhan Acara', description: 'Konsultasikan sajian acara, pesanan banyak, dan pilihan frozen food.', href: '#cara-pesan', image: '', alt: '' },
+          ].map((category) => (
+            <a key={category.number} href={category.href} className="group min-w-0 bg-white border border-line hover:border-caramel-deep transition-colors flex flex-col">
+              <div className="aspect-[4/3] overflow-hidden bg-surface-2 relative">
+                {category.image ? <img src={category.image} alt={category.alt} loading="lazy" className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500" /> : <div className="w-full h-full bg-charcoal flex items-center justify-center p-8"><img src="/catering-logo.png" alt="" className="max-w-44 max-h-32 object-contain brightness-0 invert" /></div>}
+              </div>
+              <div className="p-5 sm:p-6 flex-1 flex flex-col">
+                <span className="label-editorial text-caramel-deep text-xs">{category.number} / Katering</span>
+                <h3 className="font-serif text-3xl text-charcoal mt-3 mb-2">{category.title}</h3>
+                <p className="text-sm text-muted leading-relaxed mb-6">{category.description}</p>
+                <span className="mt-auto inline-flex items-center gap-2 text-sm font-medium text-caramel-deep">Lihat selengkapnya <ArrowRight size={15} aria-hidden="true" /></span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section id="foto-katering" className="section-padding bg-white border-y border-line scroll-mt-20">
         <div className="site-container">
-          <span className="label-editorial text-caramel-deep block mb-2">Dokumentasi dari Klien</span>
-          <h2 className="font-section-title text-charcoal mb-3">Foto Catering</h2>
-          <p className="text-sm text-muted max-w-2xl mb-10">
-            Foto dokumentasi dari klien: sebagian yang semula berada di folder Snack Box menampilkan nasi kotak,
-            sehingga dikelompokkan bersama meal box. Foto belum dikaitkan dengan paket, harga, atau menu tertentu.
-          </p>
-          {mealPhotos.length > 0 && <>
-            <h3 className="font-serif text-charcoal text-2xl mb-5">Meal Box & Nasi Kotak</h3>
-            <div className="mb-12"><ClientPhotoGallery photos={mealPhotos} title="Foto Meal Box" /></div>
-          </>}
-          {snackPhotos.length > 0 && <>
-            <h3 className="font-serif text-charcoal text-2xl mb-5">Snack, Buah & Sajian Pendamping</h3>
-            <ClientPhotoGallery photos={snackPhotos} title="Foto Snack dan Sajian Pendamping" />
-          </>}
+          <span className="label-editorial text-caramel-deep block mb-3">Dari dapur Rheamanda</span>
+          <h2 className="font-section-title text-charcoal mb-4">Lihat sajian lebih dekat.</h2>
+          <p className="text-base text-muted max-w-2xl mb-12">Dokumentasi asli dari klien, dikelompokkan menurut sajian yang tampak pada foto. Detail menu, ketersediaan, dan harga dapat dikonfirmasi saat konsultasi.</p>
+          <div id="nasi-box" className="mb-14">
+            <div className="flex flex-wrap items-end justify-between gap-3 mb-5 border-b border-line pb-4">
+              <h3 className="font-serif text-charcoal text-3xl sm:text-4xl">Nasi & Lunch Box</h3>
+              <span className="text-sm text-muted">Sajian lengkap · dokumentasi klien</span>
+            </div>
+            {mealPhotos.length > 0 ? <ClientPhotoGallery photos={mealPhotos} title="Foto Nasi dan Lunch Box" /> : <p className="text-muted">Foto dokumentasi belum tersedia. Konsultasikan pilihan nasi box dengan pengelola.</p>}
+          </div>
+          <div id="snack-box">
+            <div className="flex flex-wrap items-end justify-between gap-3 mb-5 border-b border-line pb-4">
+              <h3 className="font-serif text-charcoal text-3xl sm:text-4xl">Snack Box & Pendamping</h3>
+              <span className="text-sm text-muted">Kudapan, buah, dan minuman</span>
+            </div>
+            {snackPhotos.length > 0 ? <ClientPhotoGallery photos={snackPhotos} title="Foto Snack Box dan Sajian Pendamping" /> : <p className="text-muted">Foto dokumentasi belum tersedia. Konsultasikan pilihan snack box dengan pengelola.</p>}
+          </div>
         </div>
       </section>
 
@@ -134,26 +150,6 @@ export const KateringPage: React.FC = () => {
         </section>
       )}
 
-      {/* Five service families taken from the current company profile. */}
-      <section id="paket" className="section-padding site-container">
-        <span className="label-editorial text-caramel-deep block mb-2">Sesuai Profil Perusahaan</span>
-        <h2 className="font-section-title text-charcoal mb-4">Pilihan Sajian untuk Berbagai Momen</h2>
-        <p className="text-sm text-muted max-w-2xl mb-10">Isi, jumlah, dan harga dikonfirmasi langsung bersama pengelola.</p>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {[
-            ['Meal Box', 'Sajian lengkap dan praktis untuk rapat, perjalanan, dan acara.'],
-            ['Snack Box', 'Kudapan untuk meeting, seminar, dan coffee break.'],
-            ['Sweet & Savory', 'Pilihan kudapan manis dan gurih untuk jamuan.'],
-            ['Fresh & Balanced', 'Buah dan pilihan pelengkap untuk variasi sajian.'],
-            ['Event & Bulk Order', 'Sajian untuk kebutuhan acara dan pesanan dalam jumlah banyak.'],
-          ].map(([title, description]) => (
-            <div key={title} className="bg-white border border-line p-6 rounded-[2px]">
-              <h3 className="font-serif text-xl text-charcoal mb-2">{title}</h3>
-              <p className="text-sm text-muted leading-relaxed">{description}</p>
-            </div>
-          ))}
-        </div>
-      </section>
 
       {publishedPackages.length > 0 && <section id="penawaran" className="section-padding site-container">
         <div className="text-center max-w-2xl mx-auto mb-16">

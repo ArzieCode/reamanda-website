@@ -571,7 +571,7 @@ export function generateRealisticOrders(users: User[], products: Product[]): Ord
 
 export const INITIAL_GENERAL_SETTINGS: GeneralSettings = {
   brandName: 'Rheamanda Group',
-  tagline: 'Building Better Living',
+  tagline: 'Growing with Purpose, Serving with Heart',
   logoUrl: '/rheamanda-mark.png',
   faviconUrl: '/favicon.png',
   phone: '',
@@ -621,7 +621,7 @@ export const INITIAL_SITE_CONTENT: SiteContent[] = [
   },
   {
     key: 'announcement.text',
-    value: 'RHEAMANDA GROUP · TUMBUH BERSAMA, MELAYANI SEPENUH HATI',
+    value: 'TUMBUH DENGAN TUJUAN · MELAYANI DENGAN HATI',
     updatedAt: new Date().toISOString(),
     updatedBy: 'Sistem',
     versions: [],

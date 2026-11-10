@@ -17,7 +17,10 @@ test('both paragraphs in the dark about section explicitly use a light text colo
 test('paragraphs on dark hero sections use a generated light color', () => {
   for (const page of ['BusanaPage', 'KateringPage', 'PropertiPage']) {
     const source = readFileSync(new URL(`../src/pages/${page}.tsx`, import.meta.url), 'utf8');
-    const hero = source.split('className="site-container relative z-10 text-white')[1]?.split('</section>')[0];
+    const marker = page === 'KateringPage'
+      ? 'className="flex flex-col justify-center px-6'
+      : 'className="site-container relative z-10 text-white';
+    const hero = source.split(marker)[1]?.split('</section>')[0];
     assert.ok(hero, `${page} dark hero should exist`);
     const paragraph = hero.match(/<p className="([^"]+)"/);
     assert.ok(paragraph, `${page} hero paragraph should exist`);

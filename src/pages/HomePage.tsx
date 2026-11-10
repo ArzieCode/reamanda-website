@@ -149,8 +149,9 @@ export const HomePage: React.FC = () => {
     <section className="site-container grid lg:grid-cols-[1.1fr_0.9fr] min-h-[500px] lg:min-h-[580px] border-b border-line">
       <div className="flex flex-col justify-center py-16 sm:py-20 lg:py-24 lg:pr-16 editorial-enter">
         <span className="label-editorial text-caramel-deep"><EditableText contentKey="home.editorial.hero.tag" defaultText="Selamat datang di Rheamanda Group" /></span>
-        <h1 className="font-display mt-6 mb-6 max-w-[820px] text-charcoal">
-          Building Better<br /><em className="font-light"><EditableText contentKey="home.editorial.hero.latest.title" defaultText="Living" /></em>
+        <h1 className="font-display !text-[clamp(3.1rem,6vw,5.8rem)] mt-6 mb-6 max-w-[820px] text-charcoal">
+          Growing with{' '}<br /><em className="font-light"><EditableText contentKey="home.editorial.hero.ivory-gold.title" defaultText="Purpose," /></em>{' '}
+          <span className="block !text-[clamp(2.55rem,4.4vw,4.6rem)] mt-2">Serving with Heart</span>
         </h1>
         <p className="text-base sm:text-lg text-ink leading-relaxed max-w-md">
           <EditableText contentKey="home.editorial.hero.subtitle" defaultText="Berawal dari hunian syariah, berkembang menjadi ekosistem layanan gaya hidup: akomodasi, fashion muslim, dan kuliner." multiline />
@@ -162,7 +163,7 @@ export const HomePage: React.FC = () => {
       <div className="relative min-h-[360px] lg:min-h-0 bg-charcoal text-white overflow-hidden flex flex-col justify-between p-8 sm:p-12 lg:p-14 editorial-enter editorial-delay">
         <span className="label-editorial text-white/70">Akomodasi · Fashion · Kuliner</span>
         <div className="flex flex-1 items-center justify-center py-4">
-          <img src="/group-monogram.png" alt="Monogram R terbalik Rheamanda Group" className="w-24 sm:w-32 lg:w-44 h-auto object-contain brightness-0 invert" />
+          <img src="/group-monogram-gold.png" alt="Monogram R terbalik Rheamanda Group" className="w-24 sm:w-32 lg:w-44 h-auto object-contain" />
         </div>
         <div className="relative max-w-sm">
           <div className="h-px w-16 bg-caramel mb-6" />

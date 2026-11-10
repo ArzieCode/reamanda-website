@@ -57,10 +57,10 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdminModal }) => {
           {/* Column 1: Brand & Founder Info */}
           <div className="space-y-4">
             <span className="font-serif text-white tracking-[0.02em] text-2xl inline-flex items-center gap-2.5">
-              <img src="/group-monogram.png" alt="" className="w-9 h-9 object-contain brightness-0 invert" /> {BRAND.wordmark}
+              <img src="/group-monogram-gold.png" alt="" className="w-9 h-9 object-contain" /> {BRAND.wordmark}
             </span>
             <p className="text-white/85 text-base leading-relaxed max-w-sm font-sans">
-              Building Better Living. Berawal dari akomodasi syariah pada 2019, berkembang ke fashion muslim dan produk kuliner.
+              {BRAND.tagline}. Berawal dari akomodasi syariah pada 2019, berkembang ke fashion muslim dan produk kuliner.
             </p>
             {hasConfirmedWhatsapp && <div className="pt-2">
               <a
@@ -85,32 +85,15 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdminModal }) => {
             <ul className="space-y-2 text-base text-white/85 font-sans">
               <li>
                 <Link to="/busana#terbaru" className="hover:text-white transition-colors">
-                  Produk Terbaru 2025
+                  Lihat produk busana
                 </Link>
               </li>
               <li>
                 <Link to="/busana#koleksi" className="hover:text-white transition-colors">
-                  Koleksi Senja Jakarta
+                  Jelajahi koleksi
                 </Link>
               </li>
-              <li>
-                <Link to="/busana#koleksi" className="hover:text-white transition-colors">
-                  Koleksi Warisan Minang
-                </Link>
-              </li>
-              <li>
-                <Link to="/busana?kategori=Hijab" className="hover:text-white transition-colors">
-                  Hijab Voal Monogram
-                </Link>
-              </li>
-              <li>
-                <Link to="/busana?filter=sale" className="hover:text-sale transition-colors flex items-center gap-2">
-                  <span>Koleksi Sale</span>
-                  <span className="bg-sale text-white text-[9px] px-1.5 py-0.2 tracking-wider uppercase" style={{ borderRadius: '9999px' }}>
-                    Sale
-                  </span>
-                </Link>
-              </li>
+              <li><Link to="/busana" className="hover:text-white transition-colors">Fashion Muslim & Mukena</Link></li>
             </ul>
           </div>
 
@@ -132,13 +115,13 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdminModal }) => {
                 </Link>
               </li>
               <li>
-                <Link to="/katering#paket" className="hover:text-white transition-colors">
-                  Paket Pernikahan & Resepsi
+                <Link to="/katering#nasi-box" className="hover:text-white transition-colors">
+                  Nasi & Lunch Box
                 </Link>
               </li>
               <li>
-                <Link to="/katering#menu" className="hover:text-white transition-colors">
-                  Jamuan Nusantara & Tumpeng
+                <Link to="/katering#snack-box" className="hover:text-white transition-colors">
+                  Snack Box
                 </Link>
               </li>
             </ul>
